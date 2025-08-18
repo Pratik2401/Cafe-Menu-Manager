@@ -1,0 +1,261 @@
+/* Background and layout */
+.admin-controls {
+  background: #f6f5f5;
+  min-height: 100vh;
+  padding: 24px 0 0 0;
+}
+
+/* Navigation Bar */
+.admin-navigation {
+  margin-bottom: 24px;
+  padding-left: 16px;
+}
+
+.admin-navigation .btn,
+.admin-navigation .btn:focus {
+  background: none;
+  border: 1.5px solid #c7281c;
+  color: #c7281c;
+  font-weight: 500;
+  font-size: 1.08rem;
+  border-radius: 12px;
+  box-shadow: none;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  padding: 6px 18px;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  outline: none;
+  font-family: 'Merge One Regular';
+}
+
+.admin-navigation .btn-primary,
+.admin-navigation .btn-primary:focus {
+  background: #c7281c;
+  color: #fff;
+  border: 1.5px solid #c7281c;
+}
+
+.section-title{
+  font-family: 'Merge One Regular';
+}
+.admin-navigation .btn-outline-primary:hover,
+.admin-navigation .btn-outline-primary:focus {
+  background: #c7271c31;
+  color: #c7281c;
+  border: 1.5px solid #c7281c;
+}
+
+.admin-section{
+  display: flex;
+  justify-content: center;
+  background-color: transparent !important;
+}
+
+/* Card Styles */
+.admin-section .card {
+  border-radius: 18px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  border: none;
+  margin-bottom: 32px;
+  width: 90%;
+  min-width: 300px;
+}
+
+.admin-section .card-header {
+  background: none;
+  border-bottom: 1px solid #e0d7c6;
+  border-radius: 18px 18px 0 0;
+  padding: 20px 24px 10px 24px;
+}
+
+.section-header h2,
+.section-header h3.section-title {
+  font-family: 'Merge One Regular' !important;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 0;
+}
+
+.admin-section .card-body {
+  padding: 24px;
+}
+
+.admin-section .form-label {
+  font-weight: 500;
+  color: #444;
+}
+
+.admin-section .form-control {
+  border-radius: 8px;
+  font-size: 1.08rem;
+  padding: 8px 14px;
+  border: 1.2px solid black;
+  box-shadow: none;
+  transition: border 0.18s;
+}
+
+.admin-section .form-control:focus {
+  border: 1.5px solid #c7281c;
+  box-shadow: 0 0 0 2px #c7281c;
+}
+
+.admin-section .d-grid .btn {
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background: #c7281c;
+  border: none;
+  color: #fff;
+  margin-top: 12px;
+  padding: 10px 0;
+  transition: background 0.18s;
+}
+
+.admin-section .d-grid .btn:hover,
+.admin-section .d-grid .btn:focus {
+  background: #c7281c;
+  color: #fff;
+}
+
+/* Alerts */
+.alert-success {
+  background: #e6f5e6;
+  color: #217a3c;
+  border: 1.5px solid #b7e0b7;
+  border-radius: 10px;
+}
+
+.alert-danger {
+  background: #fbeaea;
+  color: #b71c1c;
+  border: 1.5px solid #f5bcbc;
+  border-radius: 10px;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .admin-section .card-body {
+    padding: 14px;
+  }
+  .admin-section .card-header {
+    padding: 12px 10px 6px 10px;
+  }
+  .section-header h2,
+  .section-header h3.section-title {
+    font-size: 1.25rem;
+  }
+  .admin-navigation {
+    padding-left: 4px;
+  }
+}
+
+.edit-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.edit-input-group .form-control[disabled] {
+  background: #faf9f7;
+  color: #888;
+  cursor: not-allowed;
+}
+.edit-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: black !important;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: transparent !important;
+  padding: 3px 10px !important;
+  transition: background 0.15s;
+  border-radius: 50%;
+border: 1px solid black;
+}
+.edit-icon:hover{
+  background-color: black !important;
+  color: white !important;
+}
+.edit-actions {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 4px;
+}
+.edit-actions .btn {
+  padding: 2px 8px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+.edit-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.edit-input-group .form-control[disabled] {
+  background: #faf9f7;
+  color: #888;
+  cursor: not-allowed;
+}
+.edit-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c7281c;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  transition: background 0.15s;
+}
+.edit-icon:hover, .edit-icon:focus {
+  background: #f3e7d7;
+  color: #c7281c;
+}
+.edit-footer-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+.edit-save-btn {
+  background: #217a3c !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 18px !important;
+  font-size: 1.08rem !important;
+  padding: 6px 22px !important;
+  transition: background 0.2s;
+}
+.edit-save-btn:hover,
+.edit-save-btn:focus {
+  background: #145c2c !important;
+}
+.edit-cancel-btn {
+  background: #e53935 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 18px !important;
+  font-size: 1.08rem !important;
+  padding: 6px 22px !important;
+  transition: background 0.2s;
+}
+.edit-cancel-btn:hover,
+.edit-cancel-btn:focus {
+  background: #b71c1c !important;
+}
+/* Responsive: stack buttons on mobile */
+@media (max-width: 575.98px) {
+  .edit-footer-btns {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+}

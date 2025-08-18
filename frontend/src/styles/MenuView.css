@@ -1,0 +1,109 @@
+.menu-view-container {
+  min-height: 100vh !important;
+  height: auto !important;
+  overflow-y: auto;
+  background-color: var(--bg-primary);
+  position: relative;
+  /* When a background image is set via inline style, it will override this background color */
+}
+
+.menu-view-body{
+  margin-bottom: 90px !important; /* Ensures content is not hidden behind the footer */
+}
+
+.sticky-search {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--bg-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-subcategories-message {
+  text-align: center;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-subcategories-message h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.no-subcategories-message p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.no-subcategories-message {
+  text-align: center;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%;
+}
+
+.no-subcategories-message h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.no-subcategories-message p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Menu Sidebar Styles */
+.menu-sidebar {
+  max-width: 320px;
+  width: 80%;
+}
+
+.menu-sidebar .offcanvas-header {
+  background-color: var(--bg-secondary);
+  color: white;
+}
+
+.menu-sidebar .offcanvas-title {
+  font-weight: 600;
+  color: white;
+}
+
+.menu-sidebar .accordion-button:not(.collapsed) {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-dark);
+  font-weight: 600;
+}
+
+.menu-sidebar .list-group-item.active {
+  background-color: var(--bg-tertiary);
+  border-color: var(--bg-tertiary);
+}
+
+.menu-sidebar .accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.125);
+}
+
+.menu-sidebar .list-group-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-sidebar .list-group-item:hover:not(.active) {
+  background-color: rgba(0, 0, 0, 0.03);
+  transform: translateX(3px);
+}

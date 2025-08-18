@@ -1,0 +1,269 @@
+/* Card Container */
+.EventCard {
+  width: 100%;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  margin: 8px auto !important;
+  max-width: 320px;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+}
+
+/* Banner Image */
+.EventCard-Banner {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 10px;
+  height: auto !important;
+  border-top-right-radius: 10px;
+  position: relative;
+}
+
+.EventCard-ImageLoader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+.EventCard-ImageLoader p {
+  margin-top: 10px;
+  color: #6c757d;
+  font-size: 12px;
+  font-family: 'Merge One Regular';
+}
+
+.EventCard-ImageError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa;
+  color: #dc3545;
+  font-size: 12px;
+  font-family: 'Merge One Regular';
+}
+
+.EventCard-Image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.EventCard-Image.loading {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.EventCard-Image.loaded {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Description */
+.EventCard-Description {
+  text-align: center;
+  font-size: 11px;
+  color: #111;
+  margin: 8px;
+  font-weight: 400;
+  font-family: 'Merge One Regular';
+  line-height: 1.3;
+}
+
+/* Details Section */
+.EventCard-Details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0 !important;
+  background-color: var(--bg-primary);
+  font-family: 'Merge One Regular';
+}
+
+.EventCard-Detail {
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  color: #111;
+  margin: 3px 8px !important;
+  font-family: inherit;
+}
+
+.EventCard-Icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-right: 6px;
+  color: #111;
+}
+
+.EventCard-DetailText {
+  flex: 1;
+  line-height: 1.3;
+  font-size: 10px;
+}
+
+.EventCard-18plus {
+  color: #dc3545 !important;
+  font-weight: 600;
+}
+
+.EventCard-18plus .EventCard-Icon {
+  color: #dc3545 !important;
+}
+
+/* Footer */
+.EventCard-Footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+  margin-top: 0 !important;
+}
+
+.EventCard-ViewToggle {
+  color: var(--color-accent);
+  font-size: 11px;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 400;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 0;
+  font-weight: bold;
+}
+
+
+/* Responsive */
+@media (max-width: 700px) {
+  .EventCard {
+    max-width: 98vw;
+    margin: 1rem auto;
+  }
+  
+  .EventCard-Description,
+  .EventCard-Details{
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+  }
+}
+
+/* Details Container with Smooth Transition */
+.EventCard-DetailsContainer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+}
+
+.EventCard-DetailsContainer.show {
+  max-height: 600px;
+}
+
+/* Remove default Card.Footer bg if using react-bootstrap */
+.card-footer {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.EventCard-KnowMore{
+  background-color: var(--bg-secondary);
+  padding: 4px 8px;
+  border-radius: 20px;
+  color: var(--color-secondary);
+  font-size: 9px;
+  font-weight: bold;
+  border: none;
+}
+
+.EventCard-KnowMoreContainer{
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px;
+}
+
+.EventCard-RegisterBtn{
+  background-color: var(--color-secondary);
+  padding: 4px 8px;
+  border-radius: 20px;
+  color: var(--bg-secondary);
+  font-size: 9px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.EventCard-RegisterBtn:hover {
+  opacity: 0.8;
+  color: var(--bg-secondary);
+  text-decoration: none;
+}
+
+.EventCard-Title {
+  padding: 8px 12px 4px;
+  text-align: center;
+}
+
+.EventCard-Title h4 {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: #111;
+}
+
+.EventCard-Tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.EventCard-Tag {
+  background: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 8px;
+  color: #495057;
+}
+
+.EventCard-Offers {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.EventCard-Offers h6 {
+  font-size: 10px;
+  margin: 0 0 4px 0;
+  color: #495057;
+}
+
+.EventCard-Offer {
+  font-size: 9px;
+  color: #111;
+  margin: 2px 0;
+}
+
+.EventCard-SpecialOffer {
+  color: #28a745 !important;
+  font-weight: bold;
+  font-size: 10px !important;
+}

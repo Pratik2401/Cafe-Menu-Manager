@@ -1,0 +1,364 @@
+.SearchBarContainer{
+    display: flex;
+    flex-direction: row !important;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 10px;
+}
+
+.SearchBody{
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    background-color: var(--card-bg);
+    padding: 7px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+}
+
+.SearchBody.expanded {
+    width: 70%;
+}
+
+
+
+.SearchIcon-Container{
+    width: 30px !important;
+    height: 20px !important;
+}
+
+.SearchIcon-Image{
+    width: 20px !important;
+    height: 20px !important;
+}
+.SearchField-Container{
+    height: 100%;
+    margin-left: 5px;
+}
+
+.SearchField-TextBox{
+    width: 80%;
+    height: 95%;
+    border: none;
+}
+
+.SearchField-TextBox:hover,.SearchField-TextBox:focus{
+    outline: none !important;
+}
+.ActionContainer{
+    width: 45% !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin: 0 4px;
+}
+
+.ActionContainer.reduced {
+    width: 35% !important;
+}
+
+.Action-Container{
+    margin: auto !important;
+    position: relative;
+}
+.Action-Image{
+    width: 25px !important;
+    height: 25px !important;
+    /* margin-right: 5px; */
+}
+
+.Menu-DropDown{
+    padding: 0 7px  !important;
+    height: 25px !important;
+    background-color: var(--bg-tertiary) !important;
+    border: none !important;
+    border-radius: 10px !important;
+}
+.Event-DropDown{
+    padding: 0 7px  !important;
+    height: 25px !important;
+    background-color: var(--bg-secondary) !important;
+    border: none !important;
+    border-radius: 10px !important;
+}
+/* Filter Modal Styling */
+.filter-modal .modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.filter-modal .modal-header {
+    background-color: var(--bg-secondary);
+    color: var(--color-secondary);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom: none;
+}
+
+.filter-modal .modal-title {
+    font-weight: 600;
+}
+
+.filter-modal .modal-header .btn-close {
+    color: var(--color-accent) !important;
+    opacity: 1;
+}
+
+.filter-modal .modal-body {
+    padding: 20px;
+    background-color: var(--bg-primary);
+}
+
+.filter-category-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.filter-category-item:hover {
+    background-color: var(--bg-primary);
+}
+
+.filter-category-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    object-fit: contain;
+}
+
+.filter-category-checkbox {
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--bg-tertiary);
+}
+
+.filter-category-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.filter-modal .modal-footer {
+    border-top: none;
+    background-color: var(--bg-primary);
+}
+
+.filter-modal .btn-secondary {
+    background-color: var(--bg-secondary);
+    border: none;
+}
+
+.filter-modal .btn-primary {
+    background-color: var(--bg-tertiary);
+    border: none;
+}
+/* Food Categories Styling */
+.CategoriesContainer {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px 0;
+  margin-top: 10px;
+  gap: 15px;
+}
+
+.CategoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.CategoryItem.active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.CategoryIcon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.Menu-DropDown,.Event-DropDown{
+    margin: 0 2px;
+    font-size: clamp(12px, 2vw, 18px);
+}
+
+/* Category dropdown menu styling */
+.menu-dropdown-container {
+    position: static !important;
+}
+
+.category-dropdown-menu {
+    max-height: 70vh;
+    overflow-y: auto;
+    width: 280px;
+    padding: 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    border: none;
+    position: fixed !important;
+    top: 50px !important; /* Position just below the search bar */
+    right: 10px !important; /* Position at the right end */
+    left: auto !important;
+    transform: none !important;
+    margin-top: 0 !important;
+}
+
+/* Override Bootstrap's default dropdown item styles */
+.dropdown-item {
+    white-space: normal !important;
+}
+
+.dropdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    background-color: var(--bg-secondary);
+    border-radius: 12px 12px 0 0;
+}
+
+.dropdown-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.current-category {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-dark);
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.3;
+    max-width: 200px;
+}
+
+.subcategory-label {
+    font-size: 12px;
+    color: #777;
+    margin-top: 2px;
+}
+
+.all-categories-label {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.back-button {
+    padding: 4px 8px;
+    font-size: 14px;
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.dropdown-content {
+    padding: 8px 0;
+}
+
+.category-group {
+    margin-bottom: 4px;
+}
+
+.category-item {
+    font-weight: 600;
+    padding: 10px 16px;
+    transition: all 0.2s ease;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.3;
+}
+
+.active-category {
+    background-color: var(--bg-secondary);
+    color: var(--color-accent);
+    font-weight: 700;
+    position: relative;
+}
+
+.active-category::after {
+    content: '▼';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+}
+
+.subcategory-group {
+    margin-left: 8px;
+    border-left: 2px solid var(--bg-secondary);
+    margin-top: 4px;
+    margin-bottom: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: rgba(0, 0, 0, 0.02);
+    display: block !important;
+}
+
+.subcategory-item {
+    padding: 8px 16px 8px 24px;
+    font-size: 0.95em;
+    color: var(--color-dark);
+    transition: all 0.2s ease;
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.3;
+}
+
+.category-item:hover, .subcategory-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateX(4px);
+}
+
+.no-subcategories {
+    padding: 16px;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+}
+
+/* Animation for dropdown items */
+.animate-in {
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-group:nth-child(1) .category-item { animation-delay: 0.05s; }
+.category-group:nth-child(2) .category-item { animation-delay: 0.1s; }
+.category-group:nth-child(3) .category-item { animation-delay: 0.15s; }
+.category-group:nth-child(4) .category-item { animation-delay: 0.2s; }
+.category-group:nth-child(5) .category-item { animation-delay: 0.25s; }
+.category-group:nth-child(6) .category-item { animation-delay: 0.3s; }
+.category-group:nth-child(7) .category-item { animation-delay: 0.35s; }
+.category-group:nth-child(8) .category-item { animation-delay: 0.4s; }
+.category-group:nth-child(9) .category-item { animation-delay: 0.45s; }
+.category-group:nth-child(10) .category-item { animation-delay: 0.5s; }
+
+.subcategory-item:nth-child(1) { animation-delay: 0.1s; }
+.subcategory-item:nth-child(2) { animation-delay: 0.15s; }
+.subcategory-item:nth-child(3) { animation-delay: 0.2s; }
+.subcategory-item:nth-child(4) { animation-delay: 0.25s; }
+.subcategory-item:nth-child(5) { animation-delay: 0.3s; }
+.subcategory-item:nth-child(6) { animation-delay: 0.35s; }
+.subcategory-item:nth-child(7) { animation-delay: 0.4s; }
+.subcategory-item:nth-child(8) { animation-delay: 0.45s; }
+.subcategory-item:nth-child(9) { animation-delay: 0.5s; }
+.subcategory-item:nth-child(10) { animation-delay: 0.55s; }

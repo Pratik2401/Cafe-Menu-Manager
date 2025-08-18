@@ -1,0 +1,16 @@
+.DenyButton{
+    background-color: var(--bg-tertiary) !important;
+}
+
+.ConfirmButton{
+    background-color:  var(--bg-secondary) !important;
+    color: var(--color-secondary) !important;
+    font-weight: bold !important;
+    border: none;
+}
+
+.AgeVerificationFooter{
+    display: flex !important;
+    justify-content: space-between;
+    flex-direction: row !important;
+}

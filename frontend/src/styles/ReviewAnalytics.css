@@ -1,0 +1,159 @@
+.review-analytics-container {
+  padding: 20px;
+  background-color: #f6f5f5;
+  min-height: 100vh;
+}
+
+
+.ReviewExcelDownloadButton{
+  background-color:#ede1d5 !important;
+  color: #c7281c !important;
+}
+
+.export-csv-button{
+  background-color: #ede1d5 !important;
+  color: black !important;
+}
+
+.ReviewExcelDownloadButton:hover{
+  background-color:#ede1d5 !important;
+  color: #c7281c !important;
+}
+
+.page-header {
+  background: #c7281c;
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  
+  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.brand-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 2.2rem;
+  color: white;
+}
+
+.analytics-card {
+  border: none;
+  border-radius: 15px;
+  
+  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: white;
+}
+
+.analytics-card:hover {
+  transform: translateY(-5px);
+  
+  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.analytics-card .card-header {
+  background: #c7281c;
+  color: white;
+  border: none;
+  border-radius: 15px 15px 0 0 !important;
+  font-weight: 600;
+}
+
+.analytics-icon {
+  font-size: 2.5rem;
+  color: #c7281c;
+  margin-bottom: 15px;
+}
+
+.brand-primary {
+  color: #c7281c !important;
+  font-weight: 700;
+}
+
+.brand-bg {
+  background: #c7281c !important;
+}
+
+.rating-bar {
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-label {
+  font-weight: 600;
+  color: black;
+  min-width: 20px;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 10px;
+  background-color: #ede1d5;
+}
+
+.progress-bar {
+  border-radius: 10px;
+  transition: width 0.6s ease;
+}
+
+.rating-count {
+  font-weight: 600;
+  color: black;
+  min-width: 30px;
+  text-align: right;
+}
+
+.review-item {
+  padding: 15px;
+  background: #ede1d5;
+  border-radius: 10px;
+  margin-bottom: 15px !important;
+  border: 1px solid #c7281c !important;
+}
+
+.review-comment {
+  color: black;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-muted {
+  color: black !important;
+}
+
+@media (max-width: 768px) {
+  .review-analytics-container {
+    padding: 15px;
+  }
+  
+  .page-header {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .brand-title {
+    font-size: 1.8rem;
+  }
+  
+  .analytics-card {
+    margin-bottom: 20px;
+  }
+  
+  .review-item {
+    padding: 10px;
+  }
+  
+  .review-item .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .review-item .text-end {
+    text-align: left !important;
+    margin-top: 10px;
+  }
+}

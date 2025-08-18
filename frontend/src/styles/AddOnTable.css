@@ -1,0 +1,291 @@
+.size-selector-container {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  padding: 0 5px;
+}
+
+.size-selector-header {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 15px;
+}
+
+.size-selector {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.size-selector:focus {
+  border-color: #A47248;
+  box-shadow: 0 0 0 2px rgba(164, 114, 72, 0.2);
+}
+
+.addon-table-container {
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.addon-table-container:hover {
+  box-shadow: 0 6px 16px rgba(164, 114, 72, 0.2);
+}
+
+.addon-section {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.addon-header {
+  color: white;
+  padding: 10px 15px;
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addon-header-green {
+  background-color: #28a745;
+}
+
+.addon-header-red {
+  background-color: #dc3545;
+}
+
+.addon-header svg {
+  margin-right: 8px;
+}
+
+.addon-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.addon-item:last-child {
+  border-bottom: none;
+}
+
+.addon-item:hover {
+  background-color: #f9f5f2;
+}
+
+.addon-item-name {
+  flex-grow: 1;
+  margin-left: 10px;
+  font-size: 14px;
+  word-break: break-word;
+  min-width: 0;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.addon-item-price {
+  font-weight: 600;
+  color: #28a745;
+  font-size: 14px;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.allergen-item {
+  padding: 8px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.allergen-item:hover {
+  background-color: #f9f5f2;
+}
+
+.allergen-item-name {
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quantity-btn-group {
+  display: flex;
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 25px;
+  padding: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quantity-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  background-color: transparent !important;
+  color: #A47248 !important;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  transform: scale(1.05);
+}
+
+.quantity-value {
+  width: 40px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.add-cart-btn {
+  background-color: #A47248;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-weight: 600;
+  margin-left: 0;
+  box-shadow: 0 4px 8px rgba(164, 114, 72, 0.3);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+@media (min-width: 375px) {
+  .add-cart-btn {
+    width: auto;
+    margin-left: 15px;
+  }
+}
+
+.add-cart-btn:hover {
+  background-color: #8a5f3b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(164, 114, 72, 0.4);
+}
+
+.addon-tables-flex {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+}
+
+.addon-tables-flex > div {
+  flex: 1;
+}
+
+@media (min-width: 380px) {
+  .addon-tables-flex {
+    flex-direction: row;
+  }
+}
+
+.custom-checkbox {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.addon-checkbox {
+  border: 2px solid #28a745;
+}
+
+.addon-checkbox.checked {
+  background-color: #28a745;
+}
+
+.allergen-checkbox {
+  border: 2px solid #dc3545;
+}
+
+.allergen-checkbox.checked {
+  background-color: #dc3545;
+}
+
+.custom-checkbox svg {
+  color: white;
+  font-size: 12px;
+  display: none;
+}
+
+.custom-checkbox.checked svg {
+  display: block;
+}
+
+/* Responsive styles for small screens */
+@media (max-width: 320px) {
+  .quantity-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .quantity-value {
+    width: 30px;
+    font-size: 14px;
+  }
+  
+  .addon-header {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  
+  .addon-item, .allergen-item {
+    padding: 8px 10px;
+  }
+  
+  .addon-item-name, .allergen-item-name {
+    font-size: 13px;
+  }
+  
+  .addon-item-price {
+    font-size: 13px;
+  }
+  
+  .custom-checkbox {
+    width: 18px;
+    height: 18px;
+  }
+}
+/* Additional responsive styles for 320px screens */
+@media (max-width: 320px) {
+  .addon-table-container {
+    margin-top: 15px;
+  }
+  
+  .add-cart-btn {
+    font-size: 13px;
+    padding: 6px 15px;
+  }
+}

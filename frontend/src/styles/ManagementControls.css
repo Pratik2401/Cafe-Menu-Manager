@@ -1,0 +1,45 @@
+.management-controls {
+  padding: 20px;
+}
+
+.management-navigation {
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 15px;
+}
+
+.management-navigation .btn ,
+.management-navigation .btn:focus {
+  background: none;
+  border: 1.5px solid #c7281c;
+  color: #c7281c;
+  font-weight: 500;
+  font-size: 1.08rem;
+  border-radius: 12px;
+  box-shadow: none;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  padding: 6px 18px;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  outline: none;
+  font-family: 'Merge One Regular';
+}
+
+.management-navigation .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.management-section {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .management-controls {
+    padding: 10px;
+  }
+  
+  .management-navigation .btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}

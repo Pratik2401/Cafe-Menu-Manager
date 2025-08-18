@@ -1,0 +1,430 @@
+.admin-subcategory {
+    width: 90%;
+    min-width: 310px;
+    margin: 20px 0 !important;
+}
+
+.admin-subcategory__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+}
+.admin-subcategory__search-col{
+    width: 50% !important;
+    min-width: 200px;
+}
+
+
+.SubCategoryTable{
+    box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 18px !important;
+  box-shadow: 1px solid #000000 !important;
+}
+
+
+.admin-subcategory__actions-col{
+    width: 30% !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+    min-width: 90px;
+    padding: 0px !important;
+    margin-top: 0 !important;
+}
+
+/* For mobile devices up to 480px */
+@media (max-width: 480px) {
+  .admin-subcategory {
+    margin: auto !important;
+  }
+  .admin-subcategory__actions-col {
+    margin-top: 20px;
+  }
+}
+
+/* For tablets up to 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .admin-subcategory {
+    margin: 0 10px !important;
+  }
+  .admin-subcategory__actions-col {
+    margin-top: 10px;
+  }
+
+}
+
+.admin-subcategory__table-fake {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+.admin-subcategory__thead-fake {
+  background: #f8f9fa;
+}
+.admin-subcategory__row-fake {
+  transition: background 0.2s;
+}
+.admin-subcategory__row-fake:last-child {
+  border-bottom: none;
+}
+
+/* Improve touch target size for action buttons */
+.action-buttons {
+  display: flex;
+  
+  flex-direction: row !important;
+  justify-content: center;
+  margin-top: 0 !important;
+}
+
+.action-buttons .action-btn {
+  min-width: 38px;
+  min-height: 38px;
+  margin: 0 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 50%;
+}
+
+/* Ensure buttons are more tappable on mobile */
+@media (max-width: 768px) {
+  .action-buttons .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+}
+/* Improve status switch and action buttons interaction */
+.form-check, .form-switch, .action-buttons {
+  z-index: 10;
+  position: relative;
+  pointer-events: auto !important;
+}
+
+.action-buttons .action-btn {
+  z-index: 20;
+}
+
+/* Ensure buttons have enough space between them on small screens */
+@media (max-width: 480px) {
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .action-buttons .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    margin: 0;
+  }
+}
+
+.form-control{
+  border: 1px solid #545454;
+  
+  font-family: 'Merge One Regular';
+}
+
+.input-group-text{
+  background-color: transparent !important;
+  font-family: 'Merge One Regular';
+  border: 1px solid #545454;
+}
+
+.table-responsive{
+  border-radius: 10px;
+  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+
+.SubCategoryTableHeader{
+  background-color: white !important;
+  border-bottom: 1px solid #CCCACA;
+}
+.SubCategoryTableHeader th{
+  font-family: 'Merge One Regular' !important;
+  font-size: 20px;
+}
+
+.SubCategoryTable tbody tr td{
+  
+  font-family: 'Merge One Regular' !important;
+}
+
+.SubCategoryPage-CreateButton {
+  margin-top: 5px;
+  border-radius: 30px;
+  background-color: #3F61D8 !important;
+  border: none !important;
+  color: white;
+  padding: 5px 20px !important;
+  font-size: 18px;
+  font-family: "Merge One Regular";
+}
+
+.form-label{
+  font-family: 'Merge One Regular';
+}
+
+.form-text{
+  font-family: 'Merge One Regular';
+}
+
+.RowOfSubcategory{
+  display: flex;
+  /* justify-content: center; */
+  align-items: start;
+}
+
+.AddNoteSubCategoryBtn{
+  padding: 3px 20px;
+  font-family: 'Merge One Regular';
+  border-radius: 20px;
+  font-size: 16px !important;
+  color: white !important;
+  margin: 0 10px;
+  background-color: #1A7432 !important;
+  border: none !important;
+}
+
+.AddNoteSubCategoryBtn:hover{
+  background-color: #1A7432 !important;
+}
+.RemoveSubCategoryBtn{
+  padding: 3px 20px;
+  font-family: 'Merge One Regular';
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #F60002 !important;
+  color: white !important;
+}
+
+.RemoveSubCategoryBtn:hover{
+  background-color: #F60002;
+}
+
+.SubCategoryBtnsContainer{
+  display: flex;
+  
+  justify-content: end;
+}
+
+.CreateSubCategory{
+  background-color: rgba(63, 96, 216, 0.2) !important;
+  color: black !important;
+  font-family: 'Merge One Regular';
+  border: 1px solid #3F61D8 !important;
+  padding: 3px 20px ;
+  border-radius: 30px;
+  margin: 0 10px;
+}
+
+.DelSubCategory{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent !important;
+  color: #F60002 !important;
+  border: 1px solid #F60002 !important;
+  border-radius: 50%;
+  padding: 3px 8px !important ;
+}
+
+.form-select{
+  font-family: 'Merge One Regular';
+}
+
+.NotesSectionModal{
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.ModalDelBtn{
+  padding: 5px 15px;
+  border-radius: 30px;
+  background-color: transparent !important;
+  color: #F60002 !important;
+  border: 1px solid #F60002 !important;
+}
+
+.ModalDelBtn:hover{
+  background-color: #F60002 !important;
+  color: white !important;
+}
+.AddNoteBtnContainer{
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+.AddNoteBtnModal{
+  background-color: transparent !important;
+  padding: 5px 15px ;
+  color: #c7281c !important;
+  border-radius: 30px;
+}
+
+.AddNoteBtnModal:hover{
+  background-color: #c7281c !important;
+  color:  white !important;
+}
+
+.ToggleContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ToggleDiv{
+  width: 40% !important;
+  display: flex !important;
+  flex-direction: row;
+  align-items: start !important;
+  justify-content: start !important;
+}
+
+.FieldVisibilityHeading{
+  font-family: 'Merge One Regular';
+  color : black;
+}
+.modal-title{
+  font-family: 'Merge One Regular';
+}
+
+
+.EditCancelBtn{
+  background-color: #F60002 !important;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  font-family: "Merge One Regular";
+  padding: 5px 15px;
+}
+
+.EditSaveBtn{
+  background-color: #1A7432 !important;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-family: "Merge One Regular";
+}
+
+.EditBtn{
+  background-color: transparent !important;
+  color: black !important;
+  border: 1px solid black !important;
+}
+.EditBtn:hover{
+  background-color: black !important;
+  
+}
+
+.EditBtn:hover svg{
+  color: white !important;
+}
+
+.ViewBtn{
+  background-color: transparent !important;
+  border: 1px solid #3F61D8  !important;
+}
+.ViewBtn svg{
+  color: #3F61D8;
+}
+
+.ViewBtn:hover{
+  background-color: #3F61D8 !important;
+}
+
+.ViewBtn:hover svg{
+  color: white !important;
+}
+
+.DelBtn{
+  background-color: transparent !important;
+  border: 1px solid #F60002 !important;
+}
+.DelBtn svg{
+  color: #F60002 !important;
+}
+
+.DelBtn:hover{
+  background-color: #F60002 !important;
+}
+.DelBtn:hover svg{
+  color: white !important;
+}
+
+/* Drag and drop styles */
+.drag-handle {
+  cursor: grab;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  min-width: 32px;
+}
+
+.drag-handle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Sortable item styles */
+.sortable-item {
+  transition: transform 0.2s ease;
+}
+
+.sortable-item.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+/* Mobile table scrolling improvements */
+@media (max-width: 768px) {
+  .SubCategoryTable {
+    min-width: 600px;
+    touch-action: pan-x pan-y;
+  }
+  
+  .SubCategoryTable tbody tr {
+    touch-action: manipulation;
+  }
+  
+  .SubCategoryTable tbody tr td {
+    white-space: nowrap;
+    padding: 12px 8px;
+  }
+  
+  /* Ensure table container allows horizontal scrolling */
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+  
+  .drag-handle {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

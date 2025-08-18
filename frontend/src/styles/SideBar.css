@@ -1,0 +1,92 @@
+.SideBar-Container {
+  background-color: #ede1d5 !important;
+  font-family: 'Merge One Regular';
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.BrandName{
+  color: black;
+   font-family: 'Merge One Regular';
+}
+
+.BrandLogo{
+ width: 70%;
+  height: auto;
+  margin-bottom: 20px;
+}
+.menu-toggle {
+  color: black;
+  text-decoration: none;
+  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  margin-bottom: 5px;
+   font-family: 'Merge One Regular';
+  
+}
+
+
+.menu-toggle:hover {
+  background-color: #c7281c;
+  color: white !important;
+  border-radius: 4px;
+}
+
+.menu-toggle.active {
+  background-color: #c7281c !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+.menu-toggle:not(.active) {
+  color: black !important;
+}
+
+.menu-sub-items {
+  padding-left: 10px;
+  background-color: transparent;
+  margin-top: 5px;
+}
+
+.menu-sub-items .nav-link {
+  color: black;
+  padding: 8px 15px;
+}
+
+.menu-sub-items .nav-link:hover {
+  color: #c7281c !important;
+}
+
+.menu-sub-items .nav-link.active {
+  color: #c7281c ;
+  font-weight: 500;
+}
+
+/* Mobile styles are now handled in MobileHeader.css */
+
+
+span{
+   font-family: 'Merge One Regular' ;
+}
+
+a{
+   font-family: 'Merge One Regular';
+}
+
+
+.SideBarContainer{
+  width: 100% !important;
+  display: flex;
+  justify-content: space-between;
+}
+
+.not-active{
+  color: black !important;
+}

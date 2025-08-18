@@ -1,0 +1,225 @@
+.item-card{
+    width: 100%;
+    min-width: 300px;
+    
+    caret-color: black !important
+    
+    ;
+}
+
+.createitem-card {
+  
+    width: 90%;
+    min-width: 300px;
+}
+.AdminItemList{
+  width: 90%;
+    display: flex;
+    justify-content: center;
+}
+/* Image + Control Styling */
+.image-wrapper-custom {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.show-toggle-switch {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  z-index: 10;
+  padding: 0.3rem 0.6rem;
+  border-radius: 1rem;
+  background-color: #fff;
+  box-shadow: 0 4px 4px 0px rgba(0,0,0,0.25);
+}
+
+.form-switch-custom .form-check-input {
+  cursor: pointer;
+}
+
+/* Image Container */
+.image-container-custom {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 4px 0px rgba(0,0,0,0.25);
+  width: 250px;
+
+}
+
+
+.image-wrapper-custom{
+    display: flex;
+    flex-direction: column;
+    align-items:end;
+}
+.custom-item-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* Overlay Buttons */
+.image-overlay-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #b07b4e;
+  padding: 0.3rem 1rem;
+  border-radius: 0 0 1rem 1rem;
+  color: white;
+}
+
+.image-btn {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: white !important;
+  padding: 0;
+  background: none;
+  border: none;
+  text-decoration: none;
+}
+
+.image-btn.text-danger {
+  color: #ffd5d5 !important;
+}
+
+.divider-line {
+  width: 1px;
+  height: 14px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Bottom Action Buttons */
+.item-action-buttons .btn-edit-item,
+.item-action-buttons .btn-delete-item {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.show-toggle-container {
+  padding-right: 0.5rem;
+}
+
+.image-wrapper-custom {
+  padding: 0.5rem 0.5rem 1rem;
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.WholeItemContainer{
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+}
+.image-wrapper-custom {
+  width: 250px;
+  margin: 0 auto;
+}
+
+.image-preview-box {
+  width: 250px;
+  height: 180px;
+  background: #f5f0d7;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-change-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(124, 90, 43, 0.85);
+  color: #fff;
+  text-align: center;
+  padding: 8px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.image-add-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #b9936c;
+  color: #fff;
+  text-align: center;
+  padding: 8px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 18px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.AdminItemSwitchCol{
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  
+}
+.AdminItemSwitchField{
+  
+  width: auto !important;
+}
+.gst-rate-field {
+  margin-top: 10px;
+}
+
+.gst-rate-label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.gst-rate-value {
+  color: #28a745;
+  font-weight: 500;
+}
+/* Fix for mobile touch actions on buttons */
+.item-card button {
+  touch-action: auto !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Add a larger touch target area for buttons */
+.item-card button::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  z-index: -1;
+}
+
+/* Ensure form controls are properly interactive */
+.item-card input,
+.item-card select,
+.item-card textarea,
+.item-card .form-check {
+  touch-action: auto !important;
+  position: relative;
+  z-index: 5;
+}

@@ -1,0 +1,98 @@
+.admin-cafe-routes {
+  min-height: 100vh;
+  background-color: #f9f5f0;
+}
+
+.admin-sidebar {
+  background-color: #6c3a1f;
+  min-height: 100vh;
+  padding: 0;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.admin-sidebar-header {
+  padding: 20px 15px;
+  background-color: #5a3119;
+  margin-bottom: 20px;
+}
+
+.admin-sidebar-header h3 {
+  color: #fff;
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.admin-nav {
+  padding: 0 10px;
+}
+
+.admin-nav .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.admin-nav .nav-link:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-nav .nav-link.active {
+  background-color: #fff;
+  color: #6c3a1f;
+  font-weight: 500;
+}
+
+.nav-icon {
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+
+.admin-content {
+  padding: 30px;
+}
+
+.content-header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e9e2d9;
+  padding-bottom: 15px;
+}
+
+.content-header h2 {
+  color: #6c3a1f;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.content-header p {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    min-height: auto;
+    position: relative;
+  }
+  
+  .admin-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px;
+  }
+  
+  .admin-nav .nav-item {
+    flex: 0 0 auto;
+    margin-right: 5px;
+  }
+  
+  .admin-content {
+    padding: 20px 15px;
+  }
+}

@@ -1,0 +1,19 @@
+
+.TopBarContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    background-color: var(--bg-secondary);
+    padding: 3px 10px;
+}
+
+.TopBar-Icons{
+    color: white;    
+    margin: 0 5px;
+}
+
+.TopBar-IconsImage{
+    width: auto !important;
+    height: 20px !important;
+}

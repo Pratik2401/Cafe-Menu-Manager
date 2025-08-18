@@ -1,0 +1,40 @@
+.App{
+  width: 100vw;
+  min-height: 100vh;
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Import global colors */
+@import './colors.css';
+
+.MenuBody{
+  width: 100%;
+  min-height: 100vh;
+  max-width: 480px;
+  height: auto !important;
+  background-color: var(--bg-primary) !important;
+  
+}
+
+.LandingPageContainer{
+  width: 100%;
+  min-height: 100vh;
+  max-width: 480px;
+  height: auto !important;
+  background-color: var(--bg-primary) !important;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Import global colors */
+@import './colors.css';
+

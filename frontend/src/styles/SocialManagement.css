@@ -1,0 +1,17 @@
+.social-management-container {
+  padding: 20px;
+}
+
+.social-card {
+  height: 100%;
+  
+  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+
+.social-card:hover {
+  transform: translateY(-5px);
+}
+.contact-card {
+  overflow: none !important;
+}

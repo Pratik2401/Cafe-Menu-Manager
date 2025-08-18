@@ -1,0 +1,397 @@
+.CategoryPage-Container {
+  padding: 10px; 
+  background-color: #F3f1F1 !important;
+  min-height: 100vh;
+  padding-left: 20px;
+  width: 100%;
+}
+
+.CategoryPage-HeaderRow {
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.CategoryPage-Heading {
+  font-weight: bold;
+}
+
+.CategoryPage-CreateButtonContainer {
+  text-align: right;
+  margin-top: 5px;
+}
+
+.CategoryPage-CreateButton {
+  border-radius: 30px;
+  background-color: #3F61D8 !important;
+  border: none !important;
+  color: white;
+  padding: 5px 20px !important;
+  font-size: 18px;
+  font-family: "Merge One Regular";
+}
+
+.CategoryPage-CardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 10px;
+}
+
+.CategoryCard {
+  padding: 1rem;
+  border-radius: 20px;
+  
+  min-height: 300px !important;
+  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+}
+
+.CategoryCard-Title {
+  font-size: 28px !important;
+  text-align: center;
+  font-weight: normal !important;
+  font-family: "Merge One Regular";
+}
+
+.CategoryCard-ImageContainer {
+  text-align: center;
+}
+
+.CategoryCard-Image {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid black;
+}
+
+.CategoryCard-ChangeImageButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.CategoryCard-ChangeImageButton {
+  color: black;
+  border: 1px solid #c7281c;
+  background-color: rgba(164, 113, 72, 0.2) ;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-family: "Merge One Regular";
+}
+
+.form-check-label{
+  font-family: "Merge One Regular";
+  margin-left: 5px;
+}
+.EditBottomBtn{
+  width: 100%;
+  margin-top: 20px;
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: center;
+}
+
+
+.EditCancelBtn{
+  background-color: #F60002 !important;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  font-family: "Merge One Regular";
+  padding: 5px 15px;
+}
+.EditSaveBtn{
+  background-color: #1A7432 !important;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-family: "Merge One Regular";
+}
+.EdtChangeImage{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.CategoryCard-BottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.CategoryCard-ActionIcons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.CategoryCard-IconButton {
+  border-radius: 50% !important;
+  width: 30px;
+  height:30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.DeleteBtnContainer button{
+  background-color: transparent !important;
+  color: #F60002 !important;
+  border: none !important;
+  padding: 0 !important;
+  border: 1px solid #F60002 !important;
+}
+
+.DeleteBtnContainer button:hover{
+  background-color: #F60002 !important;
+  color: white !important;
+  border: none !important;
+  padding: 0 !important;
+  border: 1px solid #F60002 !important;
+}
+.CategoryCard-ToggleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+
+.CategoryCard-ToggleWrapper{
+    width: 80px !important;
+}
+/* Make all columns stretch to the same height */
+.CategoryItem-Col {
+  display: flex;
+  min-width: 300px;
+}
+
+/* Ensure all cards fill their parent columns */
+.CategoryCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Make image container fixed height and image responsive */
+.CategoryCard-ImageContainer {
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.CategoryCard-Image {
+    width: 240px !important;
+  height: 150px !important;
+  width: auto;
+  object-fit: cover;
+}
+
+/* Ensure BottomRow and actions don’t stretch height unevenly */
+.CategoryCard-BottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+/* Keep toggle and label aligned nicely */
+.CategoryCard-ToggleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.CategoryCreateBtn{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgba(63, 96, 216, 0.2) !important;
+  color: black !important;
+  border: 1px solid #3F61D8 !important;
+  border-radius: 30px;
+  padding: 5px 15px;
+}
+
+.UploadImageBtn{
+  border: 1px solid #c7281c;
+  background-color: rgba(164, 113, 72, 0.2);
+  padding: 5px 15px;
+  border-radius: 30px;
+  color: black;
+}
+/* Optional: fix card title spacing */
+.CategoryCard-Title {
+  
+  padding: 10px;
+  font-size: 28px;
+}
+
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #f8f9fa;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-title {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-list li {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.main-content {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  padding: 20px;
+}
+
+/* Mobile & Tablet adjustments */
+@media (max-width: 992px) {
+  .hamburger-btn {
+    display: block;
+  }
+  .CategoryPage-Container {
+    padding: 0 10px !important;
+    
+  }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+  .CategoryCard .card-body {
+    padding: 0px !important;
+  }
+}
+
+.DeleteBtnContainer{
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  margin-top: 10px;
+}
+
+.TitleFormGroup{
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: center ;
+}
+.TitleFormLabel,.TitleFormField{
+  margin: 0;
+  padding: 0;
+  font-size:28px;
+  font-family: "Merge One Regular";
+}
+.TitleFormField {
+    font-size:18px !important;
+  font-family: "Merge One Regular" !important;
+}
+.TitleFormField{
+  width: 150px;
+  margin-left: 5px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid gray;
+  border-radius: 0;
+  font-size:16px;
+}
+
+.react-switch-bg div span{
+  font-family: "Merge One Regular";
+}
+
+.EditBtn{
+  background-color: transparent;
+  color: black;
+}
+.EditBtn:hover{
+  background-color: black;
+  
+}
+
+.EditBtn:hover svg{
+  color: white !important;
+}
+
+.ViewBtn{
+  background-color: transparent !important;
+  border: 1px solid #3F61D8  !important;
+}
+.ViewBtn svg{
+  color: #3F61D8;
+}
+
+.ViewBtn:hover{
+  background-color: #3F61D8 !important;
+}
+
+.ViewBtn:hover svg{
+  color: white !important;
+}
+
+.DelBtn{
+  background-color: transparent !important;
+}
+.DelBtn svg{
+  color: #F60002 !important;
+}
+
+.DelBtn:hover{
+  background-color: #F60002 !important;
+}
+.DelBtn:hover svg{
+  color: white !important;
+}
+
+.TitleFormField::placeholder{
+  font-size: 15px !important;
+}

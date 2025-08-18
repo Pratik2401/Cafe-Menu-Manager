@@ -1,0 +1,358 @@
+/* Admin Variation Management Styles */
+.admin-section {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f6f5f5;
+  min-height: 100vh;
+}
+
+.variation-card {
+  width: 90%;
+  max-width: 1200px;
+  border-radius: 18px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  border: none;
+}
+
+.variation-card-header {
+  background: none;
+  border-bottom: 1px solid #e0d7c6;
+  border-radius: 18px 18px 0 0;
+  padding: 20px 24px;
+}
+
+.variation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.variation-title {
+  font-family: 'Merge One Regular';
+  font-weight: 600;
+  font-size: 2rem;
+  color: #222;
+  margin: 0;
+}
+
+.add-variation-btn {
+  background-color: #3F61D8;
+  border: 1px solid #3F61D8;
+  color: white;
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-family: "Merge One Regular";
+  transition: all 0.3s ease;
+}
+
+.add-variation-btn:hover {
+  background-color: #2d4bb8;
+  border-color: #2d4bb8;
+  transform: translateY(-2px);
+}
+
+.variation-table {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}
+
+.variation-table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  color: #495057;
+  font-family: "Merge One Regular";
+  font-size: 16px;
+  padding: 15px;
+}
+
+.variation-table tbody td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  font-family: "Merge One Regular";
+  font-size: 14px;
+}
+
+.variation-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Icon buttons */
+.icon-btn {
+  background: transparent;
+  border: 1px solid;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.EditVariationBtn {
+  color: black;
+  border-color: black;
+}
+
+.EditVariationBtn:hover {
+  background-color: black;
+  color: white;
+  transform: scale(1.1);
+}
+
+.DeleteVariationBtn {
+  color: #dc3545;
+  border-color: #dc3545 !important;
+}
+
+.DeleteVariationBtn:hover {
+  background-color: #dc3545;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Modal styles */
+.modal-cancel-btn {
+  background-color: #6c757d;
+  border: none;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: "Merge One Regular";
+  transition: all 0.3s ease;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+.modal-save-btn {
+  background-color: #28a745;
+  border: none;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: "Merge One Regular";
+  transition: all 0.3s ease;
+}
+
+.modal-save-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.modal-save-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bulk creation styles */
+.bulk-variations-container {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.bulk-variation-row {
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.bulk-variation-row:hover {
+  background-color: #e9ecef;
+}
+
+.bulk-variation-row .form-label {
+  font-weight: 600;
+  color: #495057;
+  font-family: "Merge One Regular";
+}
+
+.bulk-variation-row .form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s ease;
+}
+
+.bulk-variation-row .form-control:focus {
+  border-color: #3F61D8;
+  box-shadow: 0 0 0 0.2rem rgba(63, 97, 216, 0.25);
+}
+
+/* Remove button for bulk items */
+.remove-variation-btn {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.remove-variation-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+}
+
+/* Add another variation button */
+.add-another-btn {
+  background-color: transparent;
+  border: 2px dashed #3F61D8;
+  color: #3F61D8;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: "Merge One Regular";
+  transition: all 0.3s ease;
+}
+
+.add-another-btn:hover {
+  background-color: rgba(63, 97, 216, 0.1);
+  border-style: solid;
+}
+
+/* Group selection styling */
+.group-selection {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.group-selection .form-label {
+  color: #495057;
+  font-weight: 700;
+  font-family: "Merge One Regular";
+}
+
+.group-selection .form-control {
+  border-radius: 8px;
+  border: 2px solid #ced4da;
+  font-weight: 500;
+}
+
+.group-selection .form-control:focus {
+  border-color: #3F61D8;
+  box-shadow: 0 0 0 0.2rem rgba(63, 97, 216, 0.25);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .variation-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .variation-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .add-variation-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .variation-table {
+    font-size: 12px;
+  }
+  
+  .variation-table thead th,
+  .variation-table tbody td {
+    padding: 8px;
+  }
+  
+  .icon-btn {
+    width: 30px;
+    height: 30px;
+    margin: 0 2px;
+  }
+  
+  .bulk-variation-row {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-section {
+    padding: 10px;
+  }
+  
+  .variation-card {
+    width: 100%;
+  }
+  
+  .variation-card-header {
+    padding: 15px;
+  }
+  
+  .variation-title {
+    font-size: 1.25rem;
+  }
+  
+  .variation-table thead th {
+    font-size: 14px;
+  }
+  
+  .variation-table tbody td {
+    font-size: 12px;
+  }
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Alert styling */
+.alert {
+  border-radius: 12px;
+  font-family: "Merge One Regular";
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+/* Form styling */
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  font-family: "Merge One Regular";
+  margin-bottom: 8px;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 10px 12px;
+  font-family: "Merge One Regular";
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #3F61D8;
+  box-shadow: 0 0 0 0.2rem rgba(63, 97, 216, 0.25);
+}
+
+.form-text {
+  font-family: "Merge One Regular";
+  font-size: 0.875rem;
+}

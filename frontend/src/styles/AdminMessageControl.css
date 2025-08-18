@@ -1,0 +1,506 @@
+/* AdminMessageControl.css */
+
+/* Base styles */
+.admin-message-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #2c3e50;
+}
+
+/* Loading spinner container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* Table responsive improvements */
+.message-table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.message-table {
+  min-width: 600px;
+  table-layout: fixed;
+}
+
+.message-table th,
+.message-table td {
+  vertical-align: middle;
+  padding: 0.75rem;
+}
+
+/* Message type column */
+.message-type-cell {
+  min-width: 200px;
+}
+
+.message-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #495057;
+}
+
+.message-description {
+  font-size: 0.875rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+/* Current value column */
+.message-value-cell {
+  min-width: 300px;
+}
+
+.message-display {
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  font-style: italic;
+  color: #495057;
+}
+
+.message-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message-edit-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.message-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Action buttons */
+.action-cell {
+  width: 80px;
+  text-align: center;
+}
+
+.edit-btn {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #6c757d;
+  background-color: transparent;
+  color: #6c757d;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.save-btn {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Alert styles */
+.alert-container {
+  margin-bottom: 1rem;
+}
+
+/* Extra small mobile (320px and below) */
+@media (max-width: 320px) {
+  .admin-message-control {
+    padding: 0.25rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .message-table {
+    min-width: 280px;
+  }
+  
+  .message-table th,
+  .message-table td {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+  }
+  
+  .message-type-cell {
+    min-width: 100px;
+  }
+  
+  .message-label {
+    font-size: 0.75rem;
+  }
+  
+  .message-description {
+    font-size: 0.625rem;
+  }
+  
+  .message-value-cell {
+    min-width: 120px;
+  }
+  
+  .message-display {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+    word-break: break-word;
+  }
+  
+  .message-edit-input {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+  }
+  
+  .save-btn,
+  .cancel-btn,
+  .edit-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .action-cell {
+    width: 40px;
+  }
+}
+
+/* Mobile styles (321px to 576px) */
+@media (min-width: 321px) and (max-width: 576px) {
+  .admin-message-control {
+    padding: 0.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+  }
+  
+  .message-table {
+    min-width: 400px;
+  }
+  
+  .message-table th,
+  .message-table td {
+    padding: 0.5rem;
+  }
+  
+  .message-type-cell {
+    min-width: 130px;
+  }
+  
+  .message-label {
+    font-size: 0.875rem;
+  }
+  
+  .message-description {
+    font-size: 0.75rem;
+  }
+  
+  .message-value-cell {
+    min-width: 200px;
+  }
+  
+  .message-display {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    word-break: break-word;
+  }
+  
+  .message-edit-input {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+  
+  .save-btn,
+  .cancel-btn,
+  .edit-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .action-cell {
+    width: 50px;
+  }
+}
+
+/* Tablet styles (577px to 768px) */
+@media (min-width: 577px) and (max-width: 768px) {
+  .admin-message-control {
+    padding: 0.75rem;
+  }
+  
+  .message-table {
+    min-width: 650px;
+  }
+  
+  .message-type-cell {
+    min-width: 180px;
+  }
+  
+  .message-value-cell {
+    min-width: 280px;
+  }
+  
+  .message-edit-actions {
+    flex-direction: row;
+  }
+}
+
+/* Small laptop styles (769px to 992px) */
+@media (min-width: 769px) and (max-width: 992px) {
+  .admin-message-control {
+    padding: 1rem;
+  }
+  
+  .message-table {
+    min-width: 700px;
+  }
+  
+  .message-type-cell {
+    min-width: 200px;
+  }
+  
+  .message-value-cell {
+    min-width: 320px;
+  }
+}
+
+/* Large laptop and desktop styles (993px and up) */
+@media (min-width: 993px) {
+  .admin-message-control {
+    padding: 1.5rem;
+  }
+  
+  .message-table {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .message-type-cell {
+    width: 25%;
+  }
+  
+  .message-value-cell {
+    width: auto;
+  }
+  
+  .action-cell {
+    width: 120px;
+  }
+}
+
+/* Focus states for accessibility */
+.message-edit-input:focus,
+.edit-btn:focus,
+.save-btn:focus,
+.cancel-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.saving-state {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #495057;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.field-description {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.modal-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.modal-textarea:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  border-color: #007bff;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
+  justify-content: flex-end;
+}
+
+/* Extra small mobile modal (320px and below) */
+@media (max-width: 320px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .modal-content {
+    width: 100%;
+    margin: 0;
+    max-height: 95vh;
+  }
+  
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 0.5rem;
+  }
+  
+  .modal-header h4 {
+    font-size: 0.9rem;
+  }
+  
+  .field-description {
+    font-size: 0.75rem;
+  }
+  
+  .modal-textarea {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .modal-footer .save-btn,
+  .modal-footer .cancel-btn {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Mobile modal adjustments (321px to 576px) */
+@media (min-width: 321px) and (max-width: 576px) {
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 0.75rem;
+  }
+  
+  .modal-header h4 {
+    font-size: 1rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .modal-footer .save-btn,
+  .modal-footer .cancel-btn {
+    width: 100%;
+  }
+}

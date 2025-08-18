@@ -1,0 +1,53 @@
+.cafe-bean-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.cafe-bean-spinner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.coffee-beans {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.bean {
+  color: #3e2723;
+  font-size: 1.5rem;
+  margin: 0 5px;
+  transform: rotate(45deg);
+}
+
+.bean-1 {
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+.bean-2 {
+  animation: bounce 1.5s ease-in-out 0.2s infinite;
+}
+
+.bean-3 {
+  animation: bounce 1.5s ease-in-out 0.4s infinite;
+}
+
+.cafe-bean-spinner-text {
+  margin-top: 15px;
+  color: #6c3a1f;
+  font-weight: 500;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    transform: rotate(45deg) translateY(-10px);
+  }
+}

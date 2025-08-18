@@ -1,0 +1,138 @@
+.cafe-cup-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.cafe-cup-spinner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.cafe-cup-spinner-text {
+  margin-top: 15px;
+  color: #6c3a1f;
+  font-weight: 500;
+}
+
+.coffee-cup {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.cup {
+  position: absolute;
+  bottom: 15px;
+  width: 50px;
+  height: 40px;
+  background: #fff;
+  border: 3px solid #6c3a1f;
+  border-radius: 0 0 15px 15px;
+  border-top: none;
+  left: 15px;
+}
+
+.cup:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: #8B4513;
+  border-radius: 50% 50% 0 0;
+}
+
+.cup-handle {
+  position: absolute;
+  right: -15px;
+  top: 10px;
+  width: 15px;
+  height: 20px;
+  border: 3px solid #6c3a1f;
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+}
+
+.saucer {
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  width: 70px;
+  height: 10px;
+  background: #fff;
+  border: 3px solid #6c3a1f;
+  border-radius: 50%;
+}
+
+.steam {
+  position: absolute;
+  top: -15px;
+  left: 20px;
+  width: 40px;
+  height: 15px;
+}
+
+.steam span {
+  position: absolute;
+  bottom: 0;
+  width: 8px;
+  height: 0;
+  background: #d3d3d3;
+  border-radius: 50%;
+  opacity: 0;
+  animation: steam 2s infinite;
+}
+
+.steam-1 {
+  left: 0;
+  animation-delay: 0.2s !important;
+}
+
+.steam-2 {
+  left: 10px;
+  animation-delay: 0.6s !important;
+}
+
+.steam-3 {
+  left: 20px;
+  animation-delay: 1s !important;
+}
+
+.steam-4 {
+  left: 30px;
+  animation-delay: 1.4s !important;
+}
+
+@keyframes steam {
+  0% {
+    height: 0;
+    opacity: 0.8;
+  }
+  20% {
+    height: 10px;
+    opacity: 0.7;
+  }
+  40% {
+    height: 15px;
+    opacity: 0.6;
+  }
+  60% {
+    height: 20px;
+    opacity: 0.4;
+  }
+  80% {
+    height: 25px;
+    opacity: 0.2;
+  }
+  100% {
+    height: 30px;
+    opacity: 0;
+  }
+}

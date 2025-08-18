@@ -1,0 +1,78 @@
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  background-color: #ede1d5 !important;
+}
+
+.hamburger-container {
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hamburger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+.hamburger-btn:focus {
+  box-shadow: none;
+}
+
+.hamburger-icon {
+  width: 24px;
+  height: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--color-dark);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.mobile-sidebar {
+  width: 280px;
+  background-color: #ede1d5 !important;
+}
+
+.mobile-sidebar .offcanvas-header {
+  padding: 1rem;
+  background-color: #ede1d5;
+  border-bottom: none;
+}
+
+.mobile-sidebar .offcanvas-title {
+  color: black;
+}
+
+.mobile-sidebar .btn-close {
+  filter: none;
+}
+
+/* Show mobile header on medium devices (less than 992px) */
+@media (min-width: 992px) {
+  .mobile-header {
+    display: none;
+  }
+}
+
+.BrandLogoMobile{
+  width: auto;
+  height: 50px;
+}

@@ -1,0 +1,117 @@
+.cafe-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* padding: 1.5rem; */
+  position: relative;
+  border-radius: 12px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.cafe-loader-text {
+  margin-top: 1.2rem;
+  color: #6c3a1f;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Coffee Cup Styling */
+.coffee-cup-icon {
+  font-size: 2rem;
+  color: #6c3a1f;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+  animation: steam 3s ease-in-out infinite;
+}
+
+/* Coffee Bean Styling */
+.coffee-beans-icon {
+  font-size: 2rem;
+  color: #3e2723;
+  margin-bottom: 1rem;
+  transform: rotate(45deg);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* Coffee Grinder Styling */
+.coffee-grinder-icon {
+  font-size: 2rem;
+  color: #5d4037;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+  animation: spin 4s linear infinite;
+}
+
+/* Coffee Pour Animation */
+.coffee-pour-animation {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.coffee-drop {
+  width: 10px;
+  height: 10px;
+  background-color: #6c3a1f;
+  border-radius: 50%;
+  margin: 0 4px;
+  animation: drop 1.5s infinite ease-in;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.15));
+}
+
+.coffee-drop:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.coffee-drop:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(25px);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    transform: rotate(45deg) translateY(-10px);
+  }
+}
+
+@keyframes steam {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
+  }
+}

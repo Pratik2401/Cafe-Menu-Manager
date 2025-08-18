@@ -1,0 +1,462 @@
+.item-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 12px !important;
+  border: none !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 1.5rem !important;
+  padding: 1.25rem !important;
+  background-color: #ffffff;
+}
+
+.item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12) !important;
+}
+
+.AdminItemSwitchCol {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.AdminItemSwitchField {
+  margin-right: 0.5rem;
+}
+
+.image-wrapper-custom {
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+.item-image-container {
+  width: 200px !important;
+  height: 200px !important;
+  background: #f8f8f8;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-image-placeholder {
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-change-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  background: rgba(0, 123, 255, 0.8);
+  color: #fff;
+  text-align: center;
+  padding: 6px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.image-remove-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  background: rgba(220, 53, 69, 0.8) !important;
+  color: #fff;
+  text-align: center;
+  padding: 6px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  border: none;
+}
+
+.image-add-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 123, 255, 0.8);
+  color: #fff;
+  text-align: center;
+  padding: 6px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.item-info-col {
+  padding: 0.5rem;
+}
+
+.AdminItemHeading {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.25rem;
+}
+
+.tag-selector {
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.tag-badge {
+  color: #fff;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.addon-item {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.allergy-badge {
+  padding: 0.4rem 0.6rem;
+}
+
+.size-option {
+  background-color: #f8f9fa;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #dee2e6;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.size-option.selected {
+  border: 2px solid #0d6efd;
+  background-color: #e7f1ff;
+}
+
+.size-price-input {
+  width: 100px;
+}
+
+.action-buttons {
+  margin-top: 1rem;
+  touch-action: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.form-section {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .item-card {
+    padding: 1rem !important;
+  }
+  
+  .ImageBasicInfoContainer{
+    flex-direction: column-reverse;
+  }
+  .image-wrapper-custom {
+    max-width: 150px;
+    margin-bottom: 1rem;
+  }
+  
+  .item-image-container {
+    height: 120px;
+  }
+}
+
+.section-divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 1rem 0;
+}
+
+.item-category {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 5px;
+  background-color: #f0f0f0;
+}
+
+.item-category.veg {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.item-category.nonveg {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.item-category.jain {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.item-category.vegan {
+  background-color: #e0f2f1;
+  color: #00796b;
+}
+
+/* New styles for section headers and visibility toggles */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  border-left: 4px solid #0d6efd;
+  transition: all 0.2s ease;
+}
+
+.section-header:hover {
+  background-color: #e9ecef;
+}
+
+.section-header h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.visibility-toggle {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.visibility-toggle .form-check {
+  margin-bottom: 0;
+}
+
+.visibility-toggle .form-check-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 4px;
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.section-content {
+  padding: 0 12px 12px 12px;
+}
+
+/* Different colors for different section types */
+.section-header.description {
+  border-left-color: #0d6efd; /* Blue */
+}
+
+.section-header.addons {
+  border-left-color: #198754; /* Green */
+}
+
+.section-header.sizes {
+  border-left-color: #6f42c1; /* Purple */
+}
+
+.section-header.allergens {
+  border-left-color: #dc3545; /* Red */
+}
+
+.section-header.tags {
+  border-left-color: #fd7e14; /* Orange */
+}
+
+/* Improved form controls */
+.form-control:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-select:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Improved badges */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Improved list groups */
+.list-group-item {
+  border-radius: 4px !important;
+  margin-bottom: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.InfoTitle{
+  font-size: 24px;
+  font-family: 'Merge One Regular';
+}
+
+.InfoTableHeading{
+  font-size: 18px !important;
+  
+  font-family: 'Merge One Regular' !important;
+}
+
+.InfoDetails{
+  
+  font-size: 22px;
+  font-family: 'Merge One Regular';
+}
+
+.InfoDetailsBadges{
+  
+  font-size: 20px;
+  font-family: 'Merge One Regular';
+}
+
+.InfoTableDetails{
+  font-size: 20px;
+  font-family: 'Merge One Regular';
+}
+
+.InfoTableDetailsPrice{
+  border: 1px solid black !important;
+  padding: 0 !important;
+  border-radius: 30px;
+  
+}
+.AdminItemAddonsTable{
+  border: 1px solid black;
+  border-radius: 10px !important;
+
+}
+
+.AdminItemAddonsTable th{
+  border-bottom: 1px solid black !important;
+}
+.AdminItemAddonsTable {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: auto;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1.5px solid #222;
+  margin-bottom: 0;
+}
+
+.AdminItemAddonsTable th,
+.AdminItemAddonsTable td {
+  padding: 5px 10px;
+  border: none;
+  text-align: center;
+  font-size: 1.25rem;
+  font-family: inherit;
+  background: #fff;
+}
+
+.AdminItemAddonsTable th {
+  font-weight: 500;
+}
+
+.AdminItemAddonsTable tr:not(:last-child) td,
+.AdminItemAddonsTable tr:not(:last-child) th {
+  border-bottom: 1.5px solid #222;
+}
+
+.AdminItemAddonsTable th:first-child,
+.AdminItemAddonsTable td:first-child {
+  text-align: left;
+}
+
+.AdminItemAddonsTable thead tr th:first-child {
+  border-top-left-radius: 16px;
+}
+
+.AdminItemAddonsTable thead tr th:last-child {
+  border-top-right-radius: 16px;
+}
+
+.AdminItemAddonsTable tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 16px;
+}
+
+.AdminItemAddonsTable tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 16px;
+}
+
+.AddonPriceBox {
+  display: inline-block;
+  min-width: 48px;
+  padding: 6px 0;
+  border: 1.5px solid #222;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 2px 0;
+}
+
+.SizesContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+.AdminItemCategorySelect {
+  width: auto;
+  min-width: 150px;
+  font-size: 18px;
+  font-family: 'Merge One Regular';
+}

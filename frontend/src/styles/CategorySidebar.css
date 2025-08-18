@@ -1,0 +1,44 @@
+.category-sidebar {
+  max-width: 300px;
+  width: 70%;
+  height: auto !important;
+  position: fixed !important;
+  top: auto !important;
+  bottom: 80px !important;
+  right: 0 !important;
+  z-index: 1001;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.category-sidebar .accordion-button {
+  font-weight: bold;
+}
+
+.category-sidebar .list-group-item {
+  padding-left: 1.5rem;
+}
+
+.category-sidebar .accordion-button:not(.collapsed) {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.category-sidebar .list-group-item.active {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  color: #212529;
+}
+
+.category-sidebar .offcanvas-header {
+  padding: 0.75rem 1rem;
+}
+
+.category-sidebar .offcanvas-body {
+  padding: 0.5rem;
+}
+
+/* Ensure the sidebar doesn't cover the feedback button */
+.category-sidebar + .feedback-drawer {
+  z-index: 1050;
+}

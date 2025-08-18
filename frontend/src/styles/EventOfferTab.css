@@ -1,0 +1,16 @@
+.event-offers-container {
+  padding: 15px 0;
+}
+
+.event-offers-container .table td {
+  vertical-align: middle;
+}
+
+.event-offers-container .badge {
+  font-size: 0.85rem;
+  padding: 0.35em 0.65em;
+}
+
+.event-offers-container .btn-sm {
+  margin-bottom: 3px;
+}

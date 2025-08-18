@@ -1,0 +1,483 @@
+/* --- Base Styles --- */
+.AdminEditForm {
+  background: transparent;
+}
+.AdminEditFields {
+  min-width: 320px;
+}
+.AdminEditLabel {
+  font-size: 1.25rem;
+  font-weight: 500;
+  min-width: 120px;
+}
+.AdminEditInput,
+.AdminEditTextarea,
+.AdminEditPriceInput {
+  border: 1.5px solid #222;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 1.1rem;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.AdminEditPriceInput {
+  border: 1.5px solid #222;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 1.1rem;
+  width: 80px !important;           /* Increased from 56px to 70px */
+  min-width: 80px;       /* Ensures enough space for 4 digits */
+  text-align: center;
+  background: #fff;
+}
+.AdminEditInput:focus,
+.AdminEditTextarea:focus,
+.AdminEditPriceInput:focus {
+  border-color: #217a3c;
+  box-shadow: 0 0 0 2px #d1e7dd;
+}
+.AdminEditTextarea {
+  min-width: 220px;
+  min-height: 60px;
+  resize: vertical;
+}
+.AdminEditCheckbox {
+  width: 22px;
+  height: 22px;
+  accent-color: #222;
+}
+.AdminEditTag {
+  padding: 4px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-right: 8px;
+  margin-bottom: 6px;
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid var(--tag-color, #1976d2);
+  background-color: color-mix(in srgb, var(--tag-color, #1976d2) 20%, transparent);
+  color: var(--tag-color, #1976d2);
+}
+
+.AdminEditTag.selected {
+  background-color: var(--tag-color, #1976d2) !important;
+  color: white !important;
+}
+.AdminEditSizeBox {
+  background: #ededed;
+  border-radius: 8px;
+  padding: 4px 18px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border: 1.5px solid #ccc;
+  cursor: pointer;
+  transition: border 0.2s, background 0.2s;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+.AdminEditSizeBox.selected,
+.AdminEditSizeBox:hover {
+  border: 2px solid #217a3c;
+  background: #eaf7d3;
+}
+.AdminEditSizePriceBox {
+  background: #ededed;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-right: 8px;
+  margin-bottom: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+
+.AdminEditAddBtn {
+  background: #217a3c;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 6px 18px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  min-width: 70px;
+  margin-left: 8px;
+  margin-top: 0;
+  width: auto;
+  display: inline-block;
+}
+.AdminEditAddBtn:hover {
+  background: #145c2c;
+}
+.AdminItemEditAddonsTable {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1.5px solid #222;
+  margin-bottom: 0;
+  width: 100%;
+  min-width: 400px;
+  display: block;
+  overflow-x: auto;
+}
+.AdminItemEditAddonsTable th,
+.AdminItemEditAddonsTable td {
+  padding: 12px 16px;
+  border: none;
+  text-align: center;
+  font-size: 1.1rem;
+  background: #fff;
+}
+.AdminItemEditAddonsTable th {
+  font-weight: 500;
+}
+.AdminItemEditAddonsTable tr:not(:last-child) td,
+.AdminItemEditAddonsTable tr:not(:last-child) th {
+  border-bottom: 1.5px solid #222;
+}
+.AdminItemEditAddonsTable th:first-child,
+.AdminItemEditAddonsTable td:first-child {
+  text-align: left;
+}
+.AdminItemEditAddonsTable thead tr th:first-child {
+  border-top-left-radius: 16px;
+}
+.AdminItemEditAddonsTable thead tr th:last-child {
+  border-top-right-radius: 16px;
+}
+.AdminItemEditAddonsTable tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 16px;
+}
+.AdminItemEditAddonsTable tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 16px;
+}
+.AdminEditPriceInput {
+  border: 1.5px solid #222;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 1.1rem;
+  width: 56px;
+  text-align: center;
+  background: #fff;
+}
+.AdminEditDeleteBtn {
+  background: none;
+  border: 1px solid #F60002;
+  color: #F60002;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0 6px;
+  transition: color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding:10px;
+}
+.AdminEditDeleteBtn:hover {
+  color: #F60002;
+}
+
+.AdminEditDeleteBtn{
+  background-color: transparent !important;
+}
+.AdminEditDeleteBtn svg{
+  color: #F60002 !important;
+}
+
+.AdminEditDeleteBtn:hover{
+  background-color: #F60002 !important;
+}
+.AdminEditDeleteBtn:hover svg{
+  color: white !important;
+}
+
+.ImageContainerCol{
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+.AdminEditImageBox {
+  width: 100%;
+  min-width: 180px;
+  max-width: 320px;
+  height: auto !important;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f5f5f5;
+  position: relative;
+  margin-bottom: 18px;
+}
+.AdminEditImageBox img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 18px 18px 0 0;
+}
+.AdminEditImageActions {
+  display: flex;
+  width: 100%;
+  /* position: absolute; */
+  bottom: 0;
+  left: 0;
+  height: auto !important;
+}
+.AdminEditImageBtn {
+  flex: 1;
+  background: #b47b3a;
+  color: #fff !important;
+  border: none;
+  border-radius: 0;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-top: 1.5px solid #fff;
+  transition: background 0.2s;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.AdminEditImageBtn:last-child {
+  border-left: 1.5px solid #fff;
+  background: #b43a3a;
+}
+.AdminEditImageBtn:hover {
+  background: #a36a2a;
+}
+.AdminEditImageBtn:last-child:hover {
+  background: #a32a2a;
+}
+.AdminEditFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-top: 24px;
+}
+.AdminEditCancelBtn {
+  background: #e53935 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 18px !important;
+  font-size: 1.2rem !important;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.AdminEditCancelBtn:hover {
+  background: #b71c1c !important;
+}
+.AdminEditSaveBtn {
+  background: #217a3c !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 18px !important;
+  font-size: 1.2rem !important;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.AdminEditSaveBtn:hover {
+  background: #145c2c !important;
+}
+
+/* --- Responsive: Tablet and Down --- */
+@media (max-width: 991.98px) {
+  .AdminEditFields,
+  .AdminEditImageCol {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .AdminEditImageCol {
+    order: -1;
+    margin-bottom: 20px;
+  }
+  .AdminEditFields {
+    order: 1;
+  }
+  .AdminEditImageBox {
+    max-width: 100%;
+    min-width: 0;
+    margin-bottom: 16px;
+  }
+  .AdminEditFooter {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .AdminEditLabel {
+    font-size: 1.1rem;
+  }
+  .AdminEditInput,
+  .AdminEditTextarea,
+  .AdminEditPriceInput {
+    font-size: 1rem;
+  }
+  .AdminEditTag {
+    font-size: 0.9rem;
+  }
+  .AdminEditSizeBox,
+  .AdminEditSizePriceBox {
+    font-size: 1rem;
+  }
+}
+
+/* --- Responsive: Mobile --- */
+@media (max-width: 575.98px) {
+  .AdminEditForm {
+    padding: 8px !important;
+  }
+  .AdminEditForm .p-3.p-md-4 {
+    padding: 12px !important;
+  }
+  .AdminEditFields {
+    padding: 0 !important;
+    min-width: 0;
+  }
+  .AdminEditLabel {
+    font-size: 0.9rem;
+    min-width: 70px;
+  }
+  .AdminEditInput,
+  .AdminEditTextarea,
+  .AdminEditPriceInput {
+    font-size: 0.85rem;
+    padding: 6px 8px !important;
+    margin: 0 !important;
+  }
+  .AdminEditTag {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+  }
+  .AdminEditRow {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .AdminEditRow .table-responsive{
+    padding: 5px;
+  }
+  .AdminEditSizeBox,
+  .AdminEditSizePriceBox {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .AdminEditImageBox {
+    min-width: 120px;
+    max-width: 200px;
+    min-height: 120px;
+    height: auto;
+    margin: 0 auto 12px auto;
+  }
+  .AdminEditImageBox img,
+  .AdminEditImageBox > div {
+    /* min-height: 120px; */
+    max-height: 160px;
+  }
+
+  
+  .AdminEditImageActions {
+    flex-direction: row !important;
+    gap: 0;
+  }
+  .AdminEditImageBtn,
+  .AdminEditImageBtn:last-child {
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-top: 1.5px solid #fff;
+    width: 50%;
+    font-size: 0.75rem;
+    padding: 4px 0;
+    height: 28px !important;
+  }
+  .AdminEditImageBtn:last-child {
+    border-top: 1.5px solid #fff !important;
+    border-left: 1.5px solid #fff !important;
+  }
+  /* Add-ons input row: stack vertically */
+  .AdminEditFields .row.g-2 {
+    flex-direction: column;
+    gap: 8px !important;
+  }
+  .AdminEditFields .row.g-2 > .col,
+  .AdminEditFields .row.g-2 > [class^="col-"] {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+  /* Add-ons table: compact and fit to screen */
+  .AdminItemEditAddonsTable {
+    min-width: 100%;
+    font-size: 0.75rem;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+  }
+  .AdminItemEditAddonsTable th,
+  .AdminItemEditAddonsTable td {
+    padding: 4px 2px;
+    font-size: 0.75rem;
+    word-wrap: break-word;
+  }
+  .AdminEditPriceInput {
+    width: 50px !important;
+    min-width: 50px;
+    font-size: 0.7rem;
+    padding: 2px 4px !important;
+  }
+  /* General: reduce spacing */
+  .AdminEditForm .row {
+    margin-bottom: 8px !important;
+  }
+  .AdminEditForm .mb-3 {
+    margin-bottom: 8px !important;
+  }
+  .AdminEditFooter {
+    margin-top: 16px !important;
+    gap: 8px !important;
+  }
+  .AdminEditCancelBtn,
+  .AdminEditSaveBtn {
+    font-size: 1rem !important;
+    padding: 8px 16px !important;
+  }
+  /* Add button full width and margin fix */
+  .AdminEditAddBtn {
+    width: 100% !important;
+    min-width: 0;
+    margin-left: 0 !important;
+    margin-top: 4px;
+    display: block;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+}
+
+/* --- Always make table scrollable on small screens --- */
+.AdminItemEditAddonsTable {
+  width: 100%;
+  min-width: 210px !important;
+  overflow-x: auto;
+  display: block;
+}
+
+/* Remove number input arrows for all browsers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  display: none !important;
+}
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}

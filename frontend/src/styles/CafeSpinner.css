@@ -1,0 +1,39 @@
+.cafe-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.cafe-spinner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.cafe-spinner-icon {
+  font-size: 2rem;
+  color: #6c3a1f;
+  margin-bottom: 10px;
+  animation: steam 2s ease-in-out infinite;
+}
+
+.cafe-spinner-text {
+  margin-top: 15px;
+  color: #6c3a1f;
+  font-weight: 500;
+}
+
+@keyframes steam {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
