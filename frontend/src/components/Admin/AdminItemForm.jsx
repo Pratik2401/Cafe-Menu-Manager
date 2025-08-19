@@ -5,6 +5,7 @@ import {
 import { FaTrash } from 'react-icons/fa';
 import { fetchSubCategoriesByCategoryId, fetchAllVariations } from '../../api/admin';
 import ImageCropModal from '../utils/ImageCropModal';
+import { getImageUrl } from '../../utils/imageUrl';
 import '../../styles/ItemForm.css'
 /**
  * Reusable Item Form component that aligns with the backend ItemModel structure
@@ -551,7 +552,7 @@ const ItemForm = ({
            
             <div className="AdminEditImageBox">
               {imagePreview ? (
-                <img src={getImageUrl(imagePreview)} alt="Item" className="w-100 h-auto  shadow-sm" style={{ objectFit: 'cover', minHeight: 180, maxHeight: 220 }} />
+                <img src={imagePreview.startsWith('blob:') ? imagePreview : getImageUrl(imagePreview)} alt="Item" className="w-100 h-auto  shadow-sm" style={{ objectFit: 'cover', minHeight: 180, maxHeight: 220 }} />
               ) : (
                 <div style={{ width: '100%', height: 180, background: '#eee', borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
                   No Image

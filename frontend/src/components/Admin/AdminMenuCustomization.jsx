@@ -543,7 +543,7 @@ const MenuCustomization = ({ isStandalone = true }) => {
                         }}
                       >
                         <img 
-                          src={getImageUrl(logoUrl)} 
+                          src={logoUrl?.startsWith('blob:') ? logoUrl : getImageUrl(logoUrl)} 
                           alt="Menu Logo" 
                           style={{ 
                             maxWidth: '90px',

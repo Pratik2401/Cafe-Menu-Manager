@@ -4,6 +4,7 @@ import { FaPlus, FaEdit, FaTrash, FaToggleOn } from 'react-icons/fa';
 import { fetchFoodCategories, createFoodCategory, updateFoodCategory, deleteFoodCategory, toggleFoodCategoryStatus } from '../../api/admin';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import ImageCropModal from '../utils/ImageCropModal';
+import { getImageUrl } from '../../utils/imageUrl';
 import Switch from "react-switch";
 import { FaPencil,FaRegTrashCan } from "react-icons/fa6";
 import Swal from 'sweetalert2';

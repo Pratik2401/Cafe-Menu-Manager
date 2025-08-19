@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { Row, Col, Form, Button, Card, Image } from 'react-bootstrap';
-import ItemSearchBar from '../MenuDesignOne/ItemSearchBar';
 import SelectedItemsList from '../MenuDesignOne/SelectedItemsList';
 import EventItemForm from './AdminEventItemForm';
 import { createEventItem, uploadOfferImage } from '../../api/admin';
 import ImageCropModal from '../utils/ImageCropModal';
+import { getImageUrl } from '../../utils/imageUrl';
 import Swal from 'sweetalert2';
 
 const OfferForm = ({ 
@@ -21,6 +21,7 @@ const OfferForm = ({
 
   const [isCreatingItem, setIsCreatingItem] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef(null);
   const [showCropModal, setShowCropModal] = useState(false);
   const [originalImageForCrop, setOriginalImageForCrop] = useState(null);
@@ -236,7 +237,7 @@ const OfferForm = ({
           {currentOffer.imageUrl && (
             <div className="mb-3 mb-md-0 me-md-3 align-self-center">
               <Image 
-                src={getImageUrl(currentOffer.imageUrl)} 
+                src={currentOffer.imageUrl?.startsWith('blob:') ? currentOffer.imageUrl : getImageUrl(currentOffer.imageUrl)} 
                 alt="Offer preview" 
                 style={{ width: '100px', height: '100px', objectFit: 'cover' }} 
                 thumbnail 
@@ -270,10 +271,52 @@ const OfferForm = ({
         />
       </Card>
 
-      <ItemSearchBar 
-        allItems={allItems || []} 
-        onSelectItem={onSelectItem} 
-      />
+      {/* Simple inline search for items */}
+      <Card className="mb-3">
+        <Card.Header>Search Items</Card.Header>
+        <Card.Body>
+          <Form.Control
+            type="text"
+            placeholder="Search items to add to offer..."
+            value={searchTerm || ''}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              // Filter and show matching items inline
+            }}
+          />
+          {searchTerm && (
+            <div className="mt-2" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+              {(allItems || [])
+                .filter(item => 
+                  item && item.name && 
+                  item.name.toLowerCase().includes((searchTerm || '').toLowerCase())
+                )
+                .slice(0, 10) // Limit to 10 results
+                .map(item => (
+                  <div 
+                    key={item._id} 
+                    className="d-flex align-items-center p-2 border-bottom cursor-pointer hover-bg-light"
+                    onClick={() => {
+                      onSelectItem(item);
+                      setSearchTerm(''); // Clear search after selection
+                    }}
+                  >
+                    <div className="flex-grow-1">
+                      <div className="fw-bold">{item.name}</div>
+                      {item.description && (
+                        <div className="text-muted small">{item.description}</div>
+                      )}
+                    </div>
+                    <Button size="sm" variant="outline-primary">
+                      Add
+                    </Button>
+                  </div>
+                ))
+              }
+            </div>
+          )}
+        </Card.Body>
+      </Card>
 
       <SelectedItemsList 
         items={selectedItems || []} 

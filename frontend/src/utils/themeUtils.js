@@ -55,7 +55,7 @@ export const initThemeCSS = () => {
     let href = themeLink.getAttribute('href');
     
     // Replace the environment variable placeholder with the actual base URL
-    const baseUrl = import.meta.env.VITE_API_URL_BASE || 'https://topchioutpost.snap2eat.in';
+    const baseUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:3000';
     href = href.replace('%VITE_API_URL_BASE%', baseUrl);
     
     // Replace the placeholder with the current timestamp
@@ -78,7 +78,7 @@ export const initThemeCSS = () => {
 export const applyThemeVariablesToRoot = async () => {
   try {
     // Get the base URL from environment variables
-    const baseUrl = import.meta.env.VITE_API_URL_BASE || 'https://topchioutpost.snap2eat.in';
+    const baseUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:3000';
     
     console.log('Fetching theme CSS from:', `${baseUrl}/theme?v=${Date.now()}`);
     

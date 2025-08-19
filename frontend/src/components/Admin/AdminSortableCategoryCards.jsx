@@ -5,6 +5,7 @@ import { FiX, FiCheck, FiMove } from "react-icons/fi";
 import Switch from "react-switch";
 import { FaEye } from "react-icons/fa";
 import { FaPencil,FaRegTrashCan } from "react-icons/fa6";
+import { getImageUrl } from '../../utils/imageUrl';
 
 
 const SortableCategoryCard = ({
@@ -78,10 +79,16 @@ const SortableCategoryCard = ({
             <div className="CategoryCard-ImageContainer mt-3 mb-2">
               <Card.Img
   variant="top"
-  src={editedCategory.preview || editedCategory.image || category.image}
+  src={
+    editedCategory.preview ? 
+      editedCategory.preview : 
+      (editedCategory.image ? 
+        (typeof editedCategory.image === 'string' ? getImageUrl(editedCategory.image) : editedCategory.image) : 
+        getImageUrl(category.image)
+      )
+  }
   className="CategoryCard-Image"
 />
-
             </div>
 
             <Form.Group
@@ -143,7 +150,7 @@ const SortableCategoryCard = ({
             <div className="CategoryCard-ImageContainer">
               <Card.Img
                 variant="top"
-                src={category.image} 
+                src={getImageUrl(category.image)} 
                 className="CategoryCard-Image"
               />
             </div>

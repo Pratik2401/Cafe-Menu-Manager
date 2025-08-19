@@ -1,17 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, memo, useMemo } from 'react';
 import '../../styles/MenuView.css';
 import SearchBar from './SearchBar';
 import NavigateBar from './NavigateBar';
 import MenuItem from './MenuItem';
 import MenuPopup from './MenuPopup';
 import { getAllCategories, getCafeSettings, getAllSubCategories } from '../../api/customer';
+import { loadBackgroundImage } from '../../utils/backgroundImageLoader';
+import { getImageUrl } from '../../utils/imageUrl';
 import TopBar from './TopBar';
 import EventBanner from './EventBanner';
 import Branding from './Branding';
 import FeedbackDrawer from './FeedbackDrawer';
 import AllergyNote from './AllergyNote';
 import CafeLoader, { LOADER_TYPES } from '../utils/CafeLoader';
-export default function MenuView() {
+
+const MenuView = memo(() => {
   const [showMenuPopup, setShowMenuPopup] = useState(false);
   const [allSubCategories, setAllSubCategories] = useState({});
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
@@ -27,6 +30,7 @@ export default function MenuView() {
   const [subCategories, setSubCategories] = useState([]);
   const [categories, setCategories] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState('');
+  const [processedBackgroundImage, setProcessedBackgroundImage] = useState('');
   const [hasSubCategories, setHasSubCategories] = useState(true);
   const [loading, setLoading] = useState(true);
   // Removed showBranding state
@@ -68,6 +72,28 @@ export default function MenuView() {
             const { backgroundImage } = cafeSettingsResponse.data.data.menuCustomization;
             if (backgroundImage) {
               setBackgroundImage(backgroundImage);
+              
+              // Process background image for CORS compatibility
+              try {
+                const imageUrl = getImageUrl(backgroundImage);
+                console.log('🎨 Processing background image for MenuView:', imageUrl);
+                
+                const processedUrl = await loadBackgroundImage(imageUrl, { 
+                  useDataUrl: true, 
+                  preload: true 
+                });
+                
+                if (processedUrl) {
+                  setProcessedBackgroundImage(processedUrl);
+                  console.log('✅ MenuView background image processed successfully');
+                } else {
+                  console.log('⚠️ MenuView background image processing failed, falling back to original URL');
+                  setProcessedBackgroundImage(imageUrl);
+                }
+              } catch (processingError) {
+                console.error('❌ MenuView background image processing error:', processingError);
+                setProcessedBackgroundImage(getImageUrl(backgroundImage));
+              }
             }
           }
         } catch (cafeError) {
@@ -146,7 +172,7 @@ const handleMenuClick = useCallback(() => {
   }, [handleCategoryChange]);
 
   return (
-    <div className="menu-view-container">
+    <div className="menu-view-container" style={processedBackgroundImage ? { backgroundImage: `url(${processedBackgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' } : {}}>
       {loading ? (
         <CafeLoader 
           type={LOADER_TYPES.COFFEE_POUR} 
@@ -212,4 +238,8 @@ const handleMenuClick = useCallback(() => {
       <FeedbackDrawer/>
     </div>
   );
-}
+});
+
+MenuView.displayName = 'MenuView';
+
+export default MenuView;

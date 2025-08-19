@@ -830,7 +830,7 @@ const EventForm = ({ eventData = null, onSuccess }) => {
                     {formData.eventImageUrl && (
                       <div className="me-3">
                         <Image 
-                          src={getImageUrl(formData.eventImageUrl)} 
+                          src={formData.eventImageUrl?.startsWith('blob:') ? formData.eventImageUrl : getImageUrl(formData.eventImageUrl)} 
                           alt="Event preview" 
                           style={{ width: '100px', height: '100px', objectFit: 'cover' }} 
                           thumbnail 
@@ -858,7 +858,7 @@ const EventForm = ({ eventData = null, onSuccess }) => {
                     {formData.promotionalImageUrl && (
                       <div className="me-3">
                         <Image 
-                          src={getImageUrl(formData.promotionalImageUrl)} 
+                          src={formData.promotionalImageUrl?.startsWith('blob:') ? formData.promotionalImageUrl : getImageUrl(formData.promotionalImageUrl)} 
                           alt="Promotional preview" 
                           style={{ width: '100px', height: '100px', objectFit: 'cover' }} 
                           thumbnail 

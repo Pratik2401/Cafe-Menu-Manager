@@ -1,15 +1,19 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback, memo } from 'react';
 import { getImageUrl } from '../../utils/imageUrl';
 import { Button, Badge, Offcanvas, ListGroup, Accordion } from 'react-bootstrap';
 import { getAllItems, getAllCategories, getAllSizes, getAllSubCategories } from '../../api/customer';
+import { useDebounce } from '../../hooks/useDebounce.js';
 
 import '../../styles/MenuItem.css';
 import '../../styles/animations.css';
 import CafeLoader, { LOADER_TYPES } from '../utils/CafeLoader';
 
-export default function MenuItem({ selectedSubCategory, filters, searchQuery, hasSubCategories, customMessages, onSubCategorySelect, onMenuClick }) {
+const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCategories, customMessages, onSubCategorySelect, onMenuClick }) => {
+  // Debounce search query for better performance
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  
   // If onSubCategorySelect is not provided, create a dummy function
-  const handleSubCategorySelect = onSubCategorySelect || (() => {});
+  const handleSubCategorySelect = useCallback(onSubCategorySelect || (() => {}), [onSubCategorySelect]);
   
   // Use effect to handle the onMenuClick prop
   useEffect(() => {
@@ -175,16 +179,16 @@ export default function MenuItem({ selectedSubCategory, filters, searchQuery, ha
     fetchCategoriesForSidebar();
   }, []);
 
-  const applyFilters = (item) => {
+  const applyFilters = useCallback((item) => {
     // Ignore subcategory match when searchQuery is present
-    const subCategoryMatch = searchQuery
+    const subCategoryMatch = debouncedSearchQuery
       ? true // Ignore subcategory when searching
       : selectedSubCategory
       ? item.subCategory._id === selectedSubCategory._id
       : true;
 
-    const searchMatch = searchQuery
-      ? item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const searchMatch = debouncedSearchQuery
+      ? item.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
       : true;
 
     // Include items where show is true or undefined (for backward compatibility)
@@ -196,7 +200,7 @@ export default function MenuItem({ selectedSubCategory, filters, searchQuery, ha
       selectedFoodCategories.includes(item.foodCategory);
 
     return subCategoryMatch && searchMatch && visibilityMatch && foodCategoryMatch;
-  };
+  }, [debouncedSearchQuery, selectedSubCategory, filters]);
 
   // State for food categories
   const [foodCategories, setFoodCategories] = useState([]);
@@ -431,7 +435,7 @@ export default function MenuItem({ selectedSubCategory, filters, searchQuery, ha
     return true;
   };
   
-  // Memoized filtered items
+  // Memoized filtered items using debounced search for better performance
   const filteredItems = useMemo(() => {
     const items = menuItems.filter(applyFilters);
 
@@ -442,7 +446,7 @@ export default function MenuItem({ selectedSubCategory, filters, searchQuery, ha
     });
     
     return items;
-  }, [menuItems, selectedSubCategory, filters, searchQuery]);
+  }, [menuItems, selectedSubCategory, filters, debouncedSearchQuery]);
 
   const toggleExpandedItem = (item) => {
     const uniqueKey = `${item._id}`;
@@ -1024,4 +1028,8 @@ export default function MenuItem({ selectedSubCategory, filters, searchQuery, ha
       </Offcanvas>
     </div>
   );
-}
+});
+
+MenuItem.displayName = 'MenuItem';
+
+export default MenuItem;

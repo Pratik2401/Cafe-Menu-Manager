@@ -1,9 +1,10 @@
+/* Import global colors first */
+@import './styles/colors.css';
+@import './styles/performance.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import global colors */
-@import './styles/colors.css';
 
 @font-face {
     font-family: 'Merge One Regular';

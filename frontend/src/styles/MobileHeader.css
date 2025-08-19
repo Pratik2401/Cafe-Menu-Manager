@@ -5,6 +5,7 @@
   right: 0;
   z-index: 1030;
   background-color: #ede1d5 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hamburger-container {
@@ -18,14 +19,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 8px;
   margin: 0;
   border: none;
   background: transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.hamburger-btn:hover {
+  background-color: rgba(199, 40, 28, 0.1);
 }
 
 .hamburger-btn:focus {
   box-shadow: none;
+  outline: 2px solid rgba(199, 40, 28, 0.3);
 }
 
 .hamburger-icon {
@@ -41,7 +49,7 @@
   display: block;
   height: 2px;
   width: 100%;
-  background-color: var(--color-dark);
+  background-color: #333;
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -49,20 +57,28 @@
 .mobile-sidebar {
   width: 280px;
   background-color: #ede1d5 !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-sidebar .offcanvas-header {
   padding: 1rem;
   background-color: #ede1d5;
-  border-bottom: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .mobile-sidebar .offcanvas-title {
   color: black;
+  font-family: 'Merge One Regular';
+  font-weight: bold;
 }
 
 .mobile-sidebar .btn-close {
   filter: none;
+  opacity: 0.7;
+}
+
+.mobile-sidebar .btn-close:hover {
+  opacity: 1;
 }
 
 /* Show mobile header on medium devices (less than 992px) */
@@ -75,4 +91,12 @@
 .BrandLogoMobile{
   width: auto;
   height: 50px;
+}
+
+/* Navbar brand styling for mobile */
+.mobile-header .navbar-brand {
+  font-family: 'Merge One Regular';
+  font-weight: bold;
+  color: #333;
+  font-size: 1.2rem;
 }

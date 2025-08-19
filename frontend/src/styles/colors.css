@@ -1,0 +1,33 @@
+/* Global Color Variables */
+:root {
+  /* Primary Brand Colors */
+  --bg-primary: #ede1d5;
+  --color-primary: #c7281c;
+  --color-secondary: #6c3a1f;
+  
+  /* Background Colors */
+  --bg-secondary: #f8f9fa;
+  --bg-white: #ffffff;
+  --bg-light: #f5f5f5;
+  
+  /* Text Colors */
+  --color-dark: #333333;
+  --color-text: #000000;
+  --color-muted: #666666;
+  --color-white: #ffffff;
+  
+  /* Border Colors */
+  --border-color: #e9ecef;
+  --border-light: rgba(0, 0, 0, 0.1);
+  
+  /* Shadow Colors */
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.25);
+  
+  /* Success/Error Colors */
+  --color-success: #28a745;
+  --color-error: #dc3545;
+  --color-warning: #ffc107;
+  --color-info: #17a2b8;
+}

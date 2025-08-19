@@ -1,0 +1,231 @@
+/**
+ * Performance-optimized CSS
+ * Contains critical styles, CSS Grid, and performance enhancements
+ */
+
+/* Critical path CSS - loaded immediately */
+.app-container {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+/* Enable hardware acceleration for animations */
+.transition-all {
+  transition: all 0.3s ease;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Optimized image loading */
+.optimized-image {
+  transition: opacity 0.3s ease;
+}
+
+.optimized-image.loading {
+  opacity: 0.7;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+.optimized-image.loaded {
+  opacity: 1;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Virtualized list optimizations */
+.virtualized-list-container {
+  contain: layout style paint;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+/* Grid optimizations */
+.optimized-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+@media (min-width: 768px) {
+  .optimized-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .optimized-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+/* Search component optimizations */
+.search-result-item {
+  contain: layout style paint;
+  cursor: pointer;
+  user-select: none;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-item-image {
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Menu item optimizations */
+.menu-item-card {
+  contain: layout style paint;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Admin layout optimizations */
+.admin-container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-content {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.content-area {
+  contain: layout style paint;
+  padding: 1rem;
+}
+
+/* Performance critical utilities */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hover-bg-light:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* Optimized buttons */
+.btn-optimized {
+  contain: layout style paint;
+  transform: translateZ(0);
+  transition: all 0.2s ease;
+}
+
+.btn-optimized:hover {
+  transform: translateY(-1px);
+}
+
+/* Performance improvements for large lists */
+.large-list-container {
+  contain: layout style paint;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Loading overlay optimizations */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Error states */
+.error-boundary {
+  padding: 2rem;
+  text-align: center;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin: 2rem;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus improvements */
+.focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+/* Dark theme support */
+[data-theme="dark"] {
+  --bs-body-bg: #212529;
+  --bs-body-color: #ffffff;
+  --bs-card-bg: #343a40;
+  --bs-border-color: #495057;
+}
+
+[data-theme="dark"] .card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-theme="dark"] .hover-bg-light:hover {
+  background-color: #495057;
+}
+
+/* Print optimizations */
+@media print {
+  .no-print { display: none !important; }
+  .app-container { overflow: visible !important; }
+
+  /* Optimize images for print */
+  .optimized-image {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Remove shadows and transitions for print */
+  .hover-shadow,
+  .menu-item-card {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}

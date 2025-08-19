@@ -1,0 +1,101 @@
+/* Layout Fixes and Improvements */
+
+/* Ensure proper container sizing */
+.container-fluid {
+  padding: 0 !important;
+}
+
+/* Sidebar improvements */
+.sidebar {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Content area improvements */
+.admin-content {
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 120px);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Breadcrumb improvements */
+.breadcrumb-container {
+  background-color: #fff;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0;
+}
+
+/* Mobile responsiveness improvements */
+@media (max-width: 991.98px) {
+  .admin-content {
+    margin: 5px;
+    padding: 15px;
+    min-height: calc(100vh - 80px);
+  }
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Fix for any z-index issues */
+.sidebar-col {
+  z-index: 1020;
+}
+
+.mobile-header {
+  z-index: 1030;
+}
+
+/* Ensure proper scrolling */
+body {
+  overflow-x: hidden;
+}
+
+/* Fix for content overflow */
+.content-col {
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Nav improvements */
+.sidebar-nav {
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav .nav-item {
+  margin-bottom: 2px;
+}
+
+/* Button reset for sidebar */
+.menu-toggle.btn {
+  border: none;
+  box-shadow: none;
+}
+
+.menu-toggle.btn:focus,
+.menu-toggle.btn:active {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Brand section styling */
+.brand-section {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Improved sidebar content structure */
+.sidebar-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

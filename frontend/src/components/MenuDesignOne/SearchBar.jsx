@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import SearchIcon from '../../assets/images/SearchIcon.png';
 import Filter from '../../assets/images/Filter.png';
+import { useDebounce } from '../../hooks/useDebounce.js';
 
 import '../../styles/SearchBar.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
@@ -8,11 +9,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { getFoodCategories, getAllEvents, getAllSubCategories } from '../../api/customer';
 
 
-export default function NavigationBar({ onFiltersChange, onSearchChange, categories = [], onCategoryChange, onSubCategorySelect, onMenuClick }) {
+const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], onCategoryChange, onSubCategorySelect, onMenuClick }) => {
   const [showFilterPopup, setShowFilterPopup] = useState(false);
 
   const [filters, setFilters] = useState({});
   const [searchQuery, setSearchQuery] = useState(''); // Add search query state
+  const debouncedSearchQuery = useDebounce(searchQuery, 300); // Debounce search input
   const [localCategories, setLocalCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [hasEvents, setHasEvents] = useState(false);
@@ -120,22 +122,29 @@ export default function NavigationBar({ onFiltersChange, onSearchChange, categor
     fetchData();
   }, [onCategoryChange]);
 
-  const toggleFilterPopup = () => {
-    setShowFilterPopup(!showFilterPopup);
-  };
+  // Effect to handle debounced search
+  useEffect(() => {
+    if (onSearchChange) {
+      onSearchChange(debouncedSearchQuery);
+    }
+  }, [debouncedSearchQuery, onSearchChange]);
 
-  const handleCheckboxChange = (e) => {
+  const toggleFilterPopup = useCallback(() => {
+    setShowFilterPopup(!showFilterPopup);
+  }, [showFilterPopup]);
+
+  const handleCheckboxChange = useCallback((e) => {
     const { name, checked } = e.target;
     const updatedFilters = { ...filters, [name]: checked };
     setFilters(updatedFilters);
     onFiltersChange(updatedFilters);
-  };
+  }, [filters, onFiltersChange]);
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = useCallback((e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    onSearchChange(query); // Pass the search query to the parent component
-  };
+    // Don't call onSearchChange directly - let the debounced effect handle it
+  }, []);
 
   const handleMenuClick = () => {
     // Check if we're on special offers pages
@@ -152,18 +161,18 @@ export default function NavigationBar({ onFiltersChange, onSearchChange, categor
     }
   };
   
-  const handleEventClick = () => {
+  const handleEventClick = useCallback(() => {
     navigate('/', { state: { showEvents: true } });
-  };
+  }, [navigate]);
   
-  const handleCategorySelect = (categoryId) => {
+  const handleCategorySelect = useCallback((categoryId) => {
     setSelectedCategory(categoryId);
     // Pass the selected category to parent component
     if (onCategoryChange) {
       onCategoryChange(categoryId);
     }
     // Also update search with the category
-    onSearchChange(searchQuery, categoryId);
+    onSearchChange(debouncedSearchQuery, categoryId);
     
     // Update localStorage to match the selected category
     const category = categories.find(cat => cat.serialId === categoryId);
@@ -173,7 +182,7 @@ export default function NavigationBar({ onFiltersChange, onSearchChange, categor
         name: category.name
       }));
     }
-  };
+  }, [categories, debouncedSearchQuery, onCategoryChange, onSearchChange]);
   
   // Update subcategories whenever selectedCategory or subCategoriesMap changes
   useEffect(() => {
@@ -294,4 +303,8 @@ export default function NavigationBar({ onFiltersChange, onSearchChange, categor
 
     </div>
   );
-}
+});
+
+NavigationBar.displayName = 'NavigationBar';
+
+export default NavigationBar;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getImageUrl } from '../../utils/imageUrl';
+import { loadBackgroundImage } from '../../utils/backgroundImageLoader';
 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -51,6 +52,7 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
   const [showAgeModal, setShowAgeModal] = useState(false); // State for age verification modal
   const [socialMediaLinks, setSocialMediaLinks] = useState([]); // State for social media links
   const [backgroundImage, setBackgroundImage] = useState(''); // State for background image
+  const [processedBackgroundImage, setProcessedBackgroundImage] = useState(''); // State for processed background image
   const [logoUrl, setLogoUrl] = useState(null); // Logo URL state
   const [logoBackgroundColor, setLogoBackgroundColor] = useState(null); // Logo background color state
   const [isAdult, setIsAdult] = useState(() => {
@@ -71,6 +73,29 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
             const { backgroundImage } = cafeSettingsResponse.data.data.menuCustomization;
             if (backgroundImage) {
               setBackgroundImage(backgroundImage);
+              
+              // Process background image for CORS compatibility
+              try {
+                const imageUrl = getImageUrl(backgroundImage);
+                console.log('🎨 Processing background image:', imageUrl);
+                
+                // Try to load as data URL first (most reliable for CORS)
+                const processedUrl = await loadBackgroundImage(imageUrl, { 
+                  useDataUrl: true, 
+                  preload: true 
+                });
+                
+                if (processedUrl) {
+                  setProcessedBackgroundImage(processedUrl);
+                  console.log('✅ Background image processed successfully');
+                } else {
+                  console.log('⚠️ Background image processing failed, falling back to original URL');
+                  setProcessedBackgroundImage(imageUrl);
+                }
+              } catch (processingError) {
+                console.error('❌ Background image processing error:', processingError);
+                setProcessedBackgroundImage(getImageUrl(backgroundImage));
+              }
             }
           }
         } catch (cafeError) {
@@ -426,7 +451,7 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
     );
   }
   return (
-  <div className='LandingPageContainer cafe-background' style={backgroundImage ? { backgroundImage: `url(${getImageUrl(backgroundImage)})` } : {}}>
+  <div className='LandingPageContainer cafe-background' style={processedBackgroundImage ? { backgroundImage: `url(${processedBackgroundImage})` } : {}}>
       
     <Container fluid className="LandingPageBody ">
 

@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table } from 're
 import { FaPlus, FaTrash, FaImage } from 'react-icons/fa';
 import Switch from 'react-switch';
 import { getImageUploads, createImageUpload, deleteImageUpload, toggleImageUploadVisibility } from '../../api/admin';
+import { getImageUrl } from '../../utils/imageUrl';
 
 const AdminImageUploadPage = () => {
   const [imageUploads, setImageUploads] = useState([]);

@@ -1,12 +1,14 @@
 .admin-dashboard {
   height: 100vh;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 .sidebar-col {
   height: 100vh;
   overflow-y: auto;
-  background-color: #EFEBCA;
+  background-color: #ede1d5;
   flex: 0 0 250px;
   max-width: 250px;
   position: fixed;
@@ -14,6 +16,7 @@
   top: 0;
   bottom: 0;
   z-index: 1000;
+  border-right: 1px solid #ddd;
 }
 
 .content-col {
@@ -23,10 +26,17 @@
   padding: 0;
   margin-left: 250px;
   width: calc(100% - 250px);
+  background-color: #f8f9fa;
 }
 
 .flex-nowrap {
   flex-wrap: nowrap !important;
+}
+
+/* Content area styling */
+.admin-content {
+  padding: 20px;
+  min-height: calc(100vh - 60px);
 }
 
 /* Medium devices (tablets, less than 992px) */
@@ -39,5 +49,10 @@
     margin-left: 0;
     width: 100%;
     padding-top: 56px; /* Height of mobile header */
+  }
+  
+  .admin-content {
+    padding: 15px;
+    padding-top: 20px;
   }
 }

@@ -421,7 +421,7 @@ function CategoryPage() {
                       <div className="CategoryCard-ImageContainer mt-3 mb-2">
                         <Card.Img
                           variant="top"
-                          src={newCategory.preview ? getImageUrl(newCategory.preview) : DefaultImage}
+                          src={newCategory.preview ? newCategory.preview : DefaultImage}
                           className="CategoryCard-Image"
                         />
                       </div>

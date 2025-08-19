@@ -634,7 +634,7 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
                     {formData.backgroundImagePreview && (
                       <div className="me-3">
                         <Image 
-                          src={getImageUrl(formData.backgroundImagePreview)} 
+                          src={formData.backgroundImagePreview?.startsWith('blob:') ? formData.backgroundImagePreview : getImageUrl(formData.backgroundImagePreview)} 
                           alt="Background preview" 
                           style={{ width: '100px', height: '100px', objectFit: 'cover' }} 
                           thumbnail 
@@ -663,7 +663,7 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
                     {formData.promotionalImagePreview && (
                       <div className="me-3">
                         <Image 
-                          src={getImageUrl(formData.promotionalImagePreview)} 
+                          src={formData.promotionalImagePreview?.startsWith('blob:') ? formData.promotionalImagePreview : getImageUrl(formData.promotionalImagePreview)} 
                           alt="Promotional preview" 
                           style={{ width: '100px', height: '100px', objectFit: 'cover' }} 
                           thumbnail 
@@ -791,7 +791,7 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
                       {offer.imagePreview && (
                         <div className="me-3">
                           <Image 
-                            src={getImageUrl(offer.imagePreview)} 
+                            src={offer.imagePreview?.startsWith('blob:') ? offer.imagePreview : getImageUrl(offer.imagePreview)} 
                             alt="Offer preview" 
                             style={{ width: '80px', height: '80px', objectFit: 'cover' }} 
                             thumbnail 

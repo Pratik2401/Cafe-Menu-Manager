@@ -3,6 +3,8 @@ import '../../styles/MenuView.css';
 import SearchBar from './SearchBar';
 import DailyOffersItem from './DailyOffersItem';
 import { getAllCategories, getCafeSettings } from '../../api/customer';
+import { loadBackgroundImage } from '../../utils/backgroundImageLoader';
+import { getImageUrl } from '../../utils/imageUrl';
 import TopBar from './TopBar';
 import EventBanner from './EventBanner';
 import Branding from './Branding';
@@ -19,6 +21,7 @@ export default function DailyOffersView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState('');
+  const [processedBackgroundImage, setProcessedBackgroundImage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +33,28 @@ export default function DailyOffersView() {
             const { backgroundImage } = cafeSettingsResponse.data.data.menuCustomization;
             if (backgroundImage) {
               setBackgroundImage(backgroundImage);
+              
+              // Process background image for CORS compatibility
+              try {
+                const imageUrl = getImageUrl(backgroundImage);
+                console.log('🎨 Processing background image for DailyOffersView:', imageUrl);
+                
+                const processedUrl = await loadBackgroundImage(imageUrl, { 
+                  useDataUrl: true, 
+                  preload: true 
+                });
+                
+                if (processedUrl) {
+                  setProcessedBackgroundImage(processedUrl);
+                  console.log('✅ DailyOffersView background image processed successfully');
+                } else {
+                  console.log('⚠️ DailyOffersView background image processing failed, falling back to original URL');
+                  setProcessedBackgroundImage(imageUrl);
+                }
+              } catch (processingError) {
+                console.error('❌ DailyOffersView background image processing error:', processingError);
+                setProcessedBackgroundImage(getImageUrl(backgroundImage));
+              }
             }
           }
         } catch (cafeError) {
