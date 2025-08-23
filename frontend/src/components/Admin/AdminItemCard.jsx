@@ -4,7 +4,7 @@ import { updateItemAvailability, updateItem } from '../../api/admin';
 import '../../styles/AdminItemCard.css';
 import ItemForm from './AdminItemForm';
 import Switch from "react-switch";
-
+import { getImageUrl } from '../../utils/imageUrl';
 
 import { FiX, FiCheck, FiMove } from "react-icons/fi";
 const AdminItemCard = ({ 

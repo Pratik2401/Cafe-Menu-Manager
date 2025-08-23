@@ -82,8 +82,10 @@ export const applyThemeVariablesToRoot = async () => {
     
     console.log('Fetching theme CSS from:', `${baseUrl}/theme?v=${Date.now()}`);
     
-    // Fetch the theme CSS file
-    const response = await fetch(`${baseUrl}/theme?v=${Date.now()}`);
+    // Fetch the theme CSS file with cache-busting timestamp
+    const response = await fetch(`${baseUrl}/theme?v=${Date.now()}&_=${Math.random()}`, {
+      cache: 'no-store'
+    });
    
     if (!response.ok) {
       throw new Error(`Failed to fetch theme CSS: ${response.status} ${response.statusText}`);

@@ -19,7 +19,7 @@ const helmet = require('helmet');
  */
 const generalRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: process.env.NODE_ENV === 'development' ? 1000 : 100, // More lenient in development
   message: {
     error: 'Too many requests from this IP, please try again later.',
     retryAfter: Math.ceil(15 * 60 / 60) + ' minutes'
@@ -27,7 +27,7 @@ const generalRateLimit = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   handler: (req, res) => {
-    console.warn(`🚫 Rate limit exceeded for IP: ${req.ip} on ${req.path}`);
+    console.warn(`🚫 Rate limit exceeded for IP: ${req.ip} on ${req.path} - Total requests in window exceeded ${process.env.NODE_ENV === 'development' ? 1000 : 100}`);
     res.status(429).json({
       error: 'Too many requests from this IP, please try again later.',
       retryAfter: Math.ceil(15 * 60 / 60) + ' minutes'

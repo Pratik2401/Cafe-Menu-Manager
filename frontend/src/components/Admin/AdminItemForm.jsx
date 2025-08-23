@@ -1333,6 +1333,7 @@ const ItemForm = ({
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
+        aspectRatio={4/3} // Portrait 4:3 for menu item images
       />
     </Form>
   );

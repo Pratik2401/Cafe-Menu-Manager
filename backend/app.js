@@ -266,6 +266,10 @@ app.use('/uploads', (req, res, next) => {
     };
     res.header('Content-Type', mimeTypes[ext] || 'image/jpeg');
     console.log(`📸 Setting content-type for ${req.url}: ${mimeTypes[ext] || 'image/jpeg'}`);
+  } else if (req.url.includes('/social-images/') || req.url.includes('/items/') || req.url.includes('/categories/')) {
+    // For uploaded images without extensions, assume JPEG
+    res.header('Content-Type', 'image/jpeg');
+    console.log(`📸 Setting default content-type for ${req.url}: image/jpeg`);
   }
   
   // Handle preflight requests
@@ -304,7 +308,7 @@ app.get('/', (req, res) => {
 // ========================================================================================
 
 // Customer routes with caching and rate limiting
-app.use('/api/customer/items', middlewareStacks.customer, cacheMenuItems, customerItemRoutes);
+app.use('/api/customer/items', middlewareStacks.customer, customerItemRoutes); // Removed caching for real-time show/hide
 app.use('/api/customer/subcategories', middlewareStacks.customer, cacheSubCategories, customerSubCategoryRoutes);
 app.use('/api/customer/category', middlewareStacks.customer, cacheCategories, customerCategoryRoutes);
 app.use('/api/customer/food-categories', middlewareStacks.customer, cacheFoodCategories, customerFoodCategoryRoutes);

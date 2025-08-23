@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getCafeSettings } from '../../api/customer'
+import { getImageUrl } from '../../utils/imageUrl'
 import '../../styles/Branding.css'
 
 export default function Branding() {
@@ -30,7 +31,7 @@ export default function Branding() {
   
   return (
     <div className="logo-container" style={logoBackgroundColor ? { backgroundColor: logoBackgroundColor } : {}}>
-      {logoUrl && <img src={logoUrl} className='LogoHeader' alt="Logo" />}
+      {logoUrl && <img src={getImageUrl(logoUrl)} className='LogoHeader' alt="Logo" />}
     </div>
   )
 }

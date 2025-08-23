@@ -4,8 +4,12 @@ import {
   deleteDailyOffer, 
   toggleDailyOfferStatus 
 } from '../../api/admin';
+import { getImageUrl } from '../../utils/imageUrl';
 import AdminDailyOfferForm from './AdminDailyOfferForm';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
+import { Container, Row, Col, Card, Button, Badge, Spinner } from 'react-bootstrap';
+import { FiPlus, FiEdit3, FiTrash2, FiPlay, FiPause, FiPercent, FiCalendar, FiClock } from 'react-icons/fi';
+import Switch from 'react-switch';
 import '../../styles/AdminDailyOffers.css';
 
 const AdminDailyOffersPage = () => {
@@ -41,20 +45,29 @@ const AdminDailyOffersPage = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this daily offer?')) {
+      const originalOffers = dailyOffers;
+      setDailyOffers(prev => prev.filter(offer => offer._id !== id));
+      
       try {
         await deleteDailyOffer(id);
-        loadDailyOffers();
       } catch (error) {
+        setDailyOffers(originalOffers);
         console.error('Error deleting daily offer:', error);
       }
     }
   };
 
   const handleToggleStatus = async (id, currentStatus) => {
+    setDailyOffers(prev => prev.map(offer => 
+      offer._id === id ? { ...offer, isActive: !currentStatus } : offer
+    ));
+    
     try {
       await toggleDailyOfferStatus(id, !currentStatus);
-      loadDailyOffers();
     } catch (error) {
+      setDailyOffers(prev => prev.map(offer => 
+        offer._id === id ? { ...offer, isActive: currentStatus } : offer
+      ));
       console.error('Error toggling status:', error);
     }
   };
@@ -134,100 +147,95 @@ const AdminDailyOffersPage = () => {
             </div>
           ) : (
             dailyOffers.map((offer) => (
-              <div key={offer._id} className="offer-card">
-                <div className="offer-image-container">
+              <div key={offer._id} style={{background: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', border: '1px solid #ddd'}}>
+                <div style={{position: 'relative', height: '200px', overflow: 'hidden', background: '#f5f5f5'}}>
                   {offer.backgroundImage ? (
                     <img 
                       src={getImageUrl(offer.backgroundImage)} 
                       alt={offer.name}
-                      className="offer-image"
+                      style={{width: '100%', height: '100%', objectFit: 'cover'}}
                     />
                   ) : (
-                    <div className="offer-image-placeholder">
-                      <i className="icon-image"></i>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#999'}}>
+                      📷 No Image
                     </div>
                   )}
-                  <div className={`offer-status ${offer.isActive ? 'active' : 'inactive'}`}>
+                  <div style={{position: 'absolute', top: '12px', right: '12px', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', background: offer.isActive ? '#28a745' : '#6c757d', color: 'white'}}>
                     {offer.isActive ? 'Active' : 'Inactive'}
                   </div>
                 </div>
 
-                <div className="offer-content">
-                  <div className="offer-header">
-                    <h3 className="offer-title">{offer.name}</h3>
-                    <div className="offer-actions">
+                <div style={{background: 'white', color: '#333', padding: '20px'}}>
+                  <div className="offer-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                    <h3 style={{color: '#e13740', margin: 0, fontSize: '18px', fontWeight: 'bold'}}>{offer.name}</h3>
+                    <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                      <Switch
+                        checked={offer.isActive}
+                        onChange={() => handleToggleStatus(offer._id, offer.isActive)}
+                        onColor="#e13740"
+                        offColor="#ccc"
+                        width={50}
+                        height={24}
+                        handleDiameter={20}
+                      />
                       <button
-                        className={`btn btn-sm ${offer.isActive ? 'btn-warning' : 'btn-success'}`}
-                        onClick={() => handleToggleStatus(offer._id, offer.isActive)}
-                        title={offer.isActive ? 'Deactivate' : 'Activate'}
-                      >
-                        {offer.isActive ? '⏸️' : '▶️'}
-                      </button>
-                      <button
-                        className="btn btn-sm btn-secondary"
+                        style={{padding: '6px 12px', borderRadius: '4px', border: 'none', fontSize: '12px', fontWeight: '600', cursor: 'pointer', backgroundColor: '#e13740', color: 'white'}}
                         onClick={() => handleEdit(offer)}
                         title="Edit"
                       >
-                        ✏️
+                        Edit
                       </button>
                       <button
-                        className="btn btn-sm btn-danger"
+                        style={{padding: '6px 12px', borderRadius: '4px', border: 'none', fontSize: '12px', fontWeight: '600', cursor: 'pointer', backgroundColor: '#e13740', color: 'white'}}
                         onClick={() => handleDelete(offer._id)}
                         title="Delete"
                       >
-                        🗑️
+                        Delete
                       </button>
                     </div>
                   </div>
 
                   {offer.description && (
-                    <p className="offer-description">{offer.description}</p>
+                    <p style={{color: '#666', fontSize: '14px', marginBottom: '15px'}}>{offer.description}</p>
                   )}
 
-                  <div className="offer-details">
-                    <div className="detail-row">
-                      <span className="detail-label">Duration:</span>
-                      <span className="detail-value">
+                  <div style={{borderTop: '1px solid #eee', paddingTop: '15px'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+                      <span style={{color: '#666', fontWeight: '500'}}>Duration:</span>
+                      <span style={{color: '#e13740', fontWeight: '600'}}>
                         {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
                       </span>
                     </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Time:</span>
-                      <span className="detail-value">
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+                      <span style={{color: '#666', fontWeight: '500'}}>Time:</span>
+                      <span style={{color: '#e13740', fontWeight: '600'}}>
                         {formatTime(offer.startTime)} - {formatTime(offer.endTime)}
                       </span>
                     </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Offers:</span>
-                      <span className="detail-value">
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+                      <span style={{color: '#666', fontWeight: '500'}}>Offers:</span>
+                      <span style={{color: '#e13740', fontWeight: '600'}}>
                         {offer.offers?.length || 0} deal{offer.offers?.length !== 1 ? 's' : ''}
                       </span>
                     </div>
                   </div>
 
                   {offer.offers && offer.offers.length > 0 && (
-                    <div className="nested-offers">
-                      <h4 className="nested-offers-title">Included Deals:</h4>
-                      <div className="nested-offers-list">
+                    <div style={{borderTop: '1px solid #eee', paddingTop: '15px', marginTop: '15px'}}>
+                      <h4 style={{color: '#e13740', fontSize: '16px', fontWeight: '600', marginBottom: '12px'}}>Included Deals:</h4>
+                      <div>
                         {offer.offers.map((nestedOffer, index) => (
-                          <div key={index} className="nested-offer-item">
-                            <div className="nested-offer-info">
-                              <span className="nested-offer-name">{nestedOffer.name}</span>
-                              <div className="nested-offer-prices">
-                                <span className="original-price">₹{nestedOffer.actualPrice}</span>
-                                <span className="offer-price">₹{nestedOffer.offerPrice}</span>
-                                <span className="discount">
+                          <div key={index} style={{display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '8px', marginBottom: '8px'}}>
+                            <div style={{flex: 1}}>
+                              <div style={{color: '#e13740', fontWeight: '600', fontSize: '14px', marginBottom: '4px'}}>{nestedOffer.name}</div>
+                              <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                <span style={{color: '#6c757d', textDecoration: 'line-through', fontSize: '12px'}}>₹{nestedOffer.actualPrice}</span>
+                                <span style={{color: '#e13740', fontWeight: '700', fontSize: '14px'}}>₹{nestedOffer.offerPrice}</span>
+                                <span style={{background: '#e13740', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '10px'}}>
                                   {Math.round(((nestedOffer.actualPrice - nestedOffer.offerPrice) / nestedOffer.actualPrice) * 100)}% OFF
                                 </span>
                               </div>
                             </div>
-                            {nestedOffer.imageUrl && (
-                              <img 
-                                src={getImageUrl(nestedOffer.imageUrl)} 
-                                alt={nestedOffer.name}
-                                className="nested-offer-image"
-                              />
-                            )}
                           </div>
                         ))}
                       </div>

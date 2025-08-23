@@ -343,6 +343,7 @@ const FoodCategoryManagement = ({ isStandalone = true }) => {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
+        aspectRatio={1} // Square 1:1 for food category icons
       />
     </div>
   );

@@ -539,7 +539,8 @@ export const createCategory = async (formData) => {
   export const getAllSocials = async () => {
     const res = await fetch(`${API_URL}/socials/`);
     if (!res.ok) throw new Error("Failed to fetch socials");
-    return res.json();
+    const response = await res.json();
+    return response.data || response || [];
   };
 
   /**
@@ -554,39 +555,18 @@ export const createCategory = async (formData) => {
 
   /**
    * Create a new social entry
-   * @param {object|FormData} data - { platform, cafeName, url, isVisible } or FormData for file upload
+   * @param {FormData} formData - FormData with name, url, isVisible, and icon file
    */
-  export const createSocial = async (data) => {
+  export const createSocial = async (formData) => {
     const token = localStorage.getItem('adminToken');
     
     try {
-      if (data instanceof FormData) {
-        // For FormData, use axios which handles multipart/form-data correctly
-        const response = await axios.post(`${API_URL}/socials/`, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-        return response.data;
-      } else {
-        // For JSON data, use fetch as before
-        const options = {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(data)
-        };
-
-        const res = await fetch(`${API_URL}/socials/`, options);
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error('Server error:', errorText);
-          throw new Error("Failed to create social");
+      const response = await axios.post(`${API_URL}/socials/`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         }
-        return res.json();
-      }
+      });
+      return response.data;
     } catch (error) {
       console.error('Error in createSocial:', error);
       throw error;
@@ -596,14 +576,13 @@ export const createCategory = async (formData) => {
   /**
    * Update a social entry by ID
    * @param {string} id
-   * @param {object|FormData} data - partial or full social update, or FormData for file upload
+   * @param {FormData|Object} data - FormData for icon updates or Object for other fields
    */
   export const updateSocial = async (id, data) => {
     const token = localStorage.getItem('adminToken');
     
     try {
       if (data instanceof FormData) {
-        // For FormData, use axios which handles multipart/form-data correctly
         const response = await axios.put(`${API_URL}/socials/${id}`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -611,7 +590,6 @@ export const createCategory = async (formData) => {
         });
         return response.data;
       } else {
-        // For JSON data, use fetch as before
         const options = {
           method: "PUT",
           headers: {
@@ -667,6 +645,24 @@ export const createCategory = async (formData) => {
       body: JSON.stringify({ isVisible }),
     });
     if (!res.ok) throw new Error("Failed to toggle social visibility");
+    return res.json();
+  };
+
+  /**
+   * Update social media serial order
+   * @param {Array} socials - Array of social media with updated serialId
+   */
+  export const updateSocialSerials = async (socials) => {
+    const token = localStorage.getItem('adminToken');
+    const res = await fetch(`${API_URL}/socials/update-serials`, {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ socials }),
+    });
+    if (!res.ok) throw new Error("Failed to update social order");
     return res.json();
   };
 

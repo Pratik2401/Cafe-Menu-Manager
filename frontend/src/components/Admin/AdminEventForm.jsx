@@ -148,7 +148,9 @@ const EventForm = ({ eventData = null, onSuccess }) => {
     if (eventData) {
       const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toISOString().slice(0, 16);
+        // Convert to local timezone
+        const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        return localDate.toISOString().slice(0, 16);
       };
 
       setFormData({
@@ -1103,6 +1105,7 @@ const EventForm = ({ eventData = null, onSuccess }) => {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
+        aspectRatio={16/9} // Landscape 16:9 for event banners
       />
     </Container>
   );

@@ -1,3 +1,7 @@
+.SocialMediaContainer {
+  max-width: 1200px;
+}
+
 .contact-card {
   position: relative;
   border-radius: 16px;
@@ -6,14 +10,13 @@
   width: 60%;
   margin: 20px 0;
   min-width: 300px;
-display: flex;
+  display: flex;
 }
 
 .icon-wrapper {
   position: absolute;
   top: -30%;
   left: 15px !important;
-  /* transform: translateX(-50%); */
   background-color: transparent !important;
   border-radius: 50%;
   padding: 6px;
@@ -21,7 +24,6 @@ display: flex;
 }
 
 .icon-wrapper img {
-    
   height: 80px;
 }
 
@@ -39,4 +41,81 @@ input[readonly] {
   display: flex;
   justify-content: center;
   margin-top: 10px;
+}
+
+/* New Social Management Styles */
+.social-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.social-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.social-card.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.drag-handle:hover {
+  background-color: #f8f9fa;
+}
+
+.social-icon img {
+  border: 2px solid #e9ecef;
+  transition: border-color 0.2s ease;
+}
+
+.social-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.social-actions .btn {
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.social-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.social-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-card {
+    margin-bottom: 20px;
+  }
+  
+  .social-actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .social-actions .btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .drag-handle {
+    display: none;
+  }
 }

@@ -80,15 +80,11 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
     setLoading(true);
     try {
       const response = await getAllItems();
-    
       
-      // Update show property for testing if needed
+      // Process items array
       const items = Array.isArray(response.data) ? response.data : [];
+      
       items.forEach(item => {
-        if (item._id === "684fb2ed60c9c29506ed71c5") {
-          item.show = true; // Make sure the sample item is visible
-        }
-        
         // Check image URLs
         if (item.image) {
           checkImageUrl(item.image, item.name);
@@ -266,7 +262,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
       setSelectedVariations(prev => ({ ...prev, ...defaultVariations }));
       setSelectedSizes(prev => ({ ...prev, ...defaultSizes }));
     }
-  }, [menuItems, categories.sizes]);
+  }, [menuItems.length, categories.sizes]); // Use menuItems.length instead of menuItems to prevent infinite loop
 
   // Function to get food category name by ID
   const getFoodCategoryName = (foodCategoryId) => {
@@ -438,7 +434,6 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
   // Memoized filtered items using debounced search for better performance
   const filteredItems = useMemo(() => {
     const items = menuItems.filter(applyFilters);
-
     
     // Debug image visibility for each item
     items.forEach(item => {

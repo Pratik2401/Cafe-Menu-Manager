@@ -6,9 +6,22 @@ const API_URL = import.meta.env.VITE_API_URL_CUSTOMER || 'https://topchioutpost.
 const customerAPI = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
+  timeout: 10000, // 10 second timeout
 });
+
+// Simple response interceptor for error handling only
+customerAPI.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 429) {
+      console.warn('Rate limit exceeded. Please wait before making more requests.');
+      return Promise.reject(new Error('Too many requests. Please wait and try again.'));
+    }
+    return Promise.reject(error);
+  }
+);
 export const createFeedback = (feedbackData) => customerAPI.post('/feedback', feedbackData);
 
 // Food category endpoints
@@ -22,11 +35,14 @@ export const getCafeSettings = () => customerAPI.get('/cafe/settings');
 // User Info Settings - Using localStorage instead of API call
 
 // Item endpoints
-export const getAllItems = () => customerAPI.get('/items');
+export const getAllItems = (includeHidden = false) => {
+  const showParam = includeHidden ? '' : '?show=true';
+  return customerAPI.get(`/items${showParam}`);
+};
 export const getItemById = (id) => customerAPI.get(`/items/${id}`);
 
 // Category endpoints
-export const getAllCategories = () => customerAPI.get('/category');
+export const getAllCategories = () => customerAPI.get(`/category?v=${Date.now()}`);
 export const getCategoryById = (id) => customerAPI.get(`/category/${id}`);
 
 // Subcategory endpoints

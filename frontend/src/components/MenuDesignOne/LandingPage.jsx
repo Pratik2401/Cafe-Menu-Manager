@@ -14,28 +14,7 @@ import AgeVerificationModal from './AgeVerificationModal';
 import EventCard from './EventCard';
 
 
-// Social media icons
-import { FaInstagram, FaWhatsapp, FaEnvelope, FaPhone, FaGoogle, FaMapMarkerAlt, FaGlobe } from 'react-icons/fa';
-// Icon mapping for social media platforms
-const iconMap = {
-  Instagram: FaInstagram,
-  WhatsApp: FaWhatsapp,
-  Email: FaEnvelope,
-  'Mobile Number': FaPhone,
-  Google: FaGoogle,
-  Maps: FaMapMarkerAlt,
-  Website: FaGlobe
-};
-
-const iconColors = {
-  Instagram: 'var(--bg-secondary)',
-  WhatsApp: 'var(--bg-secondary)',
-  Email: 'var(--bg-secondary)',
-  'Mobile Number': 'var(--bg-secondary)',
-  Google: 'var(--bg-secondary)',
-  Maps: 'var(--bg-secondary)',
-  Website: 'var(--bg-secondary)',
-};
+// No longer need fixed social media icons
 
 export default function LandingPage({ onCategorySelect, customMessages }) {
   const [mainCategoryItems, setMainCategoryItems] = useState([]);
@@ -48,7 +27,7 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
   const [hasDailyOffers, setHasDailyOffers] = useState(false);
   const [loading, setLoading] = useState(true); // Add loading state
   const [hasEvents, setHasEvents] = useState(false); // State to track if events exist
-  const [showEvents, setShowEvents] = useState(false); // State to toggle between events and categories
+  const [showEvents, setShowEvents] = useState(false); // State to toggle between events and categories - defaults to Dine-In
   const [showAgeModal, setShowAgeModal] = useState(false); // State for age verification modal
   const [socialMediaLinks, setSocialMediaLinks] = useState([]); // State for social media links
   const [backgroundImage, setBackgroundImage] = useState(''); // State for background image
@@ -104,19 +83,31 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
         
         // Fetch categories
         const categoryResponse = await getAllCategories();
+        console.log('🔍 Full category response:', categoryResponse);
+        console.log('🔍 Response data:', categoryResponse?.data);
+        console.log('🔍 Response data type:', typeof categoryResponse?.data);
+        
         // Extract data from axios response and get categories array
         const responseData = categoryResponse?.data || {};
-        const categoriesArray = responseData.categories || [];
+        console.log('🔍 Categories from response:', responseData?.categories);
+        console.log('🔍 Categories type:', typeof responseData?.categories);
+        console.log('🔍 Is categories array?', Array.isArray(responseData?.categories));
         
-        const mappedCategories = categoriesArray.map((category) => ({
+        // Backend returns {orderAllowed: boolean, categories: array}
+        const categoriesArray = responseData?.categories || [];
+        console.log('🔍 Final categories array:', categoriesArray);
+        console.log('🔍 Categories array length:', categoriesArray?.length);
+        
+        const mappedCategories = Array.isArray(categoriesArray) ? categoriesArray.map((category) => ({
           id: category.serialId,
           _id: category._id, // Keep the MongoDB ID for reference
           name: category.name,
           image: category.image,
           isAgeRestricted: category.isAgeRestricted || false
-        }));
+        })) : [];
         
-        setMainCategoryItems(mappedCategories);
+        console.log('🔍 Mapped categories:', mappedCategories);
+        console.log('🔍 Mapped categories length:', mappedCategories?.length);
         
         // Fetch subcategories
         const subCategoryResponse = await getAllSubCategories();
@@ -135,6 +126,9 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
         }));
         
         setSubCategories(mappedSubCategories);
+        
+        // Set categories first
+        setMainCategoryItems(mappedCategories);
         
         // Check if any category has age restriction
         const hasAgeRestricted = mappedCategories.some(cat => cat.isAgeRestricted);
@@ -184,26 +178,15 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
         // Fetch social media links
         try {
           const socialsResponse = await getAllSocials();
-          // Ensure socials is an array before filtering
-          const socials = socialsResponse?.data || [];
+          const socials = Array.isArray(socialsResponse) ? socialsResponse : (socialsResponse?.data || []);
           
-          // Check if socials is an array before filtering
           if (Array.isArray(socials)) {
-            // Filter visible socials only
-            const visibleSocials = socials.filter(social => social.isVisible);
-            
-            // Map to objects with icon & link
-            const mapped = visibleSocials.map(social => {
-              const IconComponent = iconMap[social.platform] || FaGlobe;
-              const iconColor = iconColors[social.platform] || '#6C757D';
-              
-              return {
-                name: social.platform,
-                IconComponent,
-                iconColor,
-                link: social.url,
-              };
-            });
+            const mapped = socials.map(social => ({
+              name: social.name,
+              icon: social.icon,
+              link: social.url,
+              _id: social._id
+            }));
             
             setSocialMediaLinks(mapped);
           } else {
@@ -263,7 +246,14 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
     };
 
     fetchData();
-  }, [isAdult]);
+  }, []); // Remove isAdult dependency
+  
+  // Separate effect to handle age verification changes
+  useEffect(() => {
+    if (mainCategoryItems.length > 0) {
+      filterCategories(mainCategoryItems, isAdult);
+    }
+  }, [isAdult, mainCategoryItems]);
   
   // Handle navigation state from EventBanner and SearchBar
   useEffect(() => {
@@ -281,17 +271,26 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
     } else if (location.state?.showEvents) {
       // Pre-select Events tab if coming from SearchBar Events button
       setShowEvents(true);
+    } else {
+      // Always default to Dine-In tab
+      setShowEvents(false);
     }
   }, [location.state]);
   
   // Function to filter categories based on age verification
   const filterCategories = (categories, isAdult) => {
+    console.log('🔍 Filtering categories:', categories);
+    console.log('🔍 Is adult:', isAdult);
+    
     if (isAdult) {
       // Show all categories if user is 21+
+      console.log('🔍 Setting all categories (adult):', categories);
       setFilteredCategories(categories);
     } else {
       // Filter out age-restricted categories if user is not 21+
-      setFilteredCategories(categories.filter(cat => !cat.isAgeRestricted));
+      const filtered = categories.filter(cat => !cat.isAgeRestricted);
+      console.log('🔍 Setting filtered categories (non-adult):', filtered);
+      setFilteredCategories(filtered);
     }
   };
 
@@ -535,6 +534,7 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
             
             
             {/* Show Main Categories */}
+            {console.log('🔍 Rendering filtered categories:', filteredCategories)}
             {filteredCategories.map((item) => (
               <div
                 key={item.id}
@@ -572,18 +572,28 @@ export default function LandingPage({ onCategorySelect, customMessages }) {
         onDeny={handleAgeDeny} 
       />
        <div className="LandingSocialContainer">
-        {socialMediaLinks.map((item, index) => (
+        {socialMediaLinks.map((item) => (
           <a
-            key={index}
+            key={item._id}
             className="LandingSocial-Icon"
             href={item.link}
             target={item.link?.startsWith('http') ? '_blank' : undefined}
             rel={item.link?.startsWith('http') ? 'noopener noreferrer' : undefined}
           >
-            <item.IconComponent
-              size={30}
-              color={item.iconColor}
+            <img
+              src={getImageUrl(item.icon)}
+              alt={item.name}
               className="LandingSocial-IconImage"
+              title={item.name}
+              style={{
+                width: '30px',
+                height: '30px',
+                objectFit: 'cover',
+                borderRadius: '6px'
+              }}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
             />
           </a>
         ))}

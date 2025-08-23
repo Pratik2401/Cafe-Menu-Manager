@@ -68,12 +68,12 @@ const createCacheMiddleware = (keyGenerator, ttl = CACHE_TTL.MEDIUM, shouldCache
 
 /**
  * Cache middleware for menu items
- * @description Caches menu items by category and subcategory
+ * @description Caches menu items by category, subcategory, and visibility
  */
 const cacheMenuItems = createCacheMiddleware(
   (req) => {
-    const { categoryId, subCategoryId } = req.query;
-    return CACHE_KEYS.MENU_ITEMS(categoryId, subCategoryId);
+    const { categoryId, subCategoryId, show } = req.query;
+    return CACHE_KEYS.MENU_ITEMS(categoryId, subCategoryId, show);
   },
   CACHE_TTL.LONG,
   (data, statusCode) => statusCode === 200 && data && Array.isArray(data)

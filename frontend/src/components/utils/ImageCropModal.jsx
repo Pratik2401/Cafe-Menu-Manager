@@ -11,7 +11,7 @@ const brand = {
   light: '#ede1d5'
 };
 
-const ImageCropModal = ({ show, onHide, originalImage, onSave }) => {
+const ImageCropModal = ({ show, onHide, originalImage, onSave, aspectRatio = undefined }) => {
   const [crop, setCrop] = useState();
   const [completedCrop, setCompletedCrop] = useState();
   const imgRef = useRef(null);
@@ -25,16 +25,50 @@ const ImageCropModal = ({ show, onHide, originalImage, onSave }) => {
   }, [show, originalImage]);
 
   const onImageLoad = useCallback((e) => {
-    const initialCrop = {
-      unit: '%',
-      width: 90,
-      height: 90,
-      x: 5,
-      y: 5
-    };
+    const image = e.currentTarget;
+    let initialCrop;
+    
+    if (aspectRatio) {
+      // Calculate initial crop dimensions based on aspect ratio
+      const imageAspect = image.width / image.height;
+      
+      if (imageAspect > aspectRatio) {
+        // Image is wider than desired aspect ratio
+        const cropHeight = 90;
+        const cropWidth = cropHeight * aspectRatio * (image.height / image.width);
+        initialCrop = {
+          unit: '%',
+          width: cropWidth,
+          height: cropHeight,
+          x: (100 - cropWidth) / 2,
+          y: 5
+        };
+      } else {
+        // Image is taller than desired aspect ratio
+        const cropWidth = 90;
+        const cropHeight = cropWidth / aspectRatio * (image.width / image.height);
+        initialCrop = {
+          unit: '%',
+          width: cropWidth,
+          height: cropHeight,
+          x: 5,
+          y: (100 - cropHeight) / 2
+        };
+      }
+    } else {
+      // Default free crop
+      initialCrop = {
+        unit: '%',
+        width: 90,
+        height: 90,
+        x: 5,
+        y: 5
+      };
+    }
+    
     setCrop(initialCrop);
     setCompletedCrop(initialCrop);
-  }, []);
+  }, [aspectRatio]);
 
   const getCroppedImg = useCallback(async () => {
     if (!imgRef.current) return null;
@@ -120,13 +154,13 @@ const ImageCropModal = ({ show, onHide, originalImage, onSave }) => {
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             onComplete={(c) => setCompletedCrop(c)}
-            aspect={undefined}
+            aspect={aspectRatio}
             ruleOfThirds
           >
             <img
               ref={imgRef}
               alt="Crop me"
-              src={originalImage && originalImage.startsWith('blob:') ? originalImage : getImageUrl(originalImage)}
+              src={originalImage}
               style={{ maxHeight: '70vh', maxWidth: '100%' }}
               onLoad={onImageLoad}
             />

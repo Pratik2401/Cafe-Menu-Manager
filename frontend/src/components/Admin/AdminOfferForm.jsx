@@ -376,6 +376,7 @@ const OfferForm = ({
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
+        aspectRatio={16/9} // Landscape 16:9 for offer images
       />
     </Card>
   );

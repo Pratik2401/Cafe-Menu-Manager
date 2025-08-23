@@ -2,33 +2,30 @@ const mongoose = require('mongoose');
 const { Document, Schema } = mongoose;
 
 const SocialSchema = new Schema({
-  platform: {
-    type: String,
-    enum: ['Instagram', 'WhatsApp', 'Google', 'Mobile Number', 'Email', 'Maps', 'Website'],
-    required: true,
-  },
-  cafeName: {
+  name: {
     type: String,
     required: true,
+    trim: true
   },
   url: {
     type: String,
     required: true,
+    trim: true
+  },
+  icon: {
+    type: String,
+    required: true
   },
   isVisible: {
     type: Boolean,
     default: true,
   },
-  location: {
-    address: String,
-    latitude: Number,
-    longitude: Number,
-    mapUrl: String
-  },
-  customImage: {
-    type: String,
-    default: null
+  serialId: {
+    type: Number,
+    default: 0
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Social', SocialSchema);

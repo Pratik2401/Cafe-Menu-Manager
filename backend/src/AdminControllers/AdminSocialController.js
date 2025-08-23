@@ -9,7 +9,11 @@ const path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const fs = require('fs');
-    const dir = 'uploads/social-images/';
+    const uploadsDir = process.env.UPLOAD_DIR || path.join(__dirname, '../../uploads');
+    const dir = path.join(uploadsDir, 'social-images');
+    
+    console.log(`Upload directory: ${uploadsDir}`);
+    console.log(`Target directory: ${dir}`);
     
     // Create directory if it doesn't exist
     if (!fs.existsSync(dir)) {
@@ -18,6 +22,7 @@ const storage = multer.diskStorage({
         console.log(`Directory created: ${dir}`);
       } catch (err) {
         console.error(`Error creating directory: ${err.message}`);
+        return cb(err);
       }
     }
     
@@ -25,13 +30,16 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'social-' + uniqueSuffix + path.extname(file.originalname));
+    const filename = 'social-' + uniqueSuffix + path.extname(file.originalname);
+    console.log(`Generated filename: ${filename}`);
+    cb(null, filename);
   }
 });
 
 const upload = multer({ 
   storage: storage,
   fileFilter: function (req, file, cb) {
+    console.log('File filter - mimetype:', file.mimetype, 'originalname:', file.originalname);
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
@@ -40,6 +48,10 @@ const upload = multer({
   },
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  onError: function (err, next) {
+    console.error('Multer error:', err);
+    next(err);
   }
 });
 
@@ -48,70 +60,80 @@ const upload = multer({
  */
 const createSocial = async (req, res) => {
   try {
-    // Handle both FormData and JSON requests
-    const platform = req.body.platform;
-    const url = req.body.url;
-    const isVisible = req.body.isVisible;
-    const cafeName = req.body.cafeName;
-    const location = req.body.location;
+    console.log('=== CREATE SOCIAL REQUEST ===');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    console.log('File:', req.file);
+    console.log('=============================');
+    
+    const { name, url, isVisible } = req.body;
 
     console.log('Creating social with:', { 
-      platform, 
+      name, 
       url, 
       isVisible, 
-      cafeName, 
       hasFile: !!req.file,
+      fileName: req.file?.filename,
+      filePath: req.file?.path,
+      fileSize: req.file?.size,
       contentType: req.headers['content-type']
     });
 
     // Validate required fields
-    if (!platform || !cafeName) {
+    if (!name || !url) {
       res.status(400).json({
         success: false,
-        message: 'Platform and cafeName are required'
+        message: 'Name and URL are required'
       });
       return;
     }
 
-    // Check if social link already exists for this platform
-    const existingSocial = await Social.findOne({ platform });
-    if (existingSocial) {
+    if (!req.file) {
       res.status(400).json({
         success: false,
-        message: `Social link for ${platform} already exists`
+        message: 'Icon image is required'
       });
       return;
     }
 
-    // Handle custom image for Website platform
-    let customImage = null;
-    if (req.file && platform === 'Website') {
-      customImage = `/uploads/social-images/${req.file.filename}`;
-      console.log('Custom image path:', customImage);
+    // Check if we already have 6 social media entries
+    const socialCount = await Social.countDocuments();
+    if (socialCount >= 6) {
+      res.status(400).json({
+        success: false,
+        message: 'Maximum 6 social media entries allowed'
+      });
+      return;
     }
+
+    // Get next serial ID
+    const maxSerial = await Social.findOne().sort({ serialId: -1 });
+    const nextSerialId = maxSerial ? maxSerial.serialId + 1 : 1;
 
     // Create a new social link
+    const iconPath = `/uploads/social-images/${req.file.filename}`;
+    console.log('Icon path being saved:', iconPath);
+    
     const newSocial = new Social({
-      platform,
-      url: url || '',
-      cafeName,
+      name: name.trim(),
+      url: url.trim(),
+      icon: iconPath,
       isVisible: isVisible !== undefined ? isVisible : true,
-      location: location || {},
-      customImage
+      serialId: nextSerialId
     });
 
     await newSocial.save();
 
     res.status(201).json({
       success: true,
-      message: 'Social link created successfully',
+      message: 'Social media created successfully',
       data: newSocial
     });
   } catch (error) {
-    console.error('Error creating social link:', error);
+    console.error('Error creating social media:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create social link',
+      message: 'Failed to create social media',
       error: error.message
     });
   }
@@ -122,7 +144,7 @@ const createSocial = async (req, res) => {
  */
 const getAllSocials = async (req, res) => {
   try {
-    const socials = await Social.find().sort({ platform: 1 });
+    const socials = await Social.find().sort({ serialId: 1 });
     
     res.status(200).json({
       success: true,
@@ -183,14 +205,13 @@ const getSocialById = async (req, res) => {
 const updateSocial = async (req, res) => {
   try {
     const { id } = req.params;
-    const { platform, url, isVisible, cafeName, location } = req.body;
+    const { name, url, isVisible } = req.body;
     
     console.log('Updating social with:', { 
       id,
-      platform, 
+      name, 
       url, 
       isVisible, 
-      cafeName, 
       hasFile: !!req.file,
       contentType: req.headers['content-type']
     });
@@ -198,7 +219,7 @@ const updateSocial = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       res.status(400).json({
         success: false,
-        message: 'Invalid social link ID'
+        message: 'Invalid social media ID'
       });
       return;
     }
@@ -208,52 +229,36 @@ const updateSocial = async (req, res) => {
     if (!social) {
       res.status(404).json({
         success: false,
-        message: 'Social link not found'
+        message: 'Social media not found'
       });
       return;
     }
     
-    // If platform is being changed, check if the new platform already exists
-    if (platform && platform !== social.platform) {
-      const existingSocial = await Social.findOne({ platform });
-      if (existingSocial && existingSocial._id.toString() !== id) {
-        res.status(400).json({
-          success: false,
-          message: `Social link for ${platform} already exists`
-        });
-        return;
-      }
-    }
-    
-    // Handle custom image update for Website platform
-    let customImage = social.customImage; // Keep existing image by default
-    if (req.file && (platform === 'Website' || social.platform === 'Website')) {
+    // Handle icon update
+    let icon = social.icon; // Keep existing icon by default
+    if (req.file) {
       try {
-        // Delete old image if exists
-        if (social.customImage) {
+        // Delete old icon if exists
+        if (social.icon) {
           try {
-            await deleteImage(social.customImage);
+            await deleteImage(social.icon);
           } catch (deleteError) {
-            console.warn('Failed to delete old image:', deleteError);
-            // Continue with the update even if delete fails
+            console.warn('Failed to delete old icon:', deleteError);
           }
         }
-        customImage = `/uploads/social-images/${req.file.filename}`;
-        console.log('Updated custom image path:', customImage);
+        icon = `/uploads/social-images/${req.file.filename}`;
+        console.log('Updated icon path:', icon);
       } catch (imageError) {
-        console.error('Error processing image:', imageError);
-        // Continue with the update without changing the image
+        console.error('Error processing icon:', imageError);
       }
     }
     
     // Update the social link
     const updateData = {};
-    if (platform) updateData.platform = platform;
-    if (url !== undefined) updateData.url = url; // Allow empty string URLs
-    if (cafeName) updateData.cafeName = cafeName;
+    if (name) updateData.name = name.trim();
+    if (url !== undefined) updateData.url = url.trim();
     if (isVisible !== undefined) updateData.isVisible = isVisible;
-    if (location) updateData.location = location;
-    if (customImage !== social.customImage) updateData.customImage = customImage;
+    if (icon !== social.icon) updateData.icon = icon;
     
     console.log('Update data:', updateData);
     
@@ -265,14 +270,14 @@ const updateSocial = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Social link updated successfully',
+      message: 'Social media updated successfully',
       data: updatedSocial
     });
   } catch (error) {
-    console.error('Error updating social link:', error);
+    console.error('Error updating social media:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update social link',
+      message: 'Failed to update social media',
       error: error.message
     });
   }
@@ -288,7 +293,7 @@ const deleteSocial = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       res.status(400).json({
         success: false,
-        message: 'Invalid social link ID'
+        message: 'Invalid social media ID'
       });
       return;
     }
@@ -298,17 +303,17 @@ const deleteSocial = async (req, res) => {
     if (!social) {
       res.status(404).json({
         success: false,
-        message: 'Social link not found'
+        message: 'Social media not found'
       });
       return;
     }
     
-    // Delete custom image if exists
-    if (social.customImage) {
+    // Delete icon if exists
+    if (social.icon) {
       try {
-        await deleteImage(social.customImage);
+        await deleteImage(social.icon);
       } catch (deleteError) {
-        console.warn('Failed to delete custom image:', deleteError);
+        console.warn('Failed to delete icon:', deleteError);
       }
     }
     
@@ -316,13 +321,13 @@ const deleteSocial = async (req, res) => {
     
     res.status(200).json({
       success: true,
-      message: 'Social link deleted successfully'
+      message: 'Social media deleted successfully'
     });
   } catch (error) {
-    console.error('Error deleting social link:', error);
+    console.error('Error deleting social media:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to delete social link',
+      message: 'Failed to delete social media',
       error: error.message
     });
   }
@@ -339,7 +344,7 @@ const toggleSocialVisibility = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       res.status(400).json({
         success: false,
-        message: 'Invalid social link ID'
+        message: 'Invalid social media ID'
       });
       return;
     }
@@ -357,7 +362,7 @@ const toggleSocialVisibility = async (req, res) => {
     if (!social) {
       res.status(404).json({
         success: false,
-        message: 'Social link not found'
+        message: 'Social media not found'
       });
       return;
     }
@@ -370,14 +375,50 @@ const toggleSocialVisibility = async (req, res) => {
     
     res.status(200).json({
       success: true,
-      message: `Social link ${isVisible ? 'shown' : 'hidden'} successfully`,
+      message: `Social media ${isVisible ? 'shown' : 'hidden'} successfully`,
       data: updatedSocial
     });
   } catch (error) {
-    console.error('Error toggling social link visibility:', error);
+    console.error('Error toggling social media visibility:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to toggle social link visibility',
+      message: 'Failed to toggle social media visibility',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Update social media serial order
+ */
+const updateSocialSerials = async (req, res) => {
+  try {
+    const { socials } = req.body;
+    
+    if (!Array.isArray(socials)) {
+      res.status(400).json({
+        success: false,
+        message: 'Socials must be an array'
+      });
+      return;
+    }
+    
+    // Update each social media's serial ID
+    const updatePromises = socials.map(({ _id, serialId }) => 
+      Social.findByIdAndUpdate(_id, { serialId }, { new: true })
+    );
+    
+    await Promise.all(updatePromises);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Social media order updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating social media order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update social media order',
       error: error.message
     });
   }
@@ -390,5 +431,6 @@ module.exports = {
   updateSocial,
   deleteSocial,
   toggleSocialVisibility,
+  updateSocialSerials,
   upload
 };

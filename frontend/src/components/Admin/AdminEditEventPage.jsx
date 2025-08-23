@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Button } from 'react-bootstrap';
+import { Row, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'react-bootstrap-icons';
 import Sidebar from './AdminSideBar';
@@ -25,6 +25,7 @@ const EditEventPage = () => {
     try {
       setLoading(true);
       const response = await getEventById(eventId);
+      console.log('Fetched event data:', response.data);
       setEventData(response.data);
       setError('');
     } catch (error) {
@@ -50,39 +51,43 @@ const EditEventPage = () => {
 
   if (loading) {
     return (
-      <Container fluid className="admin-dashboard">
+      <div className="admin-dashboard container-fluid">
         <MobileHeader active={activeSection} setActive={handleSectionChange} />
         <Row className="flex-nowrap">
           <div className="sidebar-col p-0 d-none d-lg-block">
             <Sidebar active={activeSection} setActive={handleSectionChange} />
           </div>
-          <div className="content-col">
+          <div className="">
             <Breadcrumb />
-            <Container className="py-3">
-              <Button 
-                variant="outline-secondary" 
-                onClick={handleBack}
-                className="mb-3 d-flex align-items-center"
-              >
-                <ArrowLeft className="me-2" />
-                Back to Manage Events
-              </Button>
-            </Container>
-            <div className="text-center py-5">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
+            <div style={{padding: '20px', backgroundColor: 'white'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px', padding: '25px 30px', background: 'linear-gradient(135deg, #fff 0%, #f5efe9 100%)', borderRadius: '12px', boxShadow: '0 2px 10px rgba(225,55,64,0.15)', border: '1px solid rgba(225,55,64,0.2)'}}>
+                <div style={{flex: 1}}>
+                  <h1 style={{color: '#e13740', margin: '0 0 8px 0', fontSize: '28px', fontWeight: '700', lineHeight: '1.2'}}>Edit Event</h1>
+                  <p style={{color: '#8b5a3c', margin: 0, fontSize: '16px', fontWeight: '400', lineHeight: '1.4'}}>Update event details and configuration</p>
+                </div>
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={handleBack}
+                  style={{padding: '12px 24px', border: 'none', borderRadius: '8px', background: 'linear-gradient(135deg, #e13740 0%, #c12e3a 100%)', color: 'white', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: '0 2px 8px rgba(225,55,64,0.3)', display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <ArrowLeft className="me-2" />
+                  Back to Manage Events
+                </Button>
               </div>
-              <p className="mt-3">Loading event data...</p>
+              <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 10px rgba(225,55,64,0.15)'}}>
+                <div style={{width: '40px', height: '40px', border: '3px solid #f5efe9', borderTop: '3px solid #e13740', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '16px'}}></div>
+                <p style={{color: '#8b5a3c', fontSize: '16px', margin: 0}}>Loading event data...</p>
+              </div>
             </div>
           </div>
         </Row>
-      </Container>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container fluid className="admin-dashboard">
+      <div className="admin-dashboard container-fluid">
         <MobileHeader active={activeSection} setActive={handleSectionChange} />
         <Row className="flex-nowrap">
           <div className="sidebar-col p-0 d-none d-lg-block">
@@ -90,53 +95,65 @@ const EditEventPage = () => {
           </div>
           <div className="content-col">
             <Breadcrumb />
-            <Container className="py-3">
-              <Button 
-                variant="outline-secondary" 
-                onClick={handleBack}
-                className="mb-3 d-flex align-items-center"
-              >
-                <ArrowLeft className="me-2" />
-                Back to Manage Events
-              </Button>
-            </Container>
-            <div className="alert alert-danger m-4">
-              {error}
+            <div style={{padding: '20px', backgroundColor: 'white'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px', padding: '25px 30px', background: 'linear-gradient(135deg, #fff 0%, #f5efe9 100%)', borderRadius: '12px', boxShadow: '0 2px 10px rgba(225,55,64,0.15)', border: '1px solid rgba(225,55,64,0.2)'}}>
+                <div style={{flex: 1}}>
+                  <h1 style={{color: '#e13740', margin: '0 0 8px 0', fontSize: '28px', fontWeight: '700', lineHeight: '1.2'}}>Edit Event</h1>
+                  <p style={{color: '#8b5a3c', margin: 0, fontSize: '16px', fontWeight: '400', lineHeight: '1.4'}}>Update event details and configuration</p>
+                </div>
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={handleBack}
+                  style={{padding: '12px 24px', border: 'none', borderRadius: '8px', background: 'linear-gradient(135deg, #e13740 0%, #c12e3a 100%)', color: 'white', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: '0 2px 8px rgba(225,55,64,0.3)', display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <ArrowLeft className="me-2" />
+                  Back to Manage Events
+                </Button>
+              </div>
+              <div className="alert alert-danger" style={{margin: '20px 0'}}>
+                {error}
+              </div>
             </div>
           </div>
         </Row>
-      </Container>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="admin-dashboard">
+    <div className="admin-dashboard container-fluid">
       <MobileHeader active={activeSection} setActive={handleSectionChange} />
       <Row className="flex-nowrap">
         <div className="sidebar-col p-0 d-none d-lg-block">
           <Sidebar active={activeSection} setActive={handleSectionChange} />
         </div>
-        <div className="content-col">
-          <Breadcrumb />
-          <Container className="py-3">
-            <Button 
-              variant="outline-secondary" 
-              onClick={handleBack}
-              className="mb-3 d-flex align-items-center"
-            >
-              <ArrowLeft className="me-2" />
-              Back to Manage Events
-            </Button>
-          </Container>
-          {eventData && (
-            <EventForm 
-              eventData={eventData} 
-              onSuccess={handleSuccess}
-            />
-          )}
+        <div className="EditFormContent" style={{flex: 1, overflow: 'auto', height: '100vh'}}>
+          {/* <Breadcrumb /> */}
+          <div style={{padding: '20px', backgroundColor: 'white'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px', padding: '25px 30px', background: 'linear-gradient(135deg, #fff 0%, #f5efe9 100%)', borderRadius: '12px', boxShadow: '0 2px 10px rgba(225,55,64,0.15)', border: '1px solid rgba(225,55,64,0.2)'}}>
+              <div style={{flex: 1}}>
+                <h1 style={{color: '#e13740', margin: '0 0 8px 0', fontSize: '28px', fontWeight: '700', lineHeight: '1.2'}}>Edit Event</h1>
+                <p style={{color: '#8b5a3c', margin: 0, fontSize: '16px', fontWeight: '400', lineHeight: '1.4'}}>Update event details and configuration</p>
+              </div>
+              <Button 
+                variant="outline-secondary" 
+                onClick={handleBack}
+                style={{padding: '12px 24px', border: 'none', borderRadius: '8px', background: 'linear-gradient(135deg, #e13740 0%, #c12e3a 100%)', color: 'white', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: '0 2px 8px rgba(225,55,64,0.3)', display: 'flex', alignItems: 'center', gap: '8px'}}
+              >
+                <ArrowLeft className="me-2" />
+                Back to Manage Events
+              </Button>
+            </div>
+            {eventData && (
+              <EventForm 
+                eventData={eventData} 
+                onSuccess={handleSuccess}
+              />
+            )}
+          </div>
         </div>
       </Row>
-    </Container>
+    </div>
   );
 };
 

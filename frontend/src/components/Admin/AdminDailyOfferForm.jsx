@@ -58,7 +58,7 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
     if (editingOffer) {
       populateFormData(editingOffer);
     }
-  }, [editingOffer, updateBreadcrumb, onCancel]);
+  }, [editingOffer]);
 
   const loadItems = async () => {
     try {
@@ -950,6 +950,7 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
+        aspectRatio={16/9} // Landscape 16:9 for offer banners
       />
     </Container>
   );

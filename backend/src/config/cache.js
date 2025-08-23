@@ -224,7 +224,7 @@ class CacheService {
 // Cache key generators for consistent naming
 const CACHE_KEYS = {
   // Menu data caching (1 hour TTL)
-  MENU_ITEMS: (categoryId, subCategoryId) => `menu:items:${categoryId}:${subCategoryId || 'all'}`,
+  MENU_ITEMS: (categoryId, subCategoryId, show) => `menu:items:${categoryId}:${subCategoryId || 'all'}:${show || 'all'}`,
   CATEGORIES: () => 'menu:categories:visible',
   SUBCATEGORIES: (categoryId) => `menu:subcategories:${categoryId}`,
   FOOD_CATEGORIES: () => 'menu:food-categories:visible',
