@@ -4,6 +4,7 @@ import { FaPlus, FaTrash, FaImage } from 'react-icons/fa';
 import Switch from 'react-switch';
 import { getImageUploads, createImageUpload, deleteImageUpload, toggleImageUploadVisibility } from '../../api/admin';
 import { getImageUrl } from '../../utils/imageUrl';
+import ImageCropModal from '../utils/ImageCropModal';
 
 const AdminImageUploadPage = () => {
   const [imageUploads, setImageUploads] = useState([]);
@@ -14,6 +15,8 @@ const AdminImageUploadPage = () => {
     message: '',
     image: null
   });
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [originalImageForCrop, setOriginalImageForCrop] = useState(null);
 
   useEffect(() => {
     fetchImageUploads();
@@ -79,6 +82,23 @@ const AdminImageUploadPage = () => {
   const showAlert = (message, type) => {
     setAlert({ show: true, message, type });
     setTimeout(() => setAlert({ show: false, message: '', type: '' }), 3000);
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+      setOriginalImageForCrop(imageUrl);
+      setShowCropModal(true);
+    }
+    e.target.value = '';
+  };
+
+  const handleCroppedImageSave = (croppedBlob) => {
+    if (!croppedBlob) return;
+    const croppedFile = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
+    setFormData({ ...formData, image: croppedFile });
+    setShowCropModal(false);
   };
 
   return (
@@ -179,7 +199,7 @@ const AdminImageUploadPage = () => {
               <Form.Control
                 type="file"
                 accept="image/*"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                onChange={handleImageChange}
                 required
               />
             </Form.Group>
@@ -194,6 +214,14 @@ const AdminImageUploadPage = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+
+      <ImageCropModal
+        show={showCropModal}
+        onHide={() => setShowCropModal(false)}
+        onSave={handleCroppedImageSave}
+        originalImage={originalImageForCrop}
+        aspectRatio={3}
+      />
     </Container>
   );
 };

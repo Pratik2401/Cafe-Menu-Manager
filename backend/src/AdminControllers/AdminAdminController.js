@@ -61,7 +61,12 @@ const login = async (req, res) => {
       token,
       admin: {
         id: admin._id,
-        email: admin.email
+        email: admin.email,
+        features: admin.features || {
+          ordersToggle: false,
+          eventsToggle: false,
+          dailyOfferToggle: false
+        }
       }
     });
   } catch (error) {
@@ -191,7 +196,12 @@ const signup = async (req, res) => {
       token,
       admin: {
         id: admin._id,
-        email: admin.email
+        email: admin.email,
+        features: admin.features || {
+          ordersToggle: false,
+          eventsToggle: false,
+          dailyOfferToggle: false
+        }
       }
     });
   } catch (error) {
@@ -330,6 +340,58 @@ const updateOrderingStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const getFeatures = async (req, res) => {
+  try {
+    const { adminId } = req.params;
+
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      features: admin.features || {
+        ordersToggle: false,
+        eventsToggle: false,
+        dailyOfferToggle: false
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateFeatures = async (req, res) => {
+  try {
+    const { adminId } = req.params;
+    const { ordersToggle, eventsToggle, dailyOfferToggle } = req.body;
+
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+
+    if (!admin.features) {
+      admin.features = {};
+    }
+
+    if (ordersToggle !== undefined) admin.features.ordersToggle = ordersToggle;
+    if (eventsToggle !== undefined) admin.features.eventsToggle = eventsToggle;
+    if (dailyOfferToggle !== undefined) admin.features.dailyOfferToggle = dailyOfferToggle;
+
+    await admin.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Features updated successfully',
+      features: admin.features
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
   login,
   forgotPassword,
@@ -339,5 +401,7 @@ module.exports = {
   getTables,
   removeTable,
   updateGSTSettings,
-  updateOrderingStatus
+  updateOrderingStatus,
+  getFeatures,
+  updateFeatures
 };

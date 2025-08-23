@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import "../../styles/SideBar.css";
 import Snap2EatLogo from "../../assets/images/Snap2Eat.png";
 import { getImageUrl } from '../../utils/imageUrl';
+import { getAdminFeatures } from '../../utils/tokenManager';
 import { 
   FaChevronDown, 
   FaChevronUp, 
@@ -27,6 +28,21 @@ const Sidebar = memo(() => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
+  const [adminFeatures, setAdminFeatures] = useState(getAdminFeatures());
+
+  // Update admin features when cookies change
+  useEffect(() => {
+    const updateFeatures = () => {
+      setAdminFeatures(getAdminFeatures());
+    };
+    
+    // Listen for custom admin features change event
+    window.addEventListener('adminFeaturesChanged', updateFeatures);
+    
+    return () => {
+      window.removeEventListener('adminFeaturesChanged', updateFeatures);
+    };
+  }, []);
 
   // Auto-open dropdowns based on current route (only once on mount)
   useEffect(() => {
@@ -82,12 +98,10 @@ const Sidebar = memo(() => {
   };
 
   const getDropdownState = (itemId) => {
-    const state = itemId === 'menu' ? menuOpen : itemId === 'events' ? eventsOpen : false;
-    console.log('getDropdownState for', itemId, ':', state);
-    return state;
+    return itemId === 'menu' ? menuOpen : itemId === 'events' ? eventsOpen : false;
   };
 
-  const menuItems = [
+  const baseMenuItems = [
     {
       id: 'controls',
       icon: <FaCog size={20} />,
@@ -110,11 +124,11 @@ const Sidebar = memo(() => {
       isActive: isMenuSectionActive(),
       subItems: [
         { label: 'Categories', route: '/admin/categories', icon: <FaTags size={16} /> },
-        { label: 'Daily Offers', route: '/admin/daily-offers', icon: <FaGift size={16} /> },
+        ...(adminFeatures.dailyOfferToggle ? [{ label: 'Daily Offers', route: '/admin/daily-offers', icon: <FaGift size={16} /> }] : []),
         { label: 'Image Uploads', route: '/admin/image-uploads', icon: <FaImages size={16} /> }
       ]
     },
-    {
+    ...(adminFeatures.eventsToggle ? [{
       id: 'events',
       icon: <FaCalendarAlt size={20} />,
       label: 'Event Management',
@@ -124,7 +138,7 @@ const Sidebar = memo(() => {
         { label: 'Create Event', route: '/admin/events/new', icon: <FaPlus size={16} /> },
         { label: 'Manage Events', route: '/admin/events', icon: <FaEdit size={16} /> }
       ]
-    },
+    }] : []),
     {
       id: 'analytics',
       icon: <FaChartLine size={20} />,
@@ -140,6 +154,8 @@ const Sidebar = memo(() => {
       type: 'single'
     }
   ];
+
+  const menuItems = baseMenuItems;
 
   return (
     <div className="modern-sidebar">

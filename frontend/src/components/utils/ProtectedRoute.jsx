@@ -13,6 +13,7 @@
  */
 
 import { Navigate } from 'react-router-dom';
+import { isTokenValid } from '../../utils/tokenManager';
 
 /**
  * Protected Route Component
@@ -28,11 +29,10 @@ import { Navigate } from 'react-router-dom';
  */
 const ProtectedRoute = ({ children }) => {
   /**
-   * Check for authentication token in storage
-   * @description Looks for admin token in both localStorage and sessionStorage
-   * to support both persistent and session-based authentication
+   * Check for authentication token in cookies
+   * @description Uses cookie-based token validation for better security
    */
-  const isAuthenticated = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+  const isAuthenticated = isTokenValid();
   
   /**
    * Conditional rendering based on authentication status

@@ -301,6 +301,7 @@ const AllergyManagement = ({ isStandalone = true }) => {
           setShowCropModal(false);
         }}
         originalImage={originalImageForCrop}
+        aspectRatio={1}
       />
     </div>
   );

@@ -72,7 +72,7 @@ const base64ToFile = (base64String, filename) => {
  * const category = await createCategory(formData);
  */
 export const createCategory = async (formData) => {
-  const token = localStorage.getItem('adminToken');
+  const token = getValidToken();
   const response = await fetch(`${API_URL}/category`, {
     method: "POST",
     headers: {
@@ -93,7 +93,7 @@ export const createCategory = async (formData) => {
 
     export const updateCategory = async (categoryId, categoryData) => {
       try {
-        const token = localStorage.getItem('adminToken');
+        const token = getValidToken();
         const res = await axios.put(`${API_URL}/category/${categoryId}`, categoryData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -114,7 +114,7 @@ export const createCategory = async (formData) => {
      */
     export const deleteCategory = async (categoryId) => {
       try {
-        const token = localStorage.getItem('adminToken');
+        const token = getValidToken();
         const res = await axios.delete(`${API_URL}/category/${categoryId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -156,9 +156,9 @@ export const createCategory = async (formData) => {
           `${API_URL}/auth/login`,
           { email, password }
         );
-        // Save token to localStorage with expiration if present in response
+        // Save token to cookies with 6 hour expiration if present in response
         if (res.data && res.data.token) {
-          setTokenWithExpiry(res.data.token, 4); // 4 hours
+          setTokenWithExpiry(res.data.token, 6, res.data.admin); // 6 hours
         }
         return res.data;
       } catch (error) {

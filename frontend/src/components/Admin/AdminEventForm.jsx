@@ -137,6 +137,12 @@ const EventForm = ({ eventData = null, onSuccess }) => {
     }
   };
 
+  const getAspectRatio = () => {
+    if (currentImageType === 'promotional') return 3;
+    if (currentImageType === 'offer') return 1;
+    return null;
+  };
+
   useEffect(() => {
     updateBreadcrumb([
       { label: 'Event Management' },
@@ -1105,7 +1111,7 @@ const EventForm = ({ eventData = null, onSuccess }) => {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
-        aspectRatio={16/9} // Landscape 16:9 for event banners
+        aspectRatio={getAspectRatio()}
       />
     </Container>
   );

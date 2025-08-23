@@ -328,6 +328,13 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
     }
   };
 
+  const getAspectRatio = () => {
+    if (cropTargetType === 'background') return 3/2;
+    if (cropTargetType === 'promotional') return 3/1;
+    if (cropTargetType === 'offer') return 1;
+    return 16/9;
+  };
+
   const addOffer = () => {
     setFormData(prev => ({
       ...prev,
@@ -950,7 +957,7 @@ const AdminDailyOfferForm = ({ editingOffer, onSuccess, onCancel }) => {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
-        aspectRatio={16/9} // Landscape 16:9 for offer banners
+        aspectRatio={getAspectRatio()}
       />
     </Container>
   );

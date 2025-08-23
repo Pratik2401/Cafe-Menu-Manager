@@ -442,7 +442,7 @@ const TagManagement = ({ isStandalone = true }) => {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
-        aspectRatio={1} // Square 1:1 for tag icons
+        aspectRatio={1}
       />
     </div>
   );

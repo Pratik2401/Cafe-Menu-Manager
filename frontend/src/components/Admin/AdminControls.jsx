@@ -27,7 +27,7 @@ const AdminControls = () => {
     name: '',
   });
   const [isEditingCafeName, setIsEditingCafeName] = useState(false);
-const [prevCafeName, setPrevCafeName] = useState('');
+  const [prevCafeName, setPrevCafeName] = useState('');
 
 useEffect(() => {
   if (isEditingCafeName) setPrevCafeName(cafeDetails.name);
@@ -60,6 +60,8 @@ useEffect(() => {
     };
     
     loadData();
+    
+
   }, []);
 
   // Update breadcrumb based on active section
@@ -85,6 +87,8 @@ useEffect(() => {
   const handleCafeDetailsChange = (field, value) => {
     setCafeDetails({ ...cafeDetails, [field]: value });
   };
+
+
 
   // Save cafe settings
 const handleSaveCafeSettings = async () => {

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 
 /**
  * Upload an image to server storage
@@ -10,8 +11,9 @@ const path = require('path');
  */
 const uploadImage = async (file, fileName, folder) => {
   try {
-    // Generate a unique file name to avoid collisions
-    const uniqueFileName = `${Date.now()}-${fileName}`;
+    // Generate a unique file name with .webp extension
+    const nameWithoutExt = path.parse(fileName).name;
+    const uniqueFileName = `${Date.now()}-${nameWithoutExt}.webp`;
     
     // Get upload directory from environment variable or use default
     const baseUploadDir = process.env.UPLOAD_DIR || path.join(process.cwd(), '..', 'uploads');
@@ -30,14 +32,16 @@ const uploadImage = async (file, fileName, folder) => {
       }
     }
     
-    // Write file to server
+    // Convert image to WebP format and write to server
     const filePath = path.join(uploadDir, uniqueFileName);
     try {
-      fs.writeFileSync(filePath, file);
-      console.log('Successfully uploaded file:', filePath);
+      await sharp(file)
+        .webp({ quality: 80 })
+        .toFile(filePath);
+      console.log('Successfully uploaded and converted file to WebP:', filePath);
     } catch (writeError) {
-      console.error('Failed to write file:', writeError);
-      throw new Error(`Permission denied: Cannot write file ${filePath}`);
+      console.error('Failed to convert and write file:', writeError);
+      throw new Error(`Failed to process image: ${writeError.message}`);
     }
     
     // Return URL path for serving
