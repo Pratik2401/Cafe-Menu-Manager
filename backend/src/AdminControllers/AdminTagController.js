@@ -1,14 +1,15 @@
 const Tag = require('../models/TagModel.js');
 const mongoose = require('mongoose');
 const { adminAuth } = require('../middlewares/adminAuth.js');
-const { deleteImage } = require('../utils/imageUploads.js');
+const { uploadImage, deleteImage } = require('../utils/imageUploads.js');
 
 /**
  * Create a new tag
  */
 const createTag = async (req, res) => {
   try {
-    const { name, color, image } = req.body;
+    const { name, color } = req.body;
+    let imageUrl = null;
 
     // Validate required fields
     if (!name) {
@@ -19,8 +20,13 @@ const createTag = async (req, res) => {
       return;
     }
 
+    // Handle image upload if file is provided
+    if (req.file) {
+      imageUrl = await uploadImage(req.file.buffer, req.file.originalname, 'tags');
+    }
+
     // Validate that either color or image is provided
-    if (!color && !image) {
+    if (!color && !imageUrl) {
       res.status(400).json({
         success: false,
         message: 'Either color or image must be provided'
@@ -41,7 +47,7 @@ const createTag = async (req, res) => {
     // Create a new tag
     const tagData = { name };
     if (color) tagData.color = color;
-    if (image) tagData.image = image;
+    if (imageUrl) tagData.image = imageUrl;
     
     const newTag = new Tag(tagData);
     await newTag.save();
@@ -127,7 +133,8 @@ const getTagById = async (req, res) => {
 const updateTag = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, color, image } = req.body;
+    const { name, color } = req.body;
+    let imageUrl = null;
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       res.status(400).json({
@@ -159,11 +166,20 @@ const updateTag = async (req, res) => {
       }
     }
     
+    // Handle image upload if file is provided
+    if (req.file) {
+      imageUrl = await uploadImage(req.file.buffer, req.file.originalname, 'tags');
+      // Delete old image if new image is uploaded
+      if (tag.image) {
+        deleteImage(tag.image);
+      }
+    }
+    
     // Update the tag
     const updateData = {};
     if (name) updateData.name = name;
     if (color !== undefined) updateData.color = color;
-    if (image !== undefined) updateData.image = image;
+    if (imageUrl) updateData.image = imageUrl;
     
     const updatedTag = await Tag.findByIdAndUpdate(
       id,

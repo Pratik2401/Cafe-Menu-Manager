@@ -46,6 +46,39 @@
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes imageLoad {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
 /* Animation utility classes */
 .animate-slideUp {
   animation: slideUp 0.5s ease-out forwards;
@@ -65,4 +98,23 @@
 
 .animate-spin {
   animation: spin 3s linear infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-imageLoad {
+  animation: imageLoad 0.6s ease-out forwards;
+}
+
+.animate-skeletonPulse {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
 }

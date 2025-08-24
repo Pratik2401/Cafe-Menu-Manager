@@ -24,6 +24,7 @@ const SubCategory = require('../models/SubCategoryModel.js');
 const Tag = require('../models/TagModel.js');
 const { uploadImage, deleteImage } = require('../utils/imageUploads.js');
 const { adminAuth } = require('../middlewares/adminAuth.js');
+const { cache, CACHE_KEYS } = require('../config/cache.js');
 
 /**
  * Retrieve all items with optional filtering and pagination
@@ -227,6 +228,9 @@ const createItem = async (req, res) => {
       createdItems.push(item);
     }
 
+    // Invalidate menu cache after creating items
+    await cache.clearPattern('menu:*');
+    
     res.status(201).json(Array.isArray(input) ? createdItems : createdItems[0]);
   } catch (error) {
     console.error('Error creating item:', error);
@@ -398,6 +402,9 @@ const updateItem = async (req, res) => {
     await item.save();
     console.log('Item saved successfully');
     
+    // Invalidate menu cache after updating item
+    await cache.clearPattern('menu:*');
+    
     res.status(200).json(item);
   } catch (error) {
     console.error('Error updating item - Full error:', error);
@@ -430,6 +437,10 @@ const deleteItem = async (req, res) => {
     }
 
     await Item.findByIdAndDelete(id);
+    
+    // Invalidate menu cache after deleting item
+    await cache.clearPattern('menu:*');
+    
     res.status(200).json({ message: 'Item deleted successfully' });
   } catch (error) {
     console.error('Error deleting item:', error);
@@ -461,6 +472,9 @@ const updateItemAvailability = async (req, res) => {
       return;
     }
 
+    // Invalidate menu cache after updating availability
+    await cache.clearPattern('menu:*');
+    
     res.status(200).json(item);
   } catch (error) {
     console.error('Error updating availability:', error);
@@ -507,6 +521,9 @@ const updateItemSerials = async (req, res) => {
     console.log('Executing bulk write operation...');
     const result = await Item.bulkWrite(bulkOps);
     console.log('Bulk write result:', result);
+
+    // Invalidate menu cache after reordering items
+    await cache.clearPattern('menu:*');
 
     res.json({ message: 'Items reordered successfully', result });
   } catch (err) {

@@ -5,6 +5,7 @@ import { FaSave, FaPalette, FaFont, FaImage, FaInfoCircle, FaUndo } from 'react-
 import { fetchCafeSettings, updateMenuCustomization, uploadMenuLogo, uploadMenuBackgroundImage } from '../../api/admin';
 import { refreshThemeCSS } from '../../utils/themeUtils';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
+import { clearCache } from '../../hooks/useApiCache';
 import ImageCropModal from '../utils/ImageCropModal';
 import Swal from 'sweetalert2';
 import '../../styles/MenuCustomization.css';
@@ -77,6 +78,8 @@ const MenuCustomization = ({ isStandalone = true }) => {
     const loadData = async () => {
       setLoading(true);
       try {
+        // Clear cache to ensure fresh data for admin
+        clearCache('cafe-settings');
         // Load settings from API
         const response = await fetchCafeSettings();
         
@@ -306,6 +309,9 @@ const MenuCustomization = ({ isStandalone = true }) => {
         logoBackgroundColor,
         backgroundImage
       });
+      
+      // Clear cache to ensure fresh data is fetched
+      clearCache('cafe-settings');
       
       // Refresh the theme CSS to apply changes immediately
       refreshThemeCSS();

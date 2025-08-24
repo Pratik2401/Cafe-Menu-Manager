@@ -8,16 +8,21 @@ const mongoose = require('mongoose');
  */
 const getActiveEvents = async (req, res) => {
   try {
-    // Get only active events that haven't ended yet
-    const currentDate = new Date();
-    const events = await Event.find({
-      isActive: true,
-      endDate: { $gte: currentDate }
-    }).sort({ startDate: 1 });
+    // Get all active events and filter by IST time in application
+    const events = await Event.find({ isActive: true }).sort({ startDate: 1 });
+    
+    // Filter events that haven't ended yet using IST time
+    const currentIST = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+    const currentISTDate = new Date(currentIST);
+    
+    const activeEvents = events.filter(event => {
+      const eventEndDate = new Date(event.endDate);
+      return eventEndDate >= currentISTDate;
+    });
     
     res.status(200).json({
       success: true,
-      data: events
+      data: activeEvents
     });
   } catch (error) {
     console.error('Error fetching active events:', error);

@@ -37,6 +37,12 @@ const CafeSchema = new mongoose.Schema({
     noCategoryText: { type: String, default: 'No categories available' },
     loadingText: { type: String, default: 'Loading...' }
   },
+  // Feature toggles
+  features: {
+    eventsToggle: { type: Boolean, default: true },
+    dailyOfferToggle: { type: Boolean, default: true },
+    ordersToggle: { type: Boolean, default: false }
+  },
 }, { timestamps: true });
 
 const Cafe = mongoose.model('Cafe', CafeSchema);

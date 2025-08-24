@@ -14,6 +14,7 @@ import {
   deleteTable, 
   toggleTableStatus
 } from '../../api/admin';
+import { clearCache } from '../../hooks/useApiCache';
 import AdminSocialControl from './AdminSocialControl';
 import MenuCustomization from './AdminMenuCustomization';
 import AdminMessageControl from './AdminMessageControl';
@@ -49,6 +50,8 @@ useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
+        // Clear cache to ensure fresh data for admin
+        clearCache('cafe-settings');
         const response = await fetchCafeSettings();
         setCafeDetails({ name: response.data.name });
       } catch (err) {
@@ -60,8 +63,6 @@ useEffect(() => {
     };
     
     loadData();
-    
-
   }, []);
 
   // Update breadcrumb based on active section
@@ -95,6 +96,8 @@ const handleSaveCafeSettings = async () => {
   setLoading(true);
   try {
     await updateCafeSettings(cafeDetails);
+    // Clear cache to ensure fresh data
+    clearCache('cafe-settings');
     setSuccess('Cafe name updated successfully!');
     setIsEditingCafeName(false); // Exit edit mode
     setTimeout(() => setSuccess(null), 3000);

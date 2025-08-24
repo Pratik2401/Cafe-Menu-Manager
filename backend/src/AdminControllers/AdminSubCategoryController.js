@@ -4,6 +4,7 @@ const Item = require('../models/ItemModel.js');
 const mongoose = require('mongoose');
 const { adminAuth } = require('../middlewares/adminAuth.js');
 const { deleteImage } = require('../utils/imageUploads.js');
+const { cache } = require('../config/cache.js');
 
 // Helper to get fieldVisibility with defaults
 const defaultFieldVisibility = {
@@ -67,6 +68,9 @@ const createSubCategory = async (req, res) => {
       await subCategory.save();
     }
 
+    // Invalidate menu cache after creating subcategories
+    await cache.clearPattern('menu:*');
+    
     res.status(201).json({ message: 'Subcategories created successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to create subcategories', details: err.message });
@@ -190,6 +194,9 @@ const updateSubCategory = async (req, res) => {
       { $set: { fieldVisibility: updatedSubCategory.fieldVisibility } }
     );
 
+    // Invalidate menu cache after updating subcategory
+    await cache.clearPattern('menu:*');
+    
     res.json(updatedSubCategory);
   } catch (err) {
     console.error('Failed to update subcategory:', err.message);
@@ -222,6 +229,9 @@ const deleteSubCategory = async (req, res) => {
     
     // Delete the subcategory itself
     await SubCategory.findByIdAndDelete(req.params.id);
+    
+    // Invalidate menu cache after deleting subcategory
+    await cache.clearPattern('menu:*');
     
     res.json({ 
       message: 'Subcategory deleted successfully',
@@ -304,6 +314,9 @@ const toggleSubCategoryVisibility = async (req, res) => {
       return;
     }
 
+    // Invalidate menu cache after toggling visibility
+    await cache.clearPattern('menu:*');
+    
     res.json({
       message: 'Subcategory visibility updated successfully',
       subCategory,
@@ -385,6 +398,9 @@ const updateSubCategorySerialId = async (req, res) => {
     // Fetch the updated subcategory
     const updatedSubCategory = await SubCategory.findById(subCategoryId);
 
+    // Invalidate menu cache after updating serial ID
+    await cache.clearPattern('menu:*');
+    
     res.json({
       message: 'Subcategory serialId updated and reordered successfully',
       subCategory: updatedSubCategory,

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Button, Offcanvas, Nav, Collapse, Image } from 'react-bootstrap';
 import { List } from 'react-bootstrap-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaChevronDown, FaChevronUp, FaCog, FaCalendarAlt, FaChartLine, FaUsers } from "react-icons/fa";
 import { MdManageAccounts } from "react-icons/md";
+import { getAdminFeatures } from '../../utils/tokenManager';
 import '../../styles/MobileHeader.css';
 import Snap2EatLogo from '../../assets/images/Snap2Eat.png'; // Adjust the path as necessary
 
@@ -13,6 +14,21 @@ const MobileHeader = () => {
   const [show, setShow] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
+  const [adminFeatures, setAdminFeatures] = useState(getAdminFeatures());
+
+  // Update admin features when cookies change
+  useEffect(() => {
+    const updateFeatures = () => {
+      setAdminFeatures(getAdminFeatures());
+    };
+    
+    // Listen for custom admin features change event
+    window.addEventListener('adminFeaturesChanged', updateFeatures);
+    
+    return () => {
+      window.removeEventListener('adminFeaturesChanged', updateFeatures);
+    };
+  }, []);
 
   const toggleSidebar = () => setShow(!show);
   const closeSidebar = () => setShow(false);
@@ -148,16 +164,18 @@ const MobileHeader = () => {
                 >
                   Category  Sub Category  Items
                 </Nav.Link>
-                <Nav.Link
-                  href="#"
-                  className={location.pathname.startsWith("/admin/daily-offers") ? "active" : ""}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSectionClick("menu", "daily-offers", "/admin/daily-offers");
-                  }}
-                >
-                  Daily Offers
-                </Nav.Link>
+                {adminFeatures.dailyOfferToggle && (
+                  <Nav.Link
+                    href="#"
+                    className={location.pathname.startsWith("/admin/daily-offers") ? "active" : ""}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSectionClick("menu", "daily-offers", "/admin/daily-offers");
+                    }}
+                  >
+                    Daily Offers
+                  </Nav.Link>
+                )}
                 <Nav.Link
                   href="#"
                   className={location.pathname.startsWith("/admin/food-categories") ? "active" : ""}
@@ -181,41 +199,45 @@ const MobileHeader = () => {
               </div>
             </Collapse>
 
-            <button
-              type="button"
-              className={`menu-toggle btn btn-link text-start ${
-                location.pathname.startsWith("/admin/events") ? "active" : ""
-              }`}
-              onClick={() => handleSectionClick("events")}
-            >
-              <FaCalendarAlt size={22} color={location.pathname.startsWith("/admin/events") ? "white" : "black"} />
-              <span style={{ marginLeft: '3px' }}>Events {eventsOpen ? <FaChevronUp /> : <FaChevronDown />}</span>
-            </button>
+            {adminFeatures.eventsToggle && (
+              <>
+                <button
+                  type="button"
+                  className={`menu-toggle btn btn-link text-start ${
+                    location.pathname.startsWith("/admin/events") ? "active" : ""
+                  }`}
+                  onClick={() => handleSectionClick("events")}
+                >
+                  <FaCalendarAlt size={22} color={location.pathname.startsWith("/admin/events") ? "white" : "black"} />
+                  <span style={{ marginLeft: '3px' }}>Events {eventsOpen ? <FaChevronUp /> : <FaChevronDown />}</span>
+                </button>
 
-            <Collapse in={eventsOpen}>
-              <div className="menu-sub-items ms-3">
-                <Nav.Link
-                  href="#"
-                  className={location.pathname === "/admin/events/new" ? "active" : ""}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSectionClick("events", "create-event", "/admin/events/new");
-                  }}
-                >
-                  Create Event
-                </Nav.Link>
-                <Nav.Link
-                  href="#"
-                  className={location.pathname === "/admin/events" ? "active" : ""}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSectionClick("events", "manage-events", "/admin/events");
-                  }}
-                >
-                  Manage Events
-                </Nav.Link>
-              </div>
-            </Collapse>
+                <Collapse in={eventsOpen}>
+                  <div className="menu-sub-items ms-3">
+                    <Nav.Link
+                      href="#"
+                      className={location.pathname === "/admin/events/new" ? "active" : ""}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSectionClick("events", "create-event", "/admin/events/new");
+                      }}
+                    >
+                      Create Event
+                    </Nav.Link>
+                    <Nav.Link
+                      href="#"
+                      className={location.pathname === "/admin/events" ? "active" : ""}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSectionClick("events", "manage-events", "/admin/events");
+                      }}
+                    >
+                      Manage Events
+                    </Nav.Link>
+                  </div>
+                </Collapse>
+              </>
+            )}
 
             <button
               type="button"

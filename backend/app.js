@@ -307,15 +307,15 @@ app.get('/', (req, res) => {
 // API ROUTES WITH CACHING AND RATE LIMITING
 // ========================================================================================
 
-// Customer routes with caching and rate limiting
-app.use('/api/customer/items', middlewareStacks.customer, customerItemRoutes); // Removed caching for real-time show/hide
-app.use('/api/customer/subcategories', middlewareStacks.customer, cacheSubCategories, customerSubCategoryRoutes);
-app.use('/api/customer/category', middlewareStacks.customer, cacheCategories, customerCategoryRoutes);
-app.use('/api/customer/food-categories', middlewareStacks.customer, cacheFoodCategories, customerFoodCategoryRoutes);
-app.use('/api/customer/daily-offers', middlewareStacks.customer, cacheDailyOffers, customerDailyOfferRoutes);
-app.use('/api/customer/socials', middlewareStacks.customer, cacheSocialLinks, customerSocialRoutes);
-app.use('/api/customer/cafe', middlewareStacks.customer, cacheCafeInfo, customerCafeRoutes);
-app.use('/api/customer/events', middlewareStacks.customer, cacheEvents, customerEventRoutes);
+// Customer routes with event-based cache invalidation (no caching middleware)
+app.use('/api/customer/items', middlewareStacks.customer, customerItemRoutes);
+app.use('/api/customer/subcategories', middlewareStacks.customer, customerSubCategoryRoutes);
+app.use('/api/customer/category', middlewareStacks.customer, customerCategoryRoutes);
+app.use('/api/customer/food-categories', middlewareStacks.customer, customerFoodCategoryRoutes);
+app.use('/api/customer/daily-offers', middlewareStacks.customer, customerDailyOfferRoutes);
+app.use('/api/customer/socials', middlewareStacks.customer, customerSocialRoutes);
+app.use('/api/customer/cafe', middlewareStacks.customer, customerCafeRoutes);
+app.use('/api/customer/events', middlewareStacks.customer, customerEventRoutes);
 app.use('/api/customer/tags', middlewareStacks.customer, customerTagRoutes);
 app.use('/api/customer/sizes', middlewareStacks.customer, customerSizeRoutes);
 app.use('/api/customer/feedback', middlewareStacks.customer, customerFeedbackRoutes);

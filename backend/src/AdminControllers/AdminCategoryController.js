@@ -2,6 +2,7 @@ const Category = require('../models/CategoryModel.js');
 const { uploadImage, deleteImage } = require('../utils/imageUploads.js');
 const imagekit = require('../config/imagekit.js');
 const { adminAuth } = require('../middlewares/adminAuth.js');
+const { cache } = require('../config/cache.js');
 
 // Fallback upload function using ImageKit
 const uploadImageWithFallback = async (fileBuffer, fileName, folder) => {
@@ -44,6 +45,9 @@ const createCategory = async (req, res) => {
 
     const category = new Category({ name, image: imageUrl, serialId, isVisible, isAgeRestricted });
     await category.save();
+
+    // Invalidate menu cache after creating category
+    await cache.clearPattern('menu:*');
 
     res.status(201).json(category);
   } catch (err) {
@@ -127,6 +131,9 @@ const updateCategory = async (req, res) => {
       { new: true }
     );
 
+    // Invalidate menu cache after updating category
+    await cache.clearPattern('menu:*');
+
     res.json(updatedCategory);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update category', details: err.message });
@@ -168,6 +175,9 @@ const deleteCategory = async (req, res) => {
     // Finally delete the category itself
     await Category.findByIdAndDelete(req.params.id);
     
+    // Invalidate menu cache after deleting category
+    await cache.clearPattern('menu:*');
+    
     res.json({ 
       message: 'Category deleted successfully',
       deletedSubcategories: subcategories.length,
@@ -197,6 +207,9 @@ const updateCategorySerialId = async (req, res) => {
       return;
     }
 
+    // Invalidate menu cache after updating serial ID
+    await cache.clearPattern('menu:*');
+    
     res.json(category);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update serialId', details: err.message });
@@ -216,6 +229,9 @@ const toggleCategoryVisibility = async (req, res) => {
     category.isVisible = !category.isVisible;
     await category.save();
 
+    // Invalidate menu cache after toggling visibility
+    await cache.clearPattern('menu:*');
+    
     res.json({
       message: `Category visibility toggled to ${category.isVisible ? 'visible' : 'hidden'}`,
       category,

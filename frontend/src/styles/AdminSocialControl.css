@@ -43,60 +43,164 @@ input[readonly] {
   margin-top: 10px;
 }
 
-/* New Social Management Styles */
-.social-card {
+/* Grid-based Social Management Styles */
+.social-grid-card {
   border: 1px solid #e0e0e0;
-  border-radius: 12px;
+  border-radius: 20px;
   transition: all 0.3s ease;
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  height: 100%;
+  min-height: 300px;
+  padding: 24px 20px;
 }
 
-.social-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+.social-grid-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
-.social-card.dragging {
-  opacity: 0.5;
-  transform: rotate(5deg);
+.social-grid-card.dragging {
+  opacity: 0.7;
+  transform: rotate(3deg) scale(1.05);
 }
 
-.drag-handle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border-radius: 6px;
+.drag-handle-grid {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px;
+  border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
-.drag-handle:hover {
+.drag-handle-grid:hover {
   background-color: #f8f9fa;
 }
 
-.social-icon img {
-  border: 2px solid #e9ecef;
-  transition: border-color 0.2s ease;
-}
-
-.social-actions {
+.social-icon-grid {
   display: flex;
-  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
-.social-actions .btn {
-  border-radius: 6px;
+.social-icon-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
-.social-list {
-  max-width: 800px;
-  margin: 0 auto;
+.social-grid-card:hover .social-icon-img {
+  border-color: #007bff;
+}
+
+.social-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.social-url-display {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  margin-bottom: 20px;
+}
+
+.social-url-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.social-btn-cancel {
+  background-color: #dc3545;
+  border: none;
+  border-radius: 25px;
+  padding: 6px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+}
+
+.social-btn-save {
+  background-color: #28a745 !important;
+  border: none;
+  border-radius: 25px;
+  padding: 6px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+}
+
+.social-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-switch .form-check-input {
+  width: 3.5rem;
+  height: 1.75rem;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.social-switch .form-check-input:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.social-switch .form-check-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #28a745;
+}
+
+.social-grid {
+  margin: 0 -15px;
 }
 
 .social-form-container {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.social-grid {
+  touch-action: none;
+}
+
+.social-grid-card {
+  touch-action: manipulation;
+}
+
+.drag-handle-grid {
+  touch-action: none;
 }
 
 /* Responsive Design */
@@ -105,17 +209,40 @@ input[readonly] {
     margin-bottom: 20px;
   }
   
-  .social-actions {
-    flex-direction: column;
-    gap: 4px;
+  .social-grid-card {
+    min-height: 260px;
   }
   
-  .social-actions .btn {
-    font-size: 12px;
-    padding: 4px 8px;
+  .social-icon-img {
+    width: 50px;
+    height: 50px;
   }
   
-  .drag-handle {
-    display: none;
+  .social-title {
+    font-size: 1rem;
+  }
+  
+  .social-url-text {
+    font-size: 0.8rem;
+    max-width: 140px;
+  }
+  
+  .drag-handle-grid {
+    display: block;
+    top: 8px;
+    right: 8px;
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 576px) {
+  .social-grid-card {
+    min-height: 240px;
+  }
+  
+  .social-icon-img {
+    width: 45px;
+    height: 45px;
   }
 }

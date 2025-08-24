@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const Admin = require('../models/AdminModel.js');
+const Cafe = require('../models/CafeModel.js');
 const { adminAuth } = require('../middlewares/adminAuth.js');
 
 // Email transporter setup
@@ -56,17 +57,29 @@ const login = async (req, res) => {
     console.log('Generated token:', token);
     console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
 
+    // Get features from Cafe model
+    let features = {
+      ordersToggle: false,
+      eventsToggle: false,
+      dailyOfferToggle: false
+    };
+    
+    try {
+      const cafe = await Cafe.findOne();
+      if (cafe && cafe.features) {
+        features = cafe.features;
+      }
+    } catch (err) {
+      console.log('Error fetching cafe features:', err);
+    }
+
     res.status(200).json({
       success: true,
       token,
       admin: {
         id: admin._id,
         email: admin.email,
-        features: admin.features || {
-          ordersToggle: false,
-          eventsToggle: false,
-          dailyOfferToggle: false
-        }
+        features
       }
     });
   } catch (error) {
@@ -191,17 +204,29 @@ const signup = async (req, res) => {
       { expiresIn: '1d' }
     );
 
+    // Get features from Cafe model
+    let features = {
+      ordersToggle: false,
+      eventsToggle: false,
+      dailyOfferToggle: false
+    };
+    
+    try {
+      const cafe = await Cafe.findOne();
+      if (cafe && cafe.features) {
+        features = cafe.features;
+      }
+    } catch (err) {
+      console.log('Error fetching cafe features:', err);
+    }
+
     res.status(201).json({
       success: true,
       token,
       admin: {
         id: admin._id,
         email: admin.email,
-        features: admin.features || {
-          ordersToggle: false,
-          eventsToggle: false,
-          dailyOfferToggle: false
-        }
+        features
       }
     });
   } catch (error) {

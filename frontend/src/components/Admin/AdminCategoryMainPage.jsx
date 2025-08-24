@@ -442,7 +442,7 @@ function CategoryPage() {
                             className="UploadImageBtn"
                             style={{ cursor: "pointer" }}
                           >
-                            Upload Image(Ratio 3:1)
+                            Upload (Ratio 2:1)
                           </Form.Label>
                           <Form.Control
                             type="file"
@@ -490,7 +490,7 @@ function CategoryPage() {
         onHide={() => setShowCropModal(false)}
         onSave={handleCroppedImageSave}
         originalImage={originalImageForCrop}
-        aspectRatio={3}
+        aspectRatio={2}
       />
     </Container>
   );

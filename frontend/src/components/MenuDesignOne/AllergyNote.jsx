@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllAllergies } from '../../api/customer';
+import { getImageUrl } from '../../utils/imageUrl';
 import '../../styles/AllergyNote.css';
 
 const AllergyNote = () => {
@@ -31,7 +32,7 @@ const AllergyNote = () => {
       <ul className="allergy-list">
         {allergies.map((allergy) => (
           <li key={allergy._id} className="allergy-item">
-            <img src={allergy.image} alt={allergy.name} className="allergy-icon" />
+            <img src={getImageUrl(allergy.image)} alt={allergy.name} className="allergy-icon" />
             {allergy.name}
           </li>
         ))}

@@ -15,6 +15,9 @@ const router = Router();
 // Get all social entries
 router.get('/', getAllSocials);
 
+// Update social media serial order (must be before /:id routes)
+router.put('/update-serials', updateSocialSerials);
+
 // Get a single social entry by ID
 router.get('/:id', getSocialById);
 
@@ -29,8 +32,5 @@ router.delete('/:id', deleteSocial);
 
 // Toggle visibility of a social entry by ID
 router.patch('/:id/toggle-visibility', toggleSocialVisibility);
-
-// Update social media serial order
-router.put('/update-serials', updateSocialSerials);
 
 module.exports = router;

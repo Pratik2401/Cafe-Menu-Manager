@@ -42,7 +42,7 @@ export const getAllItems = (includeHidden = false) => {
 export const getItemById = (id) => customerAPI.get(`/items/${id}`);
 
 // Category endpoints
-export const getAllCategories = () => customerAPI.get(`/category?v=${Date.now()}`);
+export const getAllCategories = () => customerAPI.get('/category');
 export const getCategoryById = (id) => customerAPI.get(`/category/${id}`);
 
 // Subcategory endpoints

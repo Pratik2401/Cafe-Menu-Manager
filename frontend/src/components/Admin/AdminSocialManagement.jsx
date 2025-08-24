@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Alert, Modal } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import { getAllSocials, deleteSocial, toggleSocialVisibility, updateSocialSerials } from '../../api/admin';
+import { clearCache } from '../../hooks/useApiCache';
 import AdminSocialCard from './AdminSocialCard';
 import AdminSocialForm from './AdminSocialForm';
 import AdminSocialDragDrop from './AdminSocialDragDrop';
@@ -26,6 +27,8 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
   const fetchSocials = async () => {
     try {
       setLoading(true);
+      // Clear cache to ensure fresh data
+      clearCache('socials');
       const response = await getAllSocials();
       setSocials(response.data || response || []);
       setError('');
@@ -60,6 +63,8 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
     try {
       await deleteSocial(id);
       setSocials(prev => prev.filter(s => s._id !== id));
+      // Clear cache to ensure consistency
+      clearCache('socials');
     } catch (err) {
       console.error('Failed to delete social media:', err);
       setError('Failed to delete social media. Please try again.');
@@ -81,6 +86,8 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
   const handleFormSuccess = () => {
     setShowForm(false);
     setEditingSocial(null);
+    // Clear cache before fetching to ensure fresh data
+    clearCache('socials');
     fetchSocials();
   };
 
@@ -98,6 +105,8 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
       
       await updateSocialSerials(socialsWithSerials);
       setSocials(reorderedSocials);
+      // Clear cache to ensure consistency
+      clearCache('socials');
     } catch (err) {
       console.error('Failed to update order:', err);
       setError('Failed to update order. Please try again.');
@@ -114,15 +123,7 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
     );
   }
 
-  if (showForm) {
-    return (
-      <AdminSocialForm
-        social={editingSocial}
-        onSuccess={handleFormSuccess}
-        onCancel={handleFormCancel}
-      />
-    );
-  }
+
 
   return (
     <Container className="SocialMediaContainer mt-4">
@@ -166,6 +167,16 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
           onToggleVisibility={handleToggleVisibility}
         />
       )}
+      
+      <Modal show={showForm} onHide={handleFormCancel} size="lg" centered>
+        <Modal.Body className="p-0">
+          <AdminSocialForm
+            social={editingSocial}
+            onSuccess={handleFormSuccess}
+            onCancel={handleFormCancel}
+          />
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

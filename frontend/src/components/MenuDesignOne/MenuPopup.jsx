@@ -9,7 +9,11 @@ export default function MenuPopup({ show, categories, subCategories, onSubCatego
     if (!show) return;
     function handleClickOutside(event) {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
-        if (onClose) onClose();
+        // Don't close if clicking on Menu button
+        const menuButton = event.target.closest('.Menu-DropDown');
+        if (!menuButton && onClose) {
+          onClose();
+        }
       }
     }
     document.addEventListener('mousedown', handleClickOutside);

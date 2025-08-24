@@ -128,16 +128,17 @@ const AllergyManagement = ({ isStandalone = true }) => {
   }
 
   return (
-    <div className="allergy-management">
-      <Card className='allergy-card'>
-        <Card.Header className="allergy-card-header">
-          <h3 className="section-title">Allergy Management</h3>
-          <button 
-            className="add-btn"
-            onClick={() => setShowModal(true)}
-          >
-            <FaPlus /> Add Allergy
-          </button>
+    <div className=" food-category-management">
+      <Card>
+        <Card.Header>
+            <h3 className="section-title">Allergy Management</h3>
+            <Button 
+              variant="primary" 
+              size="sm" 
+              onClick={() => setShowModal(true)}
+            >
+              <FaPlus className="me-1" /> Add Allergy
+            </Button>
         </Card.Header>
         <Card.Body>
           <div className="alert-container">
@@ -153,14 +154,18 @@ const AllergyManagement = ({ isStandalone = true }) => {
             )}
           </div>
 
-          <div className="allergy-table-container">
-            <Table className="allergy-table">
+          {allergies.length === 0 ? (
+            <div className="text-center py-4">
+              <p className="text-muted">No allergies found. Add an allergy to get started.</p>
+            </div>
+          ) : (
+            <Table responsive>
               <thead>
                 <tr>
-                  <th style={{ width: '80px' }}>Image</th>
-                  <th style={{ minWidth: '70px' }}>Name</th>
-                  <th style={{ width: '120px' }}>Status</th>
-                  <th style={{ width: '150px' }}>Actions</th>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -170,55 +175,45 @@ const AllergyManagement = ({ isStandalone = true }) => {
                       <img
                         src={getImageUrl(allergy.image)}
                         alt={allergy.name}
-                        className="allergy-image"
+                        style={{ width: 28, height: 28, objectFit: 'cover', borderRadius: 4, margin: 0   }}
                       />
                     </td>
-                    <td>
-                      <span className="allergy-name">{allergy.name}</span>
-                    </td>
+                    <td>{allergy.name}</td>
                     <td>
                       <Switch
                         checked={allergy.isActive}
                         onChange={() => handleToggleStatus(allergy._id)}
                         onColor="#64E239"
                         offColor="#545454"
-                        checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 14, color: 'white'}}>Show</span>}
-                        uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 14, color: 'white'}}>Hide</span>}
+                        checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
+                        uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
                         width={70}
                         height={30}
                         handleDiameter={22}
                       />
                     </td>
                     <td>
-                      <div className="action-buttons">
-                        <button
-                          className="edit-btn"
-                          onClick={() => handleEdit(allergy)}
-                          title="Edit"
-                          type="button"
-                        >
-                          <FaPencil />
-                        </button>
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDelete(allergy._id)}
-                          title="Delete"
-                          type="button"
-                        >
-                          <FaRegTrashCan />
-                        </button>
-                      </div>
+                      <button
+                        className="btn btn-outline-secondary editAllergyBtn"
+                        onClick={() => handleEdit(allergy)}
+                        title="Edit"
+                        type="button"
+                      >
+                        <FaPencil />
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => handleDelete(allergy._id)}
+                        title="Delete"
+                        type="button"
+                      >
+                        <FaRegTrashCan />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </Table>
-          </div>
-
-          {allergies.length === 0 && (
-            <div className="empty-state">
-              <p>No allergies found. Create your first allergy!</p>
-            </div>
           )}
         </Card.Body>
       </Card>
@@ -231,21 +226,19 @@ const AllergyManagement = ({ isStandalone = true }) => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <div className="modal-form-group">
-              <label className="modal-form-label">Allergy Name</label>
-              <input
+            <Form.Group className="mb-3">
+              <Form.Label>Allergy Name</Form.Label>
+              <Form.Control
                 type="text"
-                className="modal-form-input"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
               />
-            </div>
-            <div className="modal-form-group">
-              <label className="modal-form-label">Allergy Image (Keep Ratio 1:1)</label>
-              <input
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Allergy Image (Keep Ratio 1:1)</Form.Label>
+              <Form.Control
                 type="file"
-                className="modal-form-input"
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files[0];
@@ -264,22 +257,22 @@ const AllergyManagement = ({ isStandalone = true }) => {
                 </div>
               )}
               {(formData.image || editingAllergy?.image) && (
-                <div className="image-preview">
+                <div className="mt-2">
                   <img
                     src={formData.image ? URL.createObjectURL(formData.image) : getImageUrl(editingAllergy?.image)}
                     alt="Preview"
-                    className="preview-image"
+                    style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 4 }}
                   />
                 </div>
               )}
-            </div>
-            <div className="modal-actions">
-              <button className="cancel-btn" onClick={handleCloseModal} type="button">
-                ✗ Cancel
-              </button>
-              <button className="save-btn" type="submit" disabled={loading}>
-                ✓ {loading ? 'Saving...' : 'Save'}
-              </button>
+            </Form.Group>
+            <div className="d-flex justify-content-end">
+              <Button variant="secondary" className="me-2 CancelFoodCategoryBtn" onClick={handleCloseModal} type="button">
+                <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
+              </Button>
+              <Button variant="primary" type="submit" disabled={loading} className='SaveFoodCategoryBtn'>
+                <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> {loading ? 'Saving...' : 'Save'}
+              </Button>
             </div>
           </Form>
         </Modal.Body>

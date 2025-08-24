@@ -29,6 +29,7 @@ const MenuView = memo(() => {
   const [categories, setCategories] = useState([]);
   const [hasSubCategories, setHasSubCategories] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [cafeSettings, setCafeSettings] = useState(null);
   // Removed showBranding state
 
   // Fetch all categories and cafe settings on component mount
@@ -43,11 +44,13 @@ const MenuView = memo(() => {
         
         const grouped = {};
         subCategoriesData.forEach(subCategory => {
-          const categoryId = subCategory.category?.serialId || subCategory.categoryId;
-          if (!grouped[categoryId]) {
+          const categoryId = subCategory.category?.serialId;
+          if (categoryId !== undefined && !grouped[categoryId]) {
             grouped[categoryId] = [];
           }
-          grouped[categoryId].push(subCategory);
+          if (categoryId !== undefined) {
+            grouped[categoryId].push(subCategory);
+          }
         });
         
         setAllSubCategories(grouped);
@@ -68,6 +71,10 @@ const MenuView = memo(() => {
           : (response.data.categories || []);
         
         setCategories(categoriesData);
+        
+        // Fetch cafe settings
+        const settingsResponse = await getCafeSettings();
+        setCafeSettings(settingsResponse.data);
         
         // Check if there's a selected category from Landing Page in localStorage
         const storedCategory = localStorage.getItem('selectedMainCategory');

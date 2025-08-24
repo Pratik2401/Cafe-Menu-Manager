@@ -127,7 +127,7 @@ const createEvent = async (req, res) => {
       return;
     }
 
-    // Validate dates
+    // Handle IST timezone - treat input as IST and store as-is
     const start = new Date(startDate);
     const end = new Date(endDate);
     
@@ -158,8 +158,8 @@ const createEvent = async (req, res) => {
       eventId: new mongoose.Types.ObjectId().toString(),
       title,
       description,
-      startDate: start,
-      endDate: end,
+      startDate: startDate,
+      endDate: endDate,
       location,
       currentAttendees: 0,
       isActive: true,
@@ -281,7 +281,7 @@ const updateEvent = async (req, res) => {
       return;
     }
     
-    // Validate dates if provided
+    // Validate dates if provided - handle IST timezone
     if (updateData.startDate && updateData.endDate) {
       const start = new Date(updateData.startDate);
       const end = new Date(updateData.endDate);
@@ -303,7 +303,7 @@ const updateEvent = async (req, res) => {
       }
     } else if (updateData.startDate) {
       const start = new Date(updateData.startDate);
-      const end = event.endDate;
+      const end = new Date(event.endDate);
       
       if (isNaN(start.getTime())) {
         res.status(400).json({
@@ -321,7 +321,7 @@ const updateEvent = async (req, res) => {
         return;
       }
     } else if (updateData.endDate) {
-      const start = event.startDate;
+      const start = new Date(event.startDate);
       const end = new Date(updateData.endDate);
       
       if (isNaN(end.getTime())) {

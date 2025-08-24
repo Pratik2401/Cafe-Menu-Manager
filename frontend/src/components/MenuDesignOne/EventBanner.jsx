@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Carousel, Card, Modal } from 'react-bootstrap';
 import { getImageUrl } from '../../utils/imageUrl';
 import { useNavigate } from 'react-router-dom';
-import { getAllEvents, getAllImageUploads } from '../../api/customer';
+import { getAllEvents, getAllImageUploads, getCafeSettings } from '../../api/customer';
 import '../../styles/EventBanner.css';
 
 const EventBanner = () => {
   const [events, setEvents] = useState([]);
   const [imageUploads, setImageUploads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [eventsToggle, setEventsToggle] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedUpload, setSelectedUpload] = useState(null);
   const navigate = useNavigate();
@@ -16,28 +17,66 @@ const EventBanner = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch events
-        const eventsResponse = await getAllEvents({ active: true });
-        const eventsData = eventsResponse?.data || [];
-        const activeEvents = (Array.isArray(eventsData) ? eventsData : []).filter(event => {
-          const now = new Date();
-          const startDate = new Date(event.startDate);
-          const endDate = new Date(event.endDate);
-          const hasValidImage = event.promotionalImageUrl && event.promotionalImageUrl.trim() !== '';
-          
-          if (!event.isActive) return false;
-          if (now > endDate) return false; // Event has ended
-          if (!hasValidImage) return false;
-          
-          return true;
-        });
+        // Fetch cafe settings to check eventsToggle
+        const settingsResponse = await getCafeSettings();
+        console.log('EventBanner - full settings response:', settingsResponse);
+        console.log('EventBanner - features object:', settingsResponse?.data?.features);
+        const eventsEnabled = settingsResponse?.data?.data?.features?.eventsToggle || false;
+        setEventsToggle(eventsEnabled);
         
-        // Fetch image uploads
+        console.log('EventBanner - eventsToggle:', eventsEnabled);
+        
+        // Fetch events only if eventsToggle is enabled
+        let activeEvents = [];
+        if (eventsEnabled) {
+          const eventsResponse = await getAllEvents({ active: true });
+          const eventsData = eventsResponse?.data || [];
+          console.log('EventBanner - raw events:', eventsData);
+          
+          activeEvents = (Array.isArray(eventsData) ? eventsData : []).filter(event => {
+            const now = new Date();
+            const endDate = new Date(event.endDate);
+            const hasValidImage = event.promotionalImageUrl && event.promotionalImageUrl.trim() !== '';
+            
+            console.log('Event check:', {
+              title: event.title,
+              isActive: event.isActive,
+              hasValidImage,
+              endDate: event.endDate,
+              endDateParsed: endDate,
+              now,
+              endDatePassed: now > endDate,
+              promotionalImageUrl: event.promotionalImageUrl
+            });
+            
+            if (!event.isActive) {
+              console.log('Event filtered out: not active');
+              return false;
+            }
+            if (now > endDate) {
+              console.log('Event filtered out: expired');
+              return false;
+            }
+            if (!hasValidImage) {
+              console.log('Event filtered out: no valid image');
+              return false;
+            }
+            
+            console.log('Event passed all filters');
+            return true;
+          });
+          
+          console.log('EventBanner - filtered events:', activeEvents);
+        }
+        
+        // Always fetch image uploads
         const uploadsResponse = await getAllImageUploads();
         const uploadsData = uploadsResponse?.data || [];
         
         setEvents(activeEvents);
         setImageUploads(uploadsData);
+        
+        console.log('EventBanner - final state:', { activeEvents, uploadsData });
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -49,7 +88,7 @@ const EventBanner = () => {
   }, []);
 
   const handleEventClick = (event) => {
-    navigate('/', { state: { scrollToSection: 'events', openEventsMenu: true } });
+    navigate('/', { state: { defaultTab: 'events' } });
   };
 
   const handleImageClick = (upload) => {
@@ -61,7 +100,7 @@ const EventBanner = () => {
     return null; // Don't show anything while loading or if no content
   }
 
-  const allItems = [...events, ...imageUploads];
+  const allItems = [...(eventsToggle ? events : []), ...imageUploads];
 
   return (
     <div className="event-banner-container">

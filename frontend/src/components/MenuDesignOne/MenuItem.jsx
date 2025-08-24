@@ -8,6 +8,42 @@ import '../../styles/MenuItem.css';
 import '../../styles/animations.css';
 import CafeLoader, { LOADER_TYPES } from '../utils/CafeLoader';
 
+// Image component with loading animation
+const MenuItemImage = memo(({ src, alt, className, onError }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  const handleError = (e) => {
+    setIsLoading(false);
+    setHasError(true);
+    if (onError) onError(e);
+  };
+
+  return (
+    <div className="menu-image-wrapper">
+      {isLoading && !hasError && (
+        <div className="image-skeleton">
+          {/* Skeleton loader with food emoji */}
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} ${!isLoading ? 'loaded' : ''}`}
+        onLoad={handleLoad}
+        onError={handleError}
+        style={{ display: hasError ? 'none' : 'block' }}
+      />
+    </div>
+  );
+});
+
+MenuItemImage.displayName = 'MenuItemImage';
+
 const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCategories, customMessages, onSubCategorySelect, onMenuClick }) => {
   // Debounce search query for better performance
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -535,75 +571,87 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                   {/* Left Column - Text Content (70% width) */}
                   <div className="menu-card-text">
                   <div className='Dish-Container'>
-                    <h2 className="dish-name">{selection.item.name.toUpperCase()}</h2>
-                    {selection.item.tags && selection.item.tags.length > 0 && (
-                      <div className="tags-container">
-                        {selection.item.tags.map(tag => {
-                          // Handle tag as object (first type)
+                    <h2 className="dish-name">
+                      {selection.item.name.toUpperCase()}
+                      {selection.item.tags && selection.item.tags.filter(tag => {
+                        if (typeof tag === 'object') return tag.image;
+                        const tagObj = foodCategories.find(t => t._id === tag);
+                        return tagObj?.image;
+                      }).map(tag => {
+                        if (typeof tag === 'object') {
+                          return (
+                            <img 
+                              key={tag._id}
+                              src={getImageUrl(tag.image)} 
+                              alt={tag.name}
+                              title={tag.name}
+                              style={{ 
+                                width: 'auto !important', 
+                                height: '20px', 
+                                objectFit: 'contain',
+                                borderRadius: '2px',
+                                marginLeft: '8px'
+                              }} 
+                            />
+                          );
+                        } else {
+                          const tagObj = foodCategories.find(t => t._id === tag);
+                          return tagObj?.image ? (
+                            <img 
+                              key={tagObj._id}
+                              src={getImageUrl(tagObj.image)} 
+                              alt={tagObj.name}
+                              title={tagObj.name}
+                              style={{ 
+                                width: '20px', 
+                                height: '20px', 
+                                objectFit: 'contain',
+                                borderRadius: '2px',
+                                marginLeft: '8px'
+                              }} 
+                            />
+                          ) : null;
+                        }
+                      })}
+                    </h2>
+                    {selection.item.tags && selection.item.tags.filter(tag => {
+                      if (typeof tag === 'object') return !tag.image;
+                      const tagObj = foodCategories.find(t => t._id === tag);
+                      return !tagObj?.image;
+                    }).length > 0 && (
+                      <div className="text-tags-container">
+                        {selection.item.tags.filter(tag => {
+                          if (typeof tag === 'object') return !tag.image;
+                          const tagObj = foodCategories.find(t => t._id === tag);
+                          return !tagObj?.image;
+                        }).map(tag => {
                           if (typeof tag === 'object') {
                             return (
                               <Badge 
                                 key={tag._id}
-                                style={{ 
-                                  '--tag-color': tag.color,
-                                  backgroundColor: tag.image ? 'transparent' : undefined,
-                                  border: tag.image ? '1px solid var(--tag-color)' : undefined,
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px'
-                                }}
-                                className="tag-badge"
+                                style={{ '--tag-color': tag.color }}
+                                className="tag-badge text-tag"
                               >
-                                {tag.image && (
-                                  <img 
-                                    src={getImageUrl(tag.image)} 
-                                    alt={tag.name}
-                                    style={{ 
-                                      width: 'auto !important', 
-                                      height: '20px', 
-                                      objectFit: 'cover',
-                                      borderRadius: '2px'
-                                    }} 
-                                  />
-                                )}
                                 {tag.name}
                               </Badge>
                             );
-                          } 
-                          // Handle tag as string ID (second type)
-                          else {
+                          } else {
                             const tagObj = foodCategories.find(t => t._id === tag);
-                            return tagObj ? (
-                              tagObj.image ? (
-                                <img 
-                                  key={tagObj._id}
-                                  src={getImageUrl(tagObj.image)} 
-                                  alt={tagObj.name}
-                                  title={tagObj.name}
-                                  style={{ 
-                                    width: '20px', 
-                                    height: '20px', 
-                                    objectFit: 'cover',
-                                    borderRadius: '2px',
-                                    marginRight: '4px',
-                                    marginBottom: '4px'
-                                  }} 
-                                />
-                              ) : (
-                                <Badge 
-                                  key={tagObj._id}
-                                  style={{ '--tag-color': tagObj.color }}
-                                  className="tag-badge"
-                                >
-                                  {tagObj.name}
-                                </Badge>
-                              )
+                            return tagObj && !tagObj.image ? (
+                              <Badge 
+                                key={tagObj._id}
+                                style={{ '--tag-color': tagObj.color }}
+                                className="tag-badge text-tag"
+                              >
+                                {tagObj.name}
+                              </Badge>
                             ) : null;
                           }
                         })}
                       </div>
                     )}
                     </div>
+
                     {selection.item.description && (
                       <p className="dish-description">{selection.item.description}</p>
                     )}
@@ -649,7 +697,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                     {/* Food Image */}
                     {selection.item.image ? (
                       <div className="menu-card-image">
-                        <img 
+                        <MenuItemImage
                           src={selection.item.image} 
                           alt={selection.item.name} 
                           className='menu-card-image-css'
@@ -701,65 +749,78 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                 <div className="menu-card-text">
                 
                   <div className='Dish-Container'>
-                  <h2 className="dish-name">{item.name.toUpperCase()}</h2>
-                  {item.tags && item.tags.length > 0 && (
-                    <div className="tags-container">
-                      {item.tags.map(tag => {
-                        // Handle tag as object (first type)
+                  <h2 className="dish-name">
+                    {item.name.toUpperCase()}
+                    {item.tags && item.tags.filter(tag => {
+                      if (typeof tag === 'object') return tag.image;
+                      const tagObj = foodCategories.find(t => t._id === tag);
+                      return tagObj?.image;
+                    }).map(tag => {
+                      if (typeof tag === 'object') {
+                        return (
+                          <img 
+                            key={tag._id}
+                            src={getImageUrl(tag.image)} 
+                            alt={tag.name}
+                            title={tag.name}
+                            style={{ 
+                              width: 'auto', 
+                              height: '20px', 
+                              objectFit: 'contain',
+                              borderRadius: '2px',
+                              marginLeft: '8px'
+                            }} 
+                          />
+                        );
+                      } else {
+                        const tagObj = foodCategories.find(t => t._id === tag);
+                        return tagObj?.image ? (
+                          <img 
+                            key={tagObj._id}
+                            src={getImageUrl(tagObj.image)} 
+                            alt={tagObj.name}
+                            title={tagObj.name}
+                            style={{ 
+                              width: '14px', 
+                              height: '14px', 
+                              objectFit: 'contain',
+                              borderRadius: '2px',
+                              marginLeft: '8px'
+                            }} 
+                          />
+                        ) : null;
+                      }
+                    })}
+                  </h2>
+                  {item.tags && item.tags.filter(tag => {
+                    if (typeof tag === 'object') return !tag.image;
+                    const tagObj = foodCategories.find(t => t._id === tag);
+                    return !tagObj?.image;
+                  }).length > 0 && (
+                    <div className="text-tags-container">
+                      {item.tags.filter(tag => {
+                        if (typeof tag === 'object') return !tag.image;
+                        const tagObj = foodCategories.find(t => t._id === tag);
+                        return !tagObj?.image;
+                      }).map(tag => {
                         if (typeof tag === 'object') {
-                          return tag.image ? (
-                            <img 
-                              key={tag._id}
-                              src={tag.image} 
-                              alt={tag.name}
-                              title={tag.name}
-                              style={{ 
-                                width: 'auto', 
-                                height: '20px', 
-                                objectFit: 'cover',
-                                borderRadius: '2px',
-                                marginRight: '4px',
-                                marginBottom: '4px'
-                              }} 
-                            />
-                          ) : (
+                          return (
                             <Badge 
                               key={tag._id}
                               style={{ '--tag-color': tag.color }}
-                              className="tag-badge"
+                              className="tag-badge text-tag"
                             >
                               {tag.name}
                             </Badge>
                           );
-                        } 
-                        // Handle tag as string ID (second type)
-                        else {
+                        } else {
                           const tagObj = foodCategories.find(t => t._id === tag);
-                          return tagObj ? (
+                          return tagObj && !tagObj.image ? (
                             <Badge 
                               key={tagObj._id}
-                              style={{ 
-                                '--tag-color': tagObj.color,
-                                backgroundColor: tagObj.image ? 'transparent' : undefined,
-                                border: tagObj.image ? '1px solid var(--tag-color)' : undefined,
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px'
-                              }}
-                              className="tag-badge"
+                              style={{ '--tag-color': tagObj.color }}
+                              className="tag-badge text-tag"
                             >
-                              {tagObj.image && (
-                                <img 
-                                  src={tagObj.image} 
-                                  alt={tagObj.name}
-                                  style={{ 
-                                    width: '14px', 
-                                    height: '14px', 
-                                    objectFit: 'cover',
-                                    borderRadius: '2px'
-                                  }} 
-                                />
-                              )}
                               {tagObj.name}
                             </Badge>
                           ) : null;
@@ -768,6 +829,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                     </div>
                   )}
                   </div>
+
                   {item.fieldVisibility?.description !== false && item.description && (
                     <p className="dish-description">{item.description}</p>
                   )}
@@ -910,7 +972,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                   {/* Food Image */}
                   {item.image ? (
                     <div className="menu-card-image">
-                      <img 
+                      <MenuItemImage
                         src={getImageUrl(item.image)} 
                         alt={item.name} 
                         className='menu-card-image-css'

@@ -1,6 +1,7 @@
 import React from 'react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Row, Col } from 'react-bootstrap';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import AdminSocialCard from './AdminSocialCard';
@@ -22,22 +23,30 @@ const SortableSocialCard = ({ social, onEdit, onDelete, onToggleVisibility }) =>
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-3">
-      <AdminSocialCard
-        social={social}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onToggleVisibility={onToggleVisibility}
-        isDragging={isDragging}
-        dragHandleProps={{ ...attributes, ...listeners }}
-      />
-    </div>
+    <Col xs={12} md={6} className="mb-4">
+      <div ref={setNodeRef} style={style}>
+        <AdminSocialCard
+          social={social}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onToggleVisibility={onToggleVisibility}
+          isDragging={isDragging}
+          dragHandleProps={{ ...attributes, ...listeners }}
+        />
+      </div>
+    </Col>
   );
 };
 
 const AdminSocialDragDrop = ({ socials, onReorder, onEdit, onDelete, onToggleVisibility }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -63,9 +72,9 @@ const AdminSocialDragDrop = ({ socials, onReorder, onEdit, onDelete, onToggleVis
     >
       <SortableContext 
         items={socials.map(social => social._id)}
-        strategy={verticalListSortingStrategy}
+        strategy={rectSortingStrategy}
       >
-        <div className="social-list">
+        <Row className="social-grid">
           {socials.map((social) => (
             <SortableSocialCard
               key={social._id}
@@ -75,7 +84,7 @@ const AdminSocialDragDrop = ({ socials, onReorder, onEdit, onDelete, onToggleVis
               onToggleVisibility={onToggleVisibility}
             />
           ))}
-        </div>
+        </Row>
       </SortableContext>
     </DndContext>
   );

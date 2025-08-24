@@ -36,7 +36,13 @@ const uploadImage = async (file, fileName, folder) => {
     const filePath = path.join(uploadDir, uniqueFileName);
     try {
       await sharp(file)
-        .webp({ quality: 80 })
+        .webp({ 
+          quality: 80,
+          lossless: false,
+          nearLossless: false,
+          alphaQuality: 100,
+          effort: 4
+        })
         .toFile(filePath);
       console.log('Successfully uploaded and converted file to WebP:', filePath);
     } catch (writeError) {

@@ -30,19 +30,20 @@
 }
 
 .brand-container {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
 }
 
 .brand-logo {
-  width: 48px;
-  height: 48px;
+  width: auto;
+  height: 100% !important; 
   border-radius: 12px;
   object-fit: contain;
-  background: white;
-  padding: 6px;
-  box-shadow: 0 4px 12px rgba(199, 40, 28, 0.15);
+  
+  
 }
 
 .brand-text {
@@ -235,15 +236,22 @@
 
 .dropdown-arrow {
   color: #9ca3af;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   opacity: 0.7;
   transform-origin: center;
   transform: rotate(0deg);
+  will-change: transform;
 }
 
-/* Dropdown arrow rotation animation */
-.modern-nav-item.dropdown-toggle[aria-expanded="true"] .dropdown-arrow {
+/* Enhanced dropdown arrow rotation animation */
+.modern-nav-item[aria-expanded="true"] .dropdown-arrow {
   transform: rotate(180deg);
+  color: #c7281c;
+  opacity: 1;
+}
+
+.modern-nav-item[aria-expanded="false"] .dropdown-arrow {
+  transform: rotate(0deg);
 }
 
 .modern-nav-item:hover .dropdown-arrow {
@@ -256,24 +264,29 @@
   opacity: 1;
 }
 
-/* Collapse Animation - Proper Accordion */
+/* Enhanced Collapse Animation - Smooth Accordion */
 .collapse {
-  transition: height 0.35s ease;
+  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
   overflow: hidden;
+  opacity: 1;
 }
 
 .collapse:not(.show) {
-  display: none;
+  height: 0 !important;
+  opacity: 0;
+  overflow: hidden;
 }
 
 .collapse.show {
-  display: block;
+  opacity: 1;
+  overflow: visible;
 }
 
 .collapsing {
   height: 0;
   overflow: hidden;
-  transition: height 0.35s ease;
+  opacity: 0.7;
+  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
 }
 
 /* Dropdown Menu - Accordion Style with Smooth Animations */
@@ -294,28 +307,57 @@
   box-sizing: border-box;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 /* Bootstrap Collapse Animation Enhancements */
 .collapse {
-  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              opacity 0.3s ease !important;
 }
 
 .collapsing {
-  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              opacity 0.3s ease !important;
+  opacity: 0.7 !important;
 }
 
-/* Dropdown Menu Content Wrapper for Animation */
+/* Dropdown Menu Content Wrapper for Enhanced Animation */
 .dropdown-menu-content {
   padding: 6px 0 8px 10px;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   opacity: 1;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: top;
 }
 
-/* When collapsing */
+/* Smooth entrance animation */
+.collapse.show .dropdown-menu-content {
+  animation: slideInDown 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* When collapsing - smooth exit */
 .collapse:not(.show) .dropdown-menu-content {
-  transform: translateY(-10px);
+  transform: translateY(-8px) scale(0.98);
   opacity: 0;
+}
+
+.collapsing .dropdown-menu-content {
+  transform: translateY(-5px) scale(0.99);
+  opacity: 0.5;
+}
+
+/* Keyframe animations for smooth entrance */
+@keyframes slideInDown {
+  0% {
+    transform: translateY(-8px) scale(0.98);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-2px) scale(0.99);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 .dropdown-item {
@@ -329,7 +371,7 @@
   text-decoration: none !important;
   font-size: 0.75rem;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(199, 40, 28, 0.06);
@@ -341,6 +383,8 @@
   white-space: nowrap;
   cursor: pointer;
   text-align: left;
+  transform: translateX(0);
+  will-change: transform, background-color;
 }
 
 .dropdown-item::before {
@@ -524,4 +568,8 @@
   .sidebar-content {
     height: calc(100vh - 160px);
   }
+}
+
+.dropdown-toggle::after{
+  display: none !important;
 }

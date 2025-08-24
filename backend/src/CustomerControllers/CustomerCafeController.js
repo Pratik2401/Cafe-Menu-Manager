@@ -81,6 +81,9 @@ const getCafeSettings = async (_req, res) => {
       });
     }
     
+    console.log('Customer getCafeSettings - cafe.features:', cafe.features);
+    console.log('Customer getCafeSettings - full cafe:', JSON.stringify(cafe, null, 2));
+    
     res.status(200).json({
       success: true,
       data: {
@@ -89,7 +92,8 @@ const getCafeSettings = async (_req, res) => {
         imageUrl: cafe.imageUrl,
         backgroundImageUrl: cafe.backgroundImageUrl,
         allowOrdering: cafe.allowOrdering,
-        menuCustomization: cafe.menuCustomization
+        menuCustomization: cafe.menuCustomization,
+        features: cafe.features || { eventsToggle: true, dailyOfferToggle: true, ordersToggle: false }
       }
     });
   } catch (error) {

@@ -56,7 +56,6 @@
     height: auto;
     border-radius: 15px;
     margin-left: 10px;
-    background-color: #f8f8f8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -465,7 +464,7 @@
   border-radius: 12px;
   overflow: hidden;
   position: relative; /* Added for absolute positioning of food category icon */
-  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25); */
   width: 100%;
   margin: 5px 0;
 }
@@ -473,7 +472,8 @@
 .menu-card-content {
   display: flex;
  padding: 15px 20px; 
- background-color: var(--card-bg) !important;
+ background-color: white !important;
+ box-shadow: none  !important;
 }
 
 /* Left Column - Text Content (70% width) */
@@ -493,16 +493,20 @@
 
 /* Dish Name */
 .dish-name {
-  font-size: 18px;
+  font-size: 22px;
   margin-bottom: 5px;
 color: var(--color-dark);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: Oswald;
+  display: flex;
+  align-items: center;
+  justify-content: start;
 }
 
 /* Description */
 .dish-description {
-  
+  font-family: Oswald;
   font-size: 12px;
 color: var(--color-dark);
 
@@ -513,11 +517,12 @@ color: var(--color-dark);
 /* Price Section */
 .price-section {
   margin-bottom: 5px;
+  font-family: Oswald;
 }
 
 .dish-price {
-  
-  font-size: 18px;
+  font-family: Oswald;
+  font-size: 20px;
   margin: 0 !important;
 color: var(--color-dark);
 
@@ -529,6 +534,7 @@ color: var(--color-dark);
 }
 
 .addons-heading {
+  font-family: Oswald;
   font-size: 12px;
   margin: 0 !important;
 color: var(--color-dark);
@@ -542,7 +548,7 @@ color: var(--color-dark);
 }
 
 .addons-list p{
-  
+  font-family: Oswald;
   font-size: 13px;
 color: var(--color-dark);
 opacity: 0.6; /* affects the whole element though */
@@ -559,16 +565,17 @@ opacity: 0.6; /* affects the whole element though */
   position: absolute;
   left: 0;
   color: #555;
+  font-family: Oswald;
 }
 
 /* Food Image */
 .menu-card-image {
-  width: 100%;
+  width: auto;
   height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 
@@ -585,16 +592,16 @@ opacity: 0.6; /* affects the whole element though */
 /* Food Category Symbol - Fixed Position */
 .food-category-symbol-fixed {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 5px;
+  right: 5px;
   z-index: 10;
 }
 
 .category-icon {
-  width: 25px;
-  height: 25px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
-  border-radius: 4px;
+  /* border-radius: 4px; */
 }
 
 .addon-checkbox {
@@ -670,7 +677,7 @@ opacity: 0.6; /* affects the whole element though */
 .food-category-badge .badge {
   font-size: 0.8rem;
   padding: 4px 8px;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   font-weight: 500;
 }
 
@@ -679,16 +686,61 @@ opacity: 0.6; /* affects the whole element though */
   align-items: start;
   justify-content: start;
 }
+
+.tags-container-inline {
+  display: inline-flex;
+  align-items: center;
+
+}
+
+.tags-container-below {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  margin-top: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
 .tag-badge{
     background-color: var(--tag-color) !important;
-    /* margin-left: 3px; */
+    /* margin-left: 8px; */
     color: white;
     font-size: 9px;
     padding: 0.35em 0.65em;
-    margin-left: 8px;
-    margin-top: 3px !important;
-    border-radius: 0 10px 0px 10px;
     
+    border-radius: 0 10px 0px 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.tag-badge.text-tag {
+    font-size: 12px;
+    background: linear-gradient(
+        135deg,
+        var(--tag-color) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        var(--tag-color) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tag-badge.text-tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+    );
+    animation: shimmer 2.5s infinite;
 }
 /* Size options styling */
 .sizes-list {
@@ -794,7 +846,6 @@ opacity: 0.6; /* affects the whole element though */
   font-size: clamp(10px, 3vw, 12px);
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: #f8f8f8;
 }
 
 .size-option:hover {
@@ -821,13 +872,72 @@ opacity: 0.6; /* affects the whole element though */
   height: auto;
   border-radius: 20px;
   object-fit: contain;
-  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0px 7px 2px rgba(0, 0, 0, 0.5);
   display: block;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  max-width: 120px;
+  max-height: 120px;
+}
+
+.menu-card-image-css.loaded {
+  opacity: 1;
+  animation: imageLoad 0.6s ease-out forwards;
+}
+
+.image-skeleton {
+  width: 100%;
+  height: 120px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-skeleton::before {
+  content: '🍽️';
+  font-size: 24px;
+  opacity: 0.3;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.image-skeleton.hidden {
+  display: none;
+}
+
+.menu-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.menu-image-wrapper .image-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  z-index: 1;
+}
+
+.menu-image-wrapper img {
+  position: relative;
+  z-index: 2;
 }
 
 .Dish-Container{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 /* Daily Offer Styles */

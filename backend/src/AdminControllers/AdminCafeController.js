@@ -42,12 +42,12 @@ const getCafe = async (req, res) => {
  */
 const updateCafe = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, features } = req.body;
     
-    if (!name) {
+    if (!name && !features) {
       res.status(400).json({
         success: false,
-        message: 'Name is required'
+        message: 'Name or features are required'
       });
       return;
     }
@@ -56,34 +56,45 @@ const updateCafe = async (req, res) => {
     let cafe = await Cafe.findOne();
     
     if (!cafe) {
-      cafe = await Cafe.create({
-        name,
+      const cafeData = {
+        name: name || 'Default Cafe',
         location: 'Default Location',
         gstIncluded: false,
         cgst: 0,
         sgst: 0,
         allowOrdering: true,
         radius: 0
-      });
+      };
+      
+      if (features) {
+        cafeData.features = features;
+      }
+      
+      cafe = await Cafe.create(cafeData);
       
       res.status(201).json({
         success: true,
-        message: 'Cafe name created successfully',
+        message: 'Cafe settings created successfully',
         data: cafe
       });
       return;
     }
     
+    // Prepare update data
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (features) updateData.features = features;
+    
     // Update the cafe details
     const updatedCafe = await Cafe.findByIdAndUpdate(
       cafe._id,
-      { $set: { name } },
+      { $set: updateData },
       { new: true }
     );
     
     res.status(200).json({
       success: true,
-      message: 'Cafe name updated successfully',
+      message: 'Cafe settings updated successfully',
       data: updatedCafe
     });
   } catch (error) {

@@ -6,7 +6,7 @@ import { useDebounce } from '../../hooks/useDebounce.js';
 import '../../styles/SearchBar.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getFoodCategories, getAllEvents, getAllSubCategories } from '../../api/customer';
+import { getFoodCategories, getAllEvents, getAllSubCategories, getCafeSettings } from '../../api/customer';
 
 
 const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], onCategoryChange, onSubCategorySelect, onMenuClick }) => {
@@ -18,6 +18,7 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
   const [localCategories, setLocalCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [hasEvents, setHasEvents] = useState(false);
+  const [eventsToggle, setEventsToggle] = useState(false);
   const [shouldShowFilters, setShouldShowFilters] = useState(true);
   const [showMenuDropdown, setShowMenuDropdown] = useState(false);
   const [subCategoriesMap, setSubCategoriesMap] = useState({});
@@ -105,11 +106,19 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
           }
         }
         
-        // Check for events
+        // Check for events and feature toggle
         try {
-          const eventsResponse = await getAllEvents({ active: true });
-          const hasEventsData = eventsResponse && eventsResponse.data && eventsResponse.data.length > 0;
-          setHasEvents(hasEventsData);
+          const settingsResponse = await getCafeSettings();
+          const eventsEnabled = settingsResponse?.data?.data?.features?.eventsToggle || false;
+          setEventsToggle(eventsEnabled);
+          
+          if (eventsEnabled) {
+            const eventsResponse = await getAllEvents({ active: true });
+            const hasEventsData = eventsResponse && eventsResponse.data && eventsResponse.data.length > 0;
+            setHasEvents(hasEventsData);
+          } else {
+            setHasEvents(false);
+          }
         } catch (eventError) {
           console.error('Error fetching events:', eventError);
           setHasEvents(false);
@@ -146,7 +155,8 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
     // Don't call onSearchChange directly - let the debounced effect handle it
   }, []);
 
-  const handleMenuClick = () => {
+  const handleMenuClick = (e) => {
+    e.stopPropagation();
     // Check if we're on special offers pages
     const isOnOffersPage = location.pathname === '/daily-offers' || location.pathname === '/event-offers';
     
@@ -240,7 +250,7 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
 
 
 
-        {hasEvents && (
+        {eventsToggle && hasEvents && (
           <div className='Action-Container'>
             <Button className='Event-DropDown' onClick={handleEventClick}>Events</Button>
           </div>

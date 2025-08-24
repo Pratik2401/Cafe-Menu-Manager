@@ -5,7 +5,7 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Admin = require('../src/models/AdminModel');
+const Admin = require('../src/models/CafeModel');
 const { connectDB } = require('../src/config/dbconfig');
 
 const DEFAULT_FEATURES = {

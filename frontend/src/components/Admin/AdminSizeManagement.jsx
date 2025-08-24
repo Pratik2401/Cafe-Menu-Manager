@@ -32,6 +32,8 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
   const [bulkSizes, setBulkSizes] = useState([{ name: '', group: 'Default' }]);
   const [bulkGroup, setBulkGroup] = useState('Default');
   const [groupedSizes, setGroupedSizes] = useState({});
+  const [editGroupDialog, setEditGroupDialog] = useState(false);
+  const [editingGroup, setEditingGroup] = useState({ name: '', sizes: [] });
 
   useEffect(() => {
     if (isStandalone) {
@@ -227,6 +229,37 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
     }
   };
 
+  const handleEditGroup = (groupName) => {
+    const groupSizes = groupedSizes[groupName] || [];
+    setEditingGroup({
+      name: groupName,
+      sizes: groupSizes.map(size => ({ ...size }))
+    });
+    setEditGroupDialog(true);
+  };
+
+  const handleEditGroupSave = async () => {
+    setLoading(true);
+    try {
+      for (const size of editingGroup.sizes) {
+        await updateSize(size._id, { ...size, group: editingGroup.name });
+      }
+      const updatedSizes = sizes.map(size => {
+        const editedSize = editingGroup.sizes.find(s => s._id === size._id);
+        return editedSize ? { ...editedSize, group: editingGroup.name } : size;
+      });
+      setSizes(updatedSizes);
+      groupSizesByGroup(updatedSizes);
+      setEditGroupDialog(false);
+      Swal.fire('Success!', 'Group updated successfully', 'success');
+    } catch (err) {
+      Swal.fire('Error!', 'Error updating group. Please try again.', 'error');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDeleteGroup = async (groupName) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
@@ -267,20 +300,19 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
   }
 
   return (
-    <div className="admin-section">
+    <div className=" food-category-management">
       <Card className="size-card">
-        <Card.Header className="size-card-header">
-          <div className="size-header">
-            <h3 className="size-title mb-0">Size Management</h3>
-       
-              <Button 
-                variant="outline-primary" 
-                className="add-size-btn"
-                onClick={handleOpenBulkDialog}
-              >
-                <FaPlus className="me-2" /> Add Multiple
-              </Button>
-        
+        <Card.Header>
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="section-title">Size Management</h3>
+            <Button 
+              className='AddSizeBtn'
+              variant="primary" 
+              size="sm" 
+              onClick={handleOpenBulkDialog}
+            >
+              <FaPlus className="me-1" /> Add Size
+            </Button>
           </div>
         </Card.Header>
         <Card.Body>
@@ -290,27 +322,47 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
             </Alert>
           )}
 
-          {loading ? (
-            <div className="text-center py-4">
-              <Spinner animation="border" size="sm" /> Loading...
-            </div>
-          ) : Object.keys(groupedSizes).length === 0 ? (
-            <div className="text-center py-4">No sizes found</div>
+          {sizes.length === 0 ? (
+            <Table responsive>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colSpan="2" className="text-center py-4">
+                    <p className="text-muted mb-0">No sizes found. Add a size to get started.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
           ) : (
             Object.entries(groupedSizes).map(([groupName, groupSizes]) => (
               <div key={groupName} className="mb-4">
                 <div className="d-flex justify-content-between align-items-center mb-2 p-3 bg-light rounded">
                   <h5 className="mb-0 fw-bold">{groupName} ({groupSizes.length} sizes)</h5>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => handleDeleteGroup(groupName)}
-                    className="d-flex align-items-center gap-2"
-                  >
-                    <FaRegTrashCan /> Delete Group
-                  </Button>
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleEditGroup(groupName)}
+                      className="d-flex align-items-center gap-2"
+                    >
+                      <FaPencil /> Edit Group
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => handleDeleteGroup(groupName)}
+                      className="d-flex align-items-center gap-2"
+                    >
+                      <FaRegTrashCan /> Delete Group
+                    </Button>
+                  </div>
                 </div>
-                <Table responsive bordered hover className="size-table mb-0">
+                <Table responsive>
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -321,18 +373,20 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
                     {groupSizes.map((size) => (
                       <tr key={size._id}>
                         <td>{size.name}</td>
-                        <td className='size-actions'>
-                          <button 
-                            className="icon-btn EditSizeBtn"
+                        <td>
+                          <button
+                            className="btn btn-outline-secondary editSizeBtn"
                             onClick={() => handleOpenEditDialog(size)}
-                            aria-label="Edit"
+                            title="Edit"
+                            type="button"
                           >
                             <FaPencil />
                           </button>
-                          <button 
-                            className="icon-btn DeleteSizeBtn"
+                          <button
+                            className="btn btn-outline-danger"
                             onClick={() => handleDelete(size._id)}
-                            aria-label="Delete"
+                            title="Delete"
+                            type="button"
                           >
                             <FaRegTrashCan />
                           </button>
@@ -378,21 +432,56 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
 
           </Form>
         </Modal.Body>
-<Modal.Footer>
-  <Button 
-    className="modal-cancel-btn"
-    onClick={handleCloseDialog}
-  >
-    Cancel
-  </Button>
-  <Button 
-    className="modal-save-btn"
-    onClick={handleSubmit}
-    disabled={!currentSize.name}
-  >
-    {isEditing ? 'Save' : 'Create'}
-  </Button>
-</Modal.Footer>
+        <Modal.Footer>
+          <Button variant="secondary" className="me-2 CancelSizeBtn" onClick={handleCloseDialog} type="button">
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSubmit} disabled={!currentSize.name} className='SaveSizeBtn'>
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> {isEditing ? 'Save' : 'Create'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Edit Group Modal */}
+      <Modal show={editGroupDialog} onHide={() => setEditGroupDialog(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Group: {editingGroup.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold">Group Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={editingGroup.name}
+              onChange={(e) => setEditingGroup({...editingGroup, name: e.target.value})}
+            />
+          </Form.Group>
+          <h6 className="mb-3">Sizes in this group:</h6>
+          {editingGroup.sizes.map((size, index) => (
+            <div key={size._id} className="mb-3 p-3 border rounded">
+              <Form.Group>
+                <Form.Label>Size {index + 1}</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={size.name}
+                  onChange={(e) => {
+                    const updatedSizes = [...editingGroup.sizes];
+                    updatedSizes[index].name = e.target.value;
+                    setEditingGroup({...editingGroup, sizes: updatedSizes});
+                  }}
+                />
+              </Form.Group>
+            </div>
+          ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setEditGroupDialog(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleEditGroupSave}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
       </Modal>
 
       {/* Bulk Create Sizes Modal */}
@@ -463,18 +552,11 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button 
-            className="modal-cancel-btn"
-            onClick={handleCloseBulkDialog}
-          >
-            Cancel
+          <Button variant="secondary" className="me-2 CancelBulkSizeBtn" onClick={handleCloseBulkDialog} type="button">
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
           </Button>
-          <Button 
-            className="modal-save-btn"
-            onClick={handleBulkSubmit}
-            disabled={loading || bulkSizes.every(size => !size.name.trim())}
-          >
-            {loading ? 'Creating...' : `Create ${bulkSizes.filter(size => size.name.trim()).length} Sizes`}
+          <Button variant="primary" onClick={handleBulkSubmit} disabled={loading || bulkSizes.every(size => !size.name.trim())} className='SaveBulkSizeBtn'>
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> {loading ? 'Creating...' : `Create ${bulkSizes.filter(size => size.name.trim()).length} Sizes`}
           </Button>
         </Modal.Footer>
       </Modal>

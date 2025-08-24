@@ -7,7 +7,7 @@
   padding-bottom: 15px;
 }
 
-.management-navigation .btn ,
+.management-navigation .btn,
 .management-navigation .btn:focus {
   background: none;
   border: 1.5px solid #c7281c;
@@ -24,10 +24,21 @@
   font-family: 'Merge One Regular';
 }
 
-.management-navigation .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.management-navigation .btn-primary,
+.management-navigation .btn-primary:focus {
+  background: #c7281c;
+  color: #fff;
+  border: 1.5px solid #c7281c;
 }
+
+.management-navigation .btn-outline-primary:hover,
+.management-navigation .btn-outline-primary:focus {
+  background: #c7271c31;
+  color: #c7281c;
+  border: 1.5px solid #c7281c;
+}
+
+
 
 .management-section {
   margin-top: 20px;

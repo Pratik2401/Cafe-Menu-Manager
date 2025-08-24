@@ -100,7 +100,7 @@ const SortableCategoryCard = ({
                 style={{ cursor: "pointer" }}
                 onClick={onChangeImageClick}
               >
-                Change Image(Ratio 3:1)
+                Change Image
               </Form.Label>
               <Form.Control
                 type="file"

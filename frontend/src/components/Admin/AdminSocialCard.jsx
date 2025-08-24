@@ -1,6 +1,6 @@
-import React from 'react';
-import { Card, Button, Badge } from 'react-bootstrap';
-import { Pencil, Trash, Eye, EyeSlash, GripVertical } from 'react-bootstrap-icons';
+import React, { useState } from 'react';
+import { Card, Button, Form } from 'react-bootstrap';
+import { Pencil, GripVertical } from 'react-bootstrap-icons';
 import { getImageUrl } from '../../utils/imageUrl';
 
 const AdminSocialCard = ({ 
@@ -11,80 +11,97 @@ const AdminSocialCard = ({
   isDragging = false,
   dragHandleProps = {}
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(social.url);
+
+  const handleSave = () => {
+    onEdit({ ...social, url: editValue });
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditValue(social.url);
+    setIsEditing(false);
+  };
+
   return (
-    <Card className={`social-card ${isDragging ? 'dragging' : ''}`}>
-      <Card.Body className="d-flex align-items-center">
+    <Card className={`social-grid-card ${isDragging ? 'dragging' : ''}`}>
+      <Card.Body className="text-center p-3">
         <div 
           {...dragHandleProps}
-          className="drag-handle me-3"
+          className="drag-handle-grid"
           style={{ cursor: 'grab' }}
         >
-          <GripVertical size={20} className="text-muted" />
+          <GripVertical size={16} className="text-muted" />
         </div>
         
-        <div className="social-icon me-3">
+        <div className="social-icon-grid mb-3">
           <img 
             src={getImageUrl(social.icon)} 
             alt={social.name}
-            style={{ 
-              width: '40px', 
-              height: '40px', 
-              objectFit: 'cover', 
-              borderRadius: '8px' 
-            }}
+            className="social-icon-img"
             onError={(e) => {
               e.target.style.display = 'none';
             }}
           />
         </div>
         
-        <div className="flex-grow-1">
-          <div className="d-flex align-items-center mb-1">
-            <h6 className="mb-0 me-2">{social.name}</h6>
-            <Badge bg={social.isVisible ? 'success' : 'secondary'}>
-              {social.isVisible ? 'Visible' : 'Hidden'}
-            </Badge>
-          </div>
-          <p className="text-muted mb-0 small" style={{ 
-            wordBreak: 'break-all',
-            maxWidth: '300px',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
-          }}>
-            {social.url}
-          </p>
-        </div>
+        <h6 className="social-title mb-3">{social.name}</h6>
         
-        <div className="social-actions">
-          <Button
-            variant="outline-primary"
-            size="sm"
-            className="me-2"
-            onClick={() => onToggleVisibility(social._id, !social.isVisible)}
-            title={social.isVisible ? 'Hide' : 'Show'}
-          >
-            {social.isVisible ? <EyeSlash size={16} /> : <Eye size={16} />}
-          </Button>
-          
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            className="me-2"
-            onClick={() => onEdit(social)}
-            title="Edit"
-          >
-            <Pencil size={16} />
-          </Button>
-          
-          <Button
-            variant="outline-danger"
-            size="sm"
-            onClick={() => onDelete(social._id)}
-            title="Delete"
-          >
-            <Trash size={16} />
-          </Button>
+        {isEditing ? (
+          <div className="mb-3">
+            <Form.Control
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              className="mb-2"
+              size="sm"
+            />
+            <div className="d-flex gap-2 justify-content-center">
+              <Button 
+                variant="danger" 
+                size="sm" 
+                onClick={handleCancel}
+                className="social-btn-cancel"
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="success" 
+                size="sm" 
+                onClick={handleSave}
+                className="social-btn-save"
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-3">
+            <div className="social-url-display">
+              <span className="social-url-text">{social.url}</span>
+              <Button
+                variant="link"
+                size="sm"
+                className="p-0 ms-2"
+                onClick={() => setIsEditing(true)}
+                title="Edit URL"
+              >
+                <Pencil size={14} />
+              </Button>
+            </div>
+          </div>
+        )}
+        
+        <div className="social-toggle">
+          <Form.Check
+            type="switch"
+            id={`social-switch-${social._id}`}
+            label="Show"
+            checked={social.isVisible}
+            onChange={(e) => onToggleVisibility(social._id, e.target.checked)}
+            className="social-switch"
+          />
         </div>
       </Card.Body>
     </Card>

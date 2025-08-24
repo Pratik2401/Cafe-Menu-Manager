@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Container, Card, Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { ArrowLeft, Upload } from 'react-bootstrap-icons';
 import { createSocial, updateSocial } from '../../api/admin';
@@ -111,21 +111,21 @@ const AdminSocialForm = ({ social, onSuccess, onCancel }) => {
   };
 
   return (
-    <Container className="mt-4">
-      <Card>
-        <Card.Header className="d-flex align-items-center">
-          <Button 
-            variant="outline-secondary" 
-            size="sm" 
-            onClick={onCancel}
-            className="me-3"
-          >
-            <ArrowLeft />
-          </Button>
-          <h5 className="mb-0">
-            {social ? 'Edit Social Media' : 'Add New Social Media'}
-          </h5>
-        </Card.Header>
+    <Fragment>
+      <Card className="border-0">
+      <Card.Header className="d-flex align-items-center bg-primary text-white">
+        <h5 className="mb-0">
+          {social ? 'Edit Social Media' : 'Add New Social Media'}
+        </h5>
+        <Button 
+          variant="outline-light" 
+          size="sm" 
+          onClick={onCancel}
+          className="ms-auto"
+        >
+          ×
+        </Button>
+      </Card.Header>
         
         <Card.Body>
           {error && (
@@ -230,7 +230,7 @@ const AdminSocialForm = ({ social, onSuccess, onCancel }) => {
         onSave={handleCropSave}
         aspectRatio={1}
       />
-    </Container>
+    </Fragment>
   );
 };
 

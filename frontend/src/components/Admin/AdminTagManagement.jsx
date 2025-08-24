@@ -84,17 +84,13 @@ const TagManagement = ({ isStandalone = true }) => {
   };
 
   const handleCroppedImageSave = (croppedBlob) => {
-    // console.log('TagManagement: Received blob:', croppedBlob);
     if (!croppedBlob) {
       console.error('TagManagement: No blob received');
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setFormData({ ...formData, image: event.target.result, useImage: true, color: '' });
-      setHasProcessedImage(true);
-    };
-    reader.readAsDataURL(croppedBlob);
+    const croppedFile = new File([croppedBlob], 'tag-image.jpg', { type: 'image/jpeg' });
+    setFormData({ ...formData, image: croppedFile, useImage: true, color: '' });
+    setHasProcessedImage(true);
     setShowCropModal(false);
   };
 
@@ -103,10 +99,14 @@ const TagManagement = ({ isStandalone = true }) => {
     setLoading(true);
     
     try {
-      const submitData = {
-        name: formData.name,
-        ...(formData.useImage ? { image: formData.image } : { color: formData.color })
-      };
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      
+      if (formData.useImage && formData.image) {
+        submitData.append('image', formData.image);
+      } else {
+        submitData.append('color', formData.color);
+      }
 
       if (editingTag) {
         await updateTag(editingTag._id, submitData);
@@ -206,7 +206,7 @@ const TagManagement = ({ isStandalone = true }) => {
   }
 
   return (
-    <div className="tag-management">
+    <div className="tag-management food-category-management">
       
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
@@ -222,10 +222,9 @@ const TagManagement = ({ isStandalone = true }) => {
 
       <Card>
         <Card.Header>
-          <div className="d-flex justify-content-between align-items-center">
-            <h3>Tags</h3>
+            <h3 className="section-title">Tags</h3>
             <Button 
-              className='CreateTag'
+              variant="primary" 
               size="sm" 
               onClick={() => {
                 resetForm();
@@ -234,7 +233,6 @@ const TagManagement = ({ isStandalone = true }) => {
             >
               <FaPlus className="me-1" /> Add Tag
             </Button>
-          </div>
         </Card.Header>
         <Card.Body>
           {tags.length === 0 ? (
@@ -242,7 +240,7 @@ const TagManagement = ({ isStandalone = true }) => {
               <p className="text-muted">No tags found. Add a tag to get started.</p>
             </div>
           ) : (
-            <Table responsive bordered hover className='TagTable' style={{minWidth: '600px'}}>
+            <Table responsive>
               <thead>
                 <tr>
                   <th>Icon</th>
@@ -264,7 +262,8 @@ const TagManagement = ({ isStandalone = true }) => {
                             height: '30px', 
                             objectFit: 'cover',
                             border: '1px solid #ddd',
-                            borderRadius: '4px'
+                            borderRadius: '4px',
+                            margin: '0'
                           }} 
                         />
                       ) : (
@@ -281,55 +280,35 @@ const TagManagement = ({ isStandalone = true }) => {
                     </td>
                     <td>{tag.name}</td>
                    <td>
-  <Switch
-    onChange={() => handleToggleStatus(tag._id, tag.isActive)}
-    checked={tag.isActive === true}
-    checkedIcon={
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        fontSize: 10,
-        color: "#fff",
-        paddingLeft: 2
-      }}>Active</div>
-    }
-    uncheckedIcon={
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        fontSize: 10,
-        color: "#fff",
-        paddingRight: 2
-      }}>Inactive</div>
-    }
-    onColor="#64E239"
-    offColor="#545454"
-    height={28}
-    width={80}
-    handleDiameter={24}
-  />
-</td>
+                      <Switch
+                        checked={tag.isActive}
+                        onChange={() => handleToggleStatus(tag._id, tag.isActive)}
+                        onColor="#64E239"
+                        offColor="#545454"
+                        checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
+                        uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
+                        width={70}
+                        height={30}
+                        handleDiameter={22}
+                      />
+                    </td>
                     <td>
-                      <div className="d-flex flex-nowrap gap-1">
-                        <Button 
-                          variant="outline-secondary EditTagBtn" 
-                          size="sm" 
-                          onClick={() => handleEdit(tag)}
-                        >
-                          <FaPencil />
-                        </Button>
-                        <Button 
-                          variant="outline-danger DelTagBtn" 
-                          size="sm"
-                          onClick={() => handleDelete(tag._id)}
-                        >
-                          <FaRegTrashCan />
-                        </Button>
-                      </div>
+                      <button
+                        className="btn btn-outline-secondary editTagBtn"
+                        onClick={() => handleEdit(tag)}
+                        title="Edit"
+                        type="button"
+                      >
+                        <FaPencil />
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => handleDelete(tag._id)}
+                        title="Delete"
+                        type="button"
+                      >
+                        <FaRegTrashCan />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -415,7 +394,7 @@ const TagManagement = ({ isStandalone = true }) => {
                       ✓ Image processed and ready to upload
                     </div>
                     <img 
-                      src={formData.image} 
+                      src={formData.image instanceof File ? URL.createObjectURL(formData.image) : formData.image} 
                       alt="Preview" 
                       style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                     />
@@ -425,11 +404,11 @@ const TagManagement = ({ isStandalone = true }) => {
             )}
             
             <div className="d-flex justify-content-end">
-              <Button  className="me-2 CancelBtn" onClick={resetForm}>
-                Cancel
+              <Button variant="secondary" className="me-2 CancelFoodCategoryBtn" onClick={resetForm} type="button">
+                <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
               </Button>
-              <Button className='SubmitBtn' type="submit" disabled={loading}>
-                {editingTag ? 'Save' : 'Add'} 
+              <Button variant="primary" type="submit" disabled={loading} className='SaveFoodCategoryBtn'>
+                <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> Save
               </Button>
             </div>
           </Form>

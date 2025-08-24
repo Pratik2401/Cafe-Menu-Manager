@@ -31,6 +31,7 @@ import AdminSideBar from './components/Admin/AdminSideBar.jsx';
 import AdminBreadcrumb from './components/Admin/AdminBreadcrumb.jsx';
 import AdminMobileHeader from './components/Admin/AdminMobileHeader.jsx';
 import ProtectedRoute from './components/utils/ProtectedRoute.jsx';
+import FeatureRoute from './components/utils/FeatureRoute.jsx';
 
 // Bootstrap and icon imports for consistent styling
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -40,6 +41,23 @@ import './styles/AdminLayout.css';
 
 // Customer Page component imports
 import LandingPage from './components/MenuDesignOne/LandingPage.jsx';
+import { useLocation } from 'react-router-dom';
+import React from 'react';
+
+// Wrapper component to access location state
+const LandingPageWrapper = (props) => {
+  const location = useLocation();
+  const defaultTab = location.state?.defaultTab || 'dine-in';
+  
+  // Clear navigation state after reading it
+  React.useEffect(() => {
+    if (location.state?.defaultTab) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [location.state]);
+  
+  return <LandingPage {...props} defaultTab={defaultTab} />;
+};
 import MenuView from './components/MenuDesignOne/MenuView.jsx';
 import DailyOffersView from './components/MenuDesignOne/DailyOffersView.jsx';
 import EventOffersView from './components/MenuDesignOne/EventOffersView.jsx';
@@ -182,9 +200,9 @@ function App() {
               path="/"
               element={
                 <CustomerLayout>
-                  <LandingPage 
+                  <LandingPageWrapper 
                     onCategorySelect={handleCategorySelect} 
-                    customMessages={{ loadingText: "Loading cafe menu..." }} 
+                    customMessages={{ loadingText: "Loading cafe menu..." }}
                   />
                 </CustomerLayout>
               }
@@ -485,11 +503,13 @@ function App() {
               path="/admin/events/new"
               element={
                 <ProtectedRoute>
-                  <AdminLayout>
-                    <Suspense fallback={<LoadingFallback />}>
-                      <LazyComponents.AdminEventForm />
-                    </Suspense>
-                  </AdminLayout>
+                  <FeatureRoute feature="eventsToggle">
+                    <AdminLayout>
+                      <Suspense fallback={<LoadingFallback />}>
+                        <LazyComponents.AdminEventForm />
+                      </Suspense>
+                    </AdminLayout>
+                  </FeatureRoute>
                 </ProtectedRoute>
               }
             />
@@ -499,11 +519,13 @@ function App() {
               path="/admin/events"
               element={
                 <ProtectedRoute>
-                  <AdminLayout>
-                    <Suspense fallback={<LoadingFallback />}>
-                      <LazyComponents.AdminManageEventsPage />
-                    </Suspense>
-                  </AdminLayout>
+                  <FeatureRoute feature="eventsToggle">
+                    <AdminLayout>
+                      <Suspense fallback={<LoadingFallback />}>
+                        <LazyComponents.AdminManageEventsPage />
+                      </Suspense>
+                    </AdminLayout>
+                  </FeatureRoute>
                 </ProtectedRoute>
               }
             />
@@ -555,11 +577,13 @@ function App() {
               path="/admin/edit-event/:eventId"
               element={
                 <ProtectedRoute>
-                  <AdminLayout>
-                    <Suspense fallback={<LoadingFallback />}>
-                      <EditEventPage />
-                    </Suspense>
-                  </AdminLayout>
+                  <FeatureRoute feature="eventsToggle">
+                    <AdminLayout>
+                      <Suspense fallback={<LoadingFallback />}>
+                        <EditEventPage />
+                      </Suspense>
+                    </AdminLayout>
+                  </FeatureRoute>
                 </ProtectedRoute>
               }
             />

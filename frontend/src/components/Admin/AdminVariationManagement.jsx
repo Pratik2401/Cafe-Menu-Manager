@@ -268,19 +268,17 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
   }
 
   return (
-    <div className="admin-section">
-      <Card className="variation-card">
-        <Card.Header className="variation-card-header">
-          <div className="variation-header">
-            <h3 className="variation-title mb-0">Variation Management</h3>
+    <div className="food-category-management">
+      <Card>
+        <Card.Header>
+            <h3 className="section-title">Variation Management</h3>
             <Button 
-              variant="outline-primary" 
-              className="add-variation-btn"
+              variant="primary" 
+              size="sm" 
               onClick={handleOpenBulkDialog}
             >
-              <FaPlus className="me-2" /> Add Multiple
+              <FaPlus className="me-1" /> Add Variation
             </Button>
-          </div>
         </Card.Header>
         <Card.Body>
           {error && (
@@ -323,17 +321,19 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                         <td>{variation.name}</td>
                         <td>{variation.description || 'N/A'}</td>
                         <td>
-                          <button 
-                            className="icon-btn EditVariationBtn"
+                          <button
+                            className="btn btn-outline-secondary editVariationBtn"
                             onClick={() => handleOpenEditDialog(variation)}
-                            aria-label="Edit"
+                            title="Edit"
+                            type="button"
                           >
                             <FaPencil />
                           </button>
-                          <button 
-                            className="icon-btn DeleteVariationBtn"
+                          <button
+                            className="btn btn-outline-danger"
                             onClick={() => handleDelete(variation._id)}
-                            aria-label="Delete"
+                            title="Delete"
+                            type="button"
                           >
                             <FaRegTrashCan />
                           </button>
@@ -391,18 +391,11 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button 
-            className="modal-cancel-btn"
-            onClick={handleCloseDialog}
-          >
-            Cancel
+          <Button variant="secondary" className="me-2 CancelFoodCategoryBtn" onClick={handleCloseDialog} type="button">
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
           </Button>
-          <Button 
-            className="modal-save-btn"
-            onClick={handleSubmit}
-            disabled={!currentVariation.name}
-          >
-            {isEditing ? 'Save' : 'Create'}
+          <Button variant="primary" onClick={handleSubmit} disabled={!currentVariation.name} className='SaveFoodCategoryBtn'>
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> {isEditing ? 'Save' : 'Create'}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -485,18 +478,11 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button 
-            className="modal-cancel-btn"
-            onClick={handleCloseBulkDialog}
-          >
-            Cancel
+          <Button variant="secondary" className="me-2 CancelFoodCategoryBtn" onClick={handleCloseBulkDialog} type="button">
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
           </Button>
-          <Button 
-            className="modal-save-btn"
-            onClick={handleBulkSubmit}
-            disabled={loading || bulkVariations.every(variation => !variation.name.trim())}
-          >
-            {loading ? 'Creating...' : `Create ${bulkVariations.filter(variation => variation.name.trim()).length} Variations`}
+          <Button variant="primary" onClick={handleBulkSubmit} disabled={loading || bulkVariations.every(variation => !variation.name.trim())} className='SaveFoodCategoryBtn'>
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> {loading ? 'Creating...' : `Create ${bulkVariations.filter(variation => variation.name.trim()).length} Variations`}
           </Button>
         </Modal.Footer>
       </Modal>

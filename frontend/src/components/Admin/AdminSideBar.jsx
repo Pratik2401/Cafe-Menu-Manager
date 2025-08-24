@@ -162,14 +162,11 @@ const Sidebar = memo(() => {
       <div className="sidebar-header">
         <div className="brand-container">
           <Image 
-            src={getImageUrl(Snap2EatLogo)} 
+            src={Snap2EatLogo} 
             className="brand-logo" 
             alt="Snap2Eat Logo" 
           />
-          <div className="brand-text">
-            <h5 className="brand-name">Snap2Eat</h5>
-            <span className="brand-subtitle">Admin Portal</span>
-          </div>
+          
         </div>
       </div>
 
@@ -194,9 +191,10 @@ const Sidebar = memo(() => {
                 <>
                   <button
                     type="button"
-                    className={`modern-nav-item ${item.isActive ? 'dropdown-parent-active' : ''}`}
+                    className={`modern-nav-item dropdown-toggle ${item.isActive ? 'dropdown-parent-active' : ''}`}
                     onClick={() => handleSectionClick(item.id)}
                     aria-expanded={getDropdownState(item.id)}
+                    aria-controls={`dropdown-${item.id}`}
                   >
                     <div className="nav-item-content">
                       <div className="nav-item-left">
@@ -209,8 +207,8 @@ const Sidebar = memo(() => {
                     </div>
                   </button>
                   
-                  <Collapse in={getDropdownState(item.id)}>
-                    <div className="dropdown-menu">
+                  <Collapse in={getDropdownState(item.id)} timeout={400}>
+                    <div className="dropdown-menu" id={`dropdown-${item.id}`}>
                       <div className="dropdown-menu-content">
                         {item.subItems.map((subItem, index) => (
                           <button
