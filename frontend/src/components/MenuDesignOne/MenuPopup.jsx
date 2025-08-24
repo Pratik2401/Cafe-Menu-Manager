@@ -54,6 +54,11 @@ export default function MenuPopup({ show, categories, subCategories, onSubCatego
                     name: category.name
                   }));
                   
+                  // Clear search bar
+                  if (window.clearSearchBar) {
+                    window.clearSearchBar();
+                  }
+                  
                   // Update category and subcategory
                   if (categorySubCategories.length > 0) {
                     onSubCategorySelect(categorySubCategories[0], categorySubCategories);
@@ -81,6 +86,11 @@ export default function MenuPopup({ show, categories, subCategories, onSubCatego
                           id: category.serialId,
                           name: category.name
                         }));
+                        
+                        // Clear search bar
+                        if (window.clearSearchBar) {
+                          window.clearSearchBar();
+                        }
                         
                         // Store selected subcategory for NavigateBar
                         localStorage.setItem('selectedSubCategory', JSON.stringify({

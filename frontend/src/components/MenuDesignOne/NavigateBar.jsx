@@ -8,7 +8,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-export default function NavigateBar({ onSubCategorySelect, categoryId, customMessages }) {
+export default function NavigateBar({ onSubCategorySelect, categoryId, customMessages, searchQuery }) {
   const [subCategory, setSubCategory] = useState([]);
   const [activeSubCategoryId, setActiveSubCategoryId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -96,7 +96,7 @@ export default function NavigateBar({ onSubCategorySelect, categoryId, customMes
     };
 
     getSubCategories();
-  }, [onSubCategorySelect, categoryId]);
+  }, [onSubCategorySelect, categoryId, searchQuery]);
   
   // Set up global function for NavigateBar updates
   useEffect(() => {
@@ -147,6 +147,37 @@ export default function NavigateBar({ onSubCategorySelect, categoryId, customMes
       swiperRef.current.slideNext();
     }
   };
+
+  // If searching, show search results header (check this first)
+  if (searchQuery && searchQuery.trim() && !loading) {
+    return (
+      <div className="NavigateBarContainer d-flex align-items-center">
+        <Button 
+          className="PreviousBtn disabled-arrow" 
+          disabled={true}
+        >
+          &lt;
+        </Button>
+
+        <div className="SubCategory-Container" style={{ flex: 1 }}>
+          <div className="SubCategory-Item SubCategory-Item-Center">
+            <Button
+              className="SubCategory-ItemButton SubCategory-ItemButtonActive"
+            >
+              Search Results
+            </Button>
+          </div>
+        </div>
+
+        <Button 
+          className="NextBtn disabled-arrow" 
+          disabled={true}
+        >
+          &gt;
+        </Button>
+      </div>
+    );
+  }
 
   if (!loading && subCategory.length < 1) {
     return null;

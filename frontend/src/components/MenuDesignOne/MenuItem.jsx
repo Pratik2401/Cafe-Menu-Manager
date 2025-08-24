@@ -1,43 +1,54 @@
-import { useState, useMemo, useEffect, useCallback, memo } from 'react';
+import { useState, useMemo, useEffect, useCallback, memo, useRef } from 'react';
 import { getImageUrl } from '../../utils/imageUrl';
 import { Button, Badge, Offcanvas, ListGroup, Accordion } from 'react-bootstrap';
 import { getAllItems, getAllCategories, getAllSizes, getAllSubCategories } from '../../api/customer';
 import { useDebounce } from '../../hooks/useDebounce.js';
-
+import NoItems from '../../assets/images/NoItemsImage.webp';
+import LoadingVideo from '../../assets/videos/loading.gif';
 import '../../styles/MenuItem.css';
 import '../../styles/animations.css';
 import CafeLoader, { LOADER_TYPES } from '../utils/CafeLoader';
 
-// Image component with loading animation
+// Optimized progressive image loading for MenuItem images
 const MenuItemImage = memo(({ src, alt, className, onError }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef(null);
 
-  const handleLoad = () => {
-    setIsLoading(false);
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const img = new Image();
+          img.onload = () => setLoaded(true);
+          img.onerror = onError;
+          img.src = src;
+          observer.unobserve(imgRef.current);
+        }
+      },
+      { rootMargin: '50px' }
+    );
 
-  const handleError = (e) => {
-    setIsLoading(false);
-    setHasError(true);
-    if (onError) onError(e);
-  };
+    if (imgRef.current) observer.observe(imgRef.current);
+    return () => observer.disconnect();
+  }, [src, onError]);
 
   return (
-    <div className="menu-image-wrapper">
-      {isLoading && !hasError && (
-        <div className="image-skeleton">
-          {/* Skeleton loader with food emoji */}
+    <div ref={imgRef} className={className} style={{ width: '100%', height: '100%' }}>
+      {loaded ? (
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.3s' }}
+        />
+      ) : (
+        <div 
+          className="d-flex align-items-center justify-content-center bg-light"
+          style={{ width: '100%', height: '100%', minHeight: '200px' }}
+        >
+          <div className="spinner-border spinner-border-sm text-muted"></div>
         </div>
       )}
-      <img
-        src={src}
-        alt={alt}
-        className={`${className} ${!isLoading ? 'loaded' : ''}`}
-        onLoad={handleLoad}
-        onError={handleError}
-        style={{ display: hasError ? 'none' : 'block' }}
-      />
     </div>
   );
 });
@@ -64,8 +75,20 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
     return (
       <div className="MenuItemBody">
         <div className="no-items-message">
-          <h3>{customMessages?.noItemsText || 'Menu items coming soon!'}</h3>
-          
+          <img 
+            src={NoItems} 
+            alt="Menu items coming soon" 
+            className='NoItemsImage'
+          />
+          <p style={{ 
+            color: '#de353c', 
+            fontFamily: 'Comic Sans MS, cursive', 
+            fontSize: '18px',
+            textAlign: 'center',
+            marginTop: '15px'
+          }}>
+            Feeling a little empty today.
+          </p>
         </div>
       </div>
     );
@@ -698,7 +721,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                     {selection.item.image ? (
                       <div className="menu-card-image">
                         <MenuItemImage
-                          src={selection.item.image} 
+                          src={getImageUrl(selection.item.image)} 
                           alt={selection.item.name} 
                           className='menu-card-image-css'
                           onError={(e) => {
@@ -738,8 +761,20 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
         <div className="menu-items-grid">
           {filteredItems.length === 0 ? (
             <div className="no-items-message">
-              <h3>{customMessages?.noItemsText || 'No items available'}</h3>
-              <p>No menu items found for the selected filters and category. Try adjusting your filters or check other categories.</p>
+              <img 
+                src="/uploads/NoItemsImage.webp" 
+                alt="No items available" 
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+              <p style={{ 
+                color: '#de353c', 
+                fontFamily: 'Comic Sans MS, cursive', 
+                fontSize: '18px',
+                textAlign: 'center',
+                marginTop: '15px'
+              }}>
+                Feeling a little empty today.
+              </p>
             </div>
           ) : (
             filteredItems.map((item) => (

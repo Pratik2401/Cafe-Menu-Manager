@@ -125,9 +125,9 @@ const MenuView = memo(() => {
     setSelectedCategory(categoryId);
   }, []);
 
-const handleMenuClick = useCallback(() => {
-  setShowMenuPopup(prev => !prev);
-}, []);
+  const handleMenuClick = useCallback(() => {
+    setShowMenuPopup(prev => !prev);
+  }, []);
   // Set up global function for category updates
   useEffect(() => {
     window.updateCategory = (categoryId) => {
@@ -180,13 +180,10 @@ const handleMenuClick = useCallback(() => {
             <NavigateBar 
               onSubCategorySelect={handleSubCategorySelect} 
               categoryId={selectedCategory}
+              searchQuery={searchQuery}
             />
-          ) : (
-            <div className="no-subcategories-message">
-              <h3>Coming Soon!</h3>
-              <p>We're working on adding delicious items to this category. Please check back later or explore other categories.</p>
-            </div>
-          )}
+          ) : null
+          }
 
           <MenuItem
             selectedSubCategory={selectedSubCategory}
@@ -195,6 +192,7 @@ const handleMenuClick = useCallback(() => {
             onSubCategoryMatch={handleSubCategoryMatch}
             hasSubCategories={hasSubCategories}
             onSubCategorySelect={handleSubCategorySelect}
+            categoryId={selectedCategory}
             key={selectedSubCategory ? selectedSubCategory._id : 'default'}
             onMenuClick={handleMenuClick}
           />

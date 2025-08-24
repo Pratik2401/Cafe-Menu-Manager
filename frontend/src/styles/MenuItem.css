@@ -874,7 +874,7 @@ opacity: 0.6; /* affects the whole element though */
   object-fit: contain;
   box-shadow: 0 0px 7px 2px rgba(0, 0, 0, 0.5);
   display: block;
-  opacity: 0;
+  /* opacity: 0; */
   transition: opacity 0.3s ease;
   max-width: 120px;
   max-height: 120px;
@@ -882,37 +882,27 @@ opacity: 0.6; /* affects the whole element though */
 
 .menu-card-image-css.loaded {
   opacity: 1;
-  animation: imageLoad 0.6s ease-out forwards;
 }
 
-.image-skeleton {
+.video-loading-container {
   width: 100%;
   height: 120px;
   border-radius: 20px;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 25%,
-    #e0e0e0 50%,
-    #f0f0f0 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
-.image-skeleton::before {
-  content: '🍽️';
-  font-size: 24px;
-  opacity: 0.3;
-  animation: skeletonPulse 1.5s ease-in-out infinite;
-}
-
-.image-skeleton.hidden {
-  display: none;
+.loading-video {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .menu-image-wrapper {
@@ -921,7 +911,7 @@ opacity: 0.6; /* affects the whole element though */
   height: auto;
 }
 
-.menu-image-wrapper .image-skeleton {
+.menu-image-wrapper .video-loading-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -1286,11 +1276,9 @@ opacity: 0.6;
   width: 90%;
   text-align: center;
   padding: 40px 20px;
-  background: var(--card-bg);
-  color: var(--card-text);
   border-radius: 12px;
   
-  box-shadow: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+  
   margin: 20px auto;
 }
 
@@ -1299,7 +1287,10 @@ opacity: 0.6;
   margin-bottom: 10px;
   font-size: 20px;
 }
-
+.NoItemsImage{
+  width: 50%;
+  
+}
 .no-items-message p {
   color: var(--color-dark);
   opacity: 0.7;

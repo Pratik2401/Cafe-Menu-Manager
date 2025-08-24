@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import SearchIcon from '../../assets/images/SearchIcon.png';
 import Filter from '../../assets/images/Filter.png';
 import { useDebounce } from '../../hooks/useDebounce.js';
+import { getImageUrl } from '../../utils/imageUrl';
 
 import '../../styles/SearchBar.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
@@ -155,6 +156,21 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
     // Don't call onSearchChange directly - let the debounced effect handle it
   }, []);
 
+  const clearSearch = useCallback(() => {
+    setSearchQuery('');
+    if (onSearchChange) {
+      onSearchChange('');
+    }
+  }, [onSearchChange]);
+
+  // Expose clearSearch function globally
+  useEffect(() => {
+    window.clearSearchBar = clearSearch;
+    return () => {
+      delete window.clearSearchBar;
+    };
+  }, [clearSearch]);
+
   const handleMenuClick = (e) => {
     e.stopPropagation();
     // Check if we're on special offers pages
@@ -235,8 +251,22 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
             placeholder='Search...'
             className='SearchField-TextBox'
             value={searchQuery}
-            onChange={handleSearchChange} // Handle search input changes
+            onChange={handleSearchChange}
           />
+          {searchQuery && (
+            <button 
+              className='SearchField-ClearButton'
+              onClick={() => {
+                setSearchQuery('');
+                if (onSearchChange) {
+                  onSearchChange('');
+                }
+              }}
+              type='button'
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
       
@@ -286,7 +316,7 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
               />
               {category.icon && (
                 <img 
-                  src={category.icon} 
+                  src={getImageUrl(category.icon)} 
                   alt={category.name} 
                   className="filter-category-icon" 
                 />
