@@ -7,6 +7,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Admin = require('../src/models/AdminModel');
+const Cafe = require('../src/models/CafeModel');
 const { connectDB } = require('../src/config/dbconfig');
 
 /**
@@ -42,6 +43,29 @@ const createAdmin = async () => {
     });
     
     await admin.save();
+    
+    // Check if cafe settings already exist
+    const existingCafe = await Cafe.findOne();
+    if (!existingCafe) {
+      // Create default cafe settings
+      const cafe = new Cafe({
+        name: 'Snap2Eat Cafe',
+        location: 'Default Location',
+        gstIncluded: false,
+        cgst: 9,
+        sgst: 9,
+        allowOrdering: true,
+        features: {
+          ordersToggle: false,
+          eventsToggle: false,
+          dailyOfferToggle: true,
+          imageUploadsToggle: false
+        }
+      });
+      
+      await cafe.save();
+      console.log('✅ Default cafe settings created successfully');
+    }
     
     console.log('✅ Admin user created successfully');
     console.log(`📧 Email: ${adminEmail}`);

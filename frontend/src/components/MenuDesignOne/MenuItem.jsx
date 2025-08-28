@@ -349,16 +349,21 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
     
     if (variation) {
       if (variation.sizePrices?.length > 0) {
-        // Variation with sizes - always auto-select first size with price > 0
+        // Variation with sizes - try to keep same size if available
+        const currentSelection = selectedVariations[itemId];
+        const currentSizeId = currentSelection?.sizeId;
         const validSizes = variation.sizePrices.filter(sp => sp.price > 0);
+        
         if (validSizes.length > 0) {
+          // Check if current size exists in new variation
+          const sameSize = validSizes.find(sp => sp.sizeId === currentSizeId);
+          const selectedSizeId = sameSize ? currentSizeId : validSizes[0].sizeId;
+          
           setSelectedVariations(prev => ({
             ...prev,
-            [itemId]: { variationId, sizeId: validSizes[0].sizeId }
+            [itemId]: { variationId, sizeId: selectedSizeId }
           }));
         } else {
-          // If no valid sizes (all prices are 0), don't select this variation
-          // console.log('No valid sizes found for this variation');
           return;
         }
       } else if (variation.price > 0) {
@@ -368,8 +373,6 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
           [itemId]: { variationId }
         }));
       } else {
-        // If variation has no price or all zero prices, don't select it
-        // console.log('Variation has no valid price');
         return;
       }
     }
@@ -762,7 +765,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
           {filteredItems.length === 0 ? (
             <div className="no-items-message">
               <img 
-                src="/uploads/NoItemsImage.webp" 
+                src={NoItems}
                 alt="No items available" 
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
@@ -1057,10 +1060,6 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
         </div>
       )}
 
-      <div className='Self-Branding'> 
-        <p className='text-muted'>Enjoying the Snap2Eat experience?</p>
-        <p className='text-muted'>Head over to our <a href='https://snap2eat.in/' className='Brank-Link'>website</a> to see how we’re transforming menus into digital experiences.</p>
-      </div>
 
       
       {/* Menu Sidebar */}

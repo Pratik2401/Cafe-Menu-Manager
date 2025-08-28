@@ -198,6 +198,11 @@ const MenuView = memo(() => {
           />
           
           <AllergyNote />
+                <div className='Self-Branding'> 
+        <p className='text-muted'>Enjoying the Snap2Eat experience?</p>
+        <p className='text-muted'>Head over to our <a href='https://snap2eat.in/' className='Brand-Link'>website</a> to see how we’re transforming menus into digital experiences.</p>
+      </div>
+
         </div>
       )}
 

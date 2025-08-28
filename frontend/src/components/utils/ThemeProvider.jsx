@@ -25,11 +25,11 @@ const ThemeProvider = ({ children }) => {
     loadTheme();
     
     // Apply default theme variables directly to ensure something is displayed
-    document.documentElement.style.setProperty('--bg-primary', '#FEF8F3');
-    document.documentElement.style.setProperty('--bg-secondary', '#FEAD2E');
-    document.documentElement.style.setProperty('--bg-tertiary', '#383838');
-    document.documentElement.style.setProperty('--color-dark', '#383838');
-    document.documentElement.style.setProperty('--color-accent', '#FEAD2E');
+    document.documentElement.style.setProperty('--bg-primary', '#FEF8F3', 'important');
+    document.documentElement.style.setProperty('--bg-secondary', '#FEAD2E', 'important');
+    document.documentElement.style.setProperty('--bg-tertiary', '#383838', 'important');
+    document.documentElement.style.setProperty('--color-dark', '#383838', 'important');
+    document.documentElement.style.setProperty('--color-accent', '#FEAD2E', 'important');
   }, []);
   
   // Show a minimal loading state while theme is loading

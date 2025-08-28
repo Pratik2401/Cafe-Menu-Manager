@@ -69,9 +69,12 @@ const EventBanner = () => {
           console.log('EventBanner - filtered events:', activeEvents);
         }
         
-        // Always fetch image uploads
-        const uploadsResponse = await getAllImageUploads();
-        const uploadsData = uploadsResponse?.data || [];
+        // Fetch image uploads only if imageUploadsToggle is enabled
+        let uploadsData = [];
+        if (settingsResponse?.data?.data?.features?.imageUploadsToggle) {
+          const uploadsResponse = await getAllImageUploads();
+          uploadsData = uploadsResponse?.data || [];
+        }
         
         setEvents(activeEvents);
         setImageUploads(uploadsData);
@@ -92,8 +95,10 @@ const EventBanner = () => {
   };
 
   const handleImageClick = (upload) => {
-    setSelectedUpload(upload);
-    setShowModal(true);
+    if (upload.message && upload.message.trim()) {
+      setSelectedUpload(upload);
+      setShowModal(true);
+    }
   };
 
   if (loading || (events.length === 0 && imageUploads.length === 0)) {
@@ -115,6 +120,7 @@ const EventBanner = () => {
             <Card 
               className="event-card"
               onClick={() => item.title ? handleEventClick(item) : handleImageClick(item)}
+              style={{ cursor: (item.title || (item.message && item.message.trim())) ? 'pointer' : 'default' }}
             >
               <div className="event-image-container">
                 <img 

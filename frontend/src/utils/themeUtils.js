@@ -4,18 +4,11 @@
  */
 export const refreshThemeCSS = (forceReload = true) => {
   // Find the theme CSS link element
-  const themeLink = document.querySelector('link[href*="theme.css"]');
+  const themeLink = document.querySelector('link[href*="/theme"]');
   
   if (themeLink) {
-    // Get the current href
-    let href = themeLink.getAttribute('href');
-    
-    // Replace the timestamp or add it if it doesn't exist
-    if (href.includes('?v=')) {
-      href = href.replace(/\?v=\d+/, `?v=${Date.now()}`);
-    } else {
-      href = `${href}?v=${Date.now()}`;
-    }
+    // Use API endpoint for theme
+    const href = `/api/theme?v=${Date.now()}`;
     
     // Update the href to force a refresh
     themeLink.setAttribute('href', href);
@@ -51,15 +44,8 @@ export const initThemeCSS = () => {
   const themeLink = document.querySelector('link[href*="TIMESTAMP_PLACEHOLDER"]');
   
   if (themeLink) {
-    // Get the current href
-    let href = themeLink.getAttribute('href');
-    
-    // Replace the environment variable placeholder with the actual base URL
-    const baseUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:3000';
-    href = href.replace('%VITE_API_URL_BASE%', baseUrl);
-    
-    // Replace the placeholder with the current timestamp
-    href = href.replace('TIMESTAMP_PLACEHOLDER', Date.now());
+    // Use API endpoint for theme
+    const href = `/api/theme?v=${Date.now()}`;
     
     // Update the href
     themeLink.setAttribute('href', href);
@@ -77,13 +63,13 @@ export const initThemeCSS = () => {
  */
 export const applyThemeVariablesToRoot = async () => {
   try {
-    // Get the base URL from environment variables
-    const baseUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:3000';
+    // Use API endpoint for theme
+    const themeUrl = `/api/theme?v=${Date.now()}&_=${Math.random()}`;
     
-    console.log('Fetching theme CSS from:', `${baseUrl}/theme?v=${Date.now()}`);
+    console.log('Fetching theme CSS from:', themeUrl);
     
     // Fetch the theme CSS file with cache-busting timestamp
-    const response = await fetch(`${baseUrl}/theme?v=${Date.now()}&_=${Math.random()}`, {
+    const response = await fetch(themeUrl, {
       cache: 'no-store'
     });
    
@@ -106,8 +92,8 @@ export const applyThemeVariablesToRoot = async () => {
         const varName = `--${varMatch[1].trim()}`;
         const varValue = varMatch[2].trim();
         
-        // Apply the variable to :root
-        document.documentElement.style.setProperty(varName, varValue);
+        // Apply the variable to :root with !important to override built CSS
+        document.documentElement.style.setProperty(varName, varValue, 'important');
         console.log(`Applied CSS variable: ${varName} = ${varValue}`);
       }
     } else {
@@ -117,11 +103,11 @@ export const applyThemeVariablesToRoot = async () => {
     console.error('Error applying theme variables:', error);
     
     // Apply default theme variables as fallback
-    document.documentElement.style.setProperty('--bg-primary', '#FEF8F3');
-    document.documentElement.style.setProperty('--bg-secondary', '#FEAD2E');
-    document.documentElement.style.setProperty('--bg-tertiary', '#383838');
-    document.documentElement.style.setProperty('--color-dark', '#383838');
-    document.documentElement.style.setProperty('--color-accent', '#FEAD2E');
+    document.documentElement.style.setProperty('--bg-primary', '#FEF8F3', 'important');
+    document.documentElement.style.setProperty('--bg-secondary', '#FEAD2E', 'important');
+    document.documentElement.style.setProperty('--bg-tertiary', '#383838', 'important');
+    document.documentElement.style.setProperty('--color-dark', '#383838', 'important');
+    document.documentElement.style.setProperty('--color-accent', '#FEAD2E', 'important');
     console.log('Applied default theme variables as fallback');
     
     throw error;

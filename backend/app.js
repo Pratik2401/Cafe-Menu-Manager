@@ -345,13 +345,17 @@ app.use('/api/admin/image-uploads', middlewareStacks.upload, adminImageUploadRou
 app.use('/api/admin', middlewareStacks.admin, adminCafeRoutes);
 app.use('/api/admin/variations', middlewareStacks.admin, require('./src/AdminRoutes/AdminVariationRoutes.js'));
 
-// Theme routes with long-term caching
-app.use('/theme', middlewareStacks.customer, cacheThemeSettings, customerThemeRoutes);
+// Theme routes with long-term caching - MUST be before static file serving
+const { getThemeCSS } = require('./src/controllers/ThemeController');
 
-app.get('/theme/theme.css', middlewareStacks.customer, cacheThemeSettings, (req, res) => {
-  req.url = '/theme.css';
-  adminThemeRoutes(req, res, () => {});
-});
+// Direct theme CSS route
+app.get('/api/theme', middlewareStacks.customer, cacheThemeSettings, getThemeCSS);
+app.get('/api/theme.css', middlewareStacks.customer, cacheThemeSettings, getThemeCSS);
+app.get('/theme', middlewareStacks.customer, cacheThemeSettings, getThemeCSS);
+app.get('/theme.css', middlewareStacks.customer, cacheThemeSettings, getThemeCSS);
+
+// Fallback theme routes
+app.use('/api/theme', middlewareStacks.customer, cacheThemeSettings, customerThemeRoutes);
 
 app.use(errorHandler);
 

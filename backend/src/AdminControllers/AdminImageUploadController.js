@@ -3,17 +3,32 @@ const { uploadImage, deleteImage } = require('../utils/imageUploads.js');
 
 const createImageUpload = async (req, res) => {
   try {
+    console.log('📸 Image upload request received');
+    console.log('📸 Request body:', req.body);
+    console.log('📸 Request file:', req.file ? { 
+      fieldname: req.file.fieldname,
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      hasBuffer: !!req.file.buffer
+    } : 'No file');
+    
     const { message } = req.body;
     const file = req.file;
 
-    if (!message || !file) {
-      res.status(400).json({ error: 'Message and image file are required' });
+    if (!file) {
+      console.log('📸 Missing required fields:', { message: !!message, file: !!file });
+      res.status(400).json({ error: 'Image file is required' });
       return;
     }
 
+    console.log('📸 Attempting to upload image...');
     const imageUrl = await uploadImage(file.buffer, file.originalname, 'backgrounds');
-    const imageUpload = new ImageUpload({ imageUrl, message });
+    console.log('📸 Image uploaded successfully:', imageUrl);
+    
+    const imageUpload = new ImageUpload({ imageUrl, message: message || '' });
     await imageUpload.save();
+    console.log('📸 Image upload saved to database');
 
     // Always return a public image URL, never a blob URL
     res.status(201).json({
@@ -21,6 +36,7 @@ const createImageUpload = async (req, res) => {
       backgroundImage: imageUrl // For frontend compatibility
     });
   } catch (error) {
+    console.error('📸 Image upload error:', error);
     res.status(500).json({ error: 'Failed to create image upload', details: error.message });
   }
 };

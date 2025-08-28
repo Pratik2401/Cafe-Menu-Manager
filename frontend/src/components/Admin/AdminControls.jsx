@@ -27,6 +27,7 @@ const AdminControls = () => {
   const [cafeDetails, setCafeDetails] = useState({
     name: '',
   });
+
   const [isEditingCafeName, setIsEditingCafeName] = useState(false);
   const [prevCafeName, setPrevCafeName] = useState('');
 
@@ -54,6 +55,7 @@ useEffect(() => {
         clearCache('cafe-settings');
         const response = await fetchCafeSettings();
         setCafeDetails({ name: response.data.name });
+
       } catch (err) {
         setError('Failed to load cafe settings. Please try again.');
         console.error(err);
@@ -73,6 +75,7 @@ useEffect(() => {
       'social': 'Social Media',
       'menu-customization': 'Menu Customization',
       'messages': 'Messages',
+      'features': 'Feature Toggles',
       'tax': 'Tax Settings',
       'ordering': 'Ordering Settings',
       'location': 'Location Settings'
@@ -88,6 +91,8 @@ useEffect(() => {
   const handleCafeDetailsChange = (field, value) => {
     setCafeDetails({ ...cafeDetails, [field]: value });
   };
+
+
 
 
 
@@ -252,6 +257,8 @@ const handleSaveCafeSettings = async () => {
               <FaComments className="me-2" /> Messages
             </Button>
 
+
+
             
           </Col>
         </Row>
@@ -335,6 +342,8 @@ const handleSaveCafeSettings = async () => {
           <AdminMessageControl isStandalone={false} />
         </div>
       )}
+
+
 
     </div>
   );

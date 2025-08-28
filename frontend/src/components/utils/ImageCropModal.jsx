@@ -122,7 +122,7 @@ const ImageCropModal = ({ show, onHide, originalImage, onSave, aspectRatio = und
     );
     
     return new Promise((resolve) => {
-      canvas.toBlob(resolve, 'image/png');
+      canvas.toBlob(resolve, 'image/webp', 0.8);
     });
   }, [completedCrop, crop]);
 

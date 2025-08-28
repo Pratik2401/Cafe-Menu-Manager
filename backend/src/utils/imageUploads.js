@@ -20,15 +20,41 @@ const uploadImage = async (file, fileName, folder) => {
     const uploadDir = path.join(baseUploadDir, folder);
 
     console.log('Upload directory path:', uploadDir);
+    console.log('Process working directory:', process.cwd());
+    console.log('Base upload directory:', baseUploadDir);
     
     // Create directory if it doesn't exist
     if (!fs.existsSync(uploadDir)) {
       try {
-        fs.mkdirSync(uploadDir, { recursive: true });
+        fs.mkdirSync(uploadDir, { recursive: true, mode: 0o755 });
         console.log('Created upload directory:', uploadDir);
+        
+        // Verify directory was created and is writable
+        try {
+          fs.accessSync(uploadDir, fs.constants.W_OK);
+          console.log('Directory is writable');
+        } catch (accessError) {
+          console.error('Directory created but not writable:', accessError);
+          throw new Error(`Directory created but not writable: ${uploadDir}`);
+        }
       } catch (mkdirError) {
         console.error('Failed to create upload directory:', mkdirError);
-        throw new Error(`Permission denied: Cannot create directory ${uploadDir}`);
+        console.error('Error details:', {
+          code: mkdirError.code,
+          errno: mkdirError.errno,
+          path: mkdirError.path,
+          syscall: mkdirError.syscall
+        });
+        throw new Error(`Permission denied: Cannot create directory ${uploadDir}. Error: ${mkdirError.message}`);
+      }
+    } else {
+      // Directory exists, check if it's writable
+      try {
+        fs.accessSync(uploadDir, fs.constants.W_OK);
+        console.log('Existing directory is writable');
+      } catch (accessError) {
+        console.error('Directory exists but not writable:', accessError);
+        throw new Error(`Directory exists but not writable: ${uploadDir}`);
       }
     }
     

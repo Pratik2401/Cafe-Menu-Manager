@@ -33,25 +33,40 @@ const AdminImageUploadPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.message || !formData.image) {
-      showAlert('Please provide both message and image', 'warning');
+    console.log('🚀 Form submit handler called');
+    if (!formData.image) {
+      showAlert('Please select an image', 'warning');
       return;
     }
 
     setLoading(true);
     try {
+      console.log('Submitting image upload:', {
+        message: formData.message,
+        image: formData.image,
+        imageType: formData.image.type,
+        imageSize: formData.image.size
+      });
+      
       const data = new FormData();
       data.append('message', formData.message);
       data.append('image', formData.image);
 
-      await createImageUpload(data);
+      console.log('FormData entries:');
+      for (let [key, value] of data.entries()) {
+        console.log(key, value);
+      }
+
+      const result = await createImageUpload(data);
+      console.log('Upload result:', result);
 
       showAlert('Image upload created successfully', 'success');
       setShowModal(false);
       setFormData({ message: '', image: null });
       fetchImageUploads();
     } catch (error) {
-      showAlert('Failed to create image upload', 'danger');
+      console.error('Upload error:', error);
+      showAlert(`Failed to create image upload: ${error.message}`, 'danger');
     } finally {
       setLoading(false);
     }
@@ -96,7 +111,9 @@ const AdminImageUploadPage = () => {
 
   const handleCroppedImageSave = (croppedBlob) => {
     if (!croppedBlob) return;
-    const croppedFile = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
+    console.log('Cropped blob received:', croppedBlob);
+    const croppedFile = new File([croppedBlob], 'cropped-image.webp', { type: 'image/webp' });
+    console.log('Created file:', croppedFile);
     setFormData({ ...formData, image: croppedFile });
     setShowCropModal(false);
   };
@@ -183,7 +200,7 @@ const AdminImageUploadPage = () => {
         <Modal.Header closeButton>
           <Modal.Title>Add Image Upload</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} encType="multipart/form-data">
           <Modal.Body>
             <Form.Group className="mb-3">
               <Form.Label>Message</Form.Label>
@@ -191,7 +208,7 @@ const AdminImageUploadPage = () => {
                 type="text"
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                required
+                placeholder="Optional message for the banner"
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -200,15 +217,20 @@ const AdminImageUploadPage = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                required
+                required={!formData.image}
               />
+              {formData.image && (
+                <div className="mt-2 text-success">
+                  ✓ Image selected: {formData.image.name}
+                </div>
+              )}
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" disabled={loading}>
+            <Button type="submit" variant="primary" disabled={loading || !formData.image}>
               {loading ? 'Creating...' : 'Create'}
             </Button>
           </Modal.Footer>

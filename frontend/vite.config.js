@@ -3,12 +3,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  // Enable experimental features for faster loading
-  experimental: {
-    renderBuiltUrl(filename) {
-      return { runtime: `window.__assetsPath(${JSON.stringify(filename)})` }
-    }
-  },
   plugins: [react()],
   base: '/',
   define: {
@@ -25,7 +19,7 @@ export default defineConfig({
           
           // UI Framework chunks
           'bootstrap-core': ['react-bootstrap', 'bootstrap'],
-          'icons': ['react-icons', 'bootstrap-icons', '@coreui/icons-react'],
+          'icons': ['react-icons', '@coreui/icons-react'],
           
           // Customer components - load first
           'customer-core': [
@@ -52,13 +46,7 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 500,
     sourcemap: false,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    }
+    minify: true
   },
   optimizeDeps: {
     include: [
@@ -68,6 +56,12 @@ export default defineConfig({
     force: true
   },
   server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    },
     warmup: {
       clientFiles: [
         './src/components/MenuDesignOne/LandingPage.jsx',

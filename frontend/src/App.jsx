@@ -35,7 +35,7 @@ import FeatureRoute from './components/utils/FeatureRoute.jsx';
 
 // Bootstrap and icon imports for consistent styling
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import './styles/GlobalModals.css';
 import './styles/AdminLayout.css';
 

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Button, Offcanvas, Nav, Collapse, Image } from 'react-bootstrap';
 import { List } from 'react-bootstrap-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaChevronDown, FaChevronUp, FaCog, FaCalendarAlt, FaChartLine, FaUsers } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaCog, FaCalendarAlt, FaChartLine, FaUsers, FaTags, FaGift, FaImages, FaPlus, FaEdit } from "react-icons/fa";
 import { MdManageAccounts } from "react-icons/md";
 import { getAdminFeatures } from '../../utils/tokenManager';
 import '../../styles/MobileHeader.css';
-import Snap2EatLogo from '../../assets/images/Snap2Eat.png'; // Adjust the path as necessary
+import '../../styles/SideBar.css';
 
 const MobileHeader = () => {
   const navigate = useNavigate();
@@ -29,6 +29,22 @@ const MobileHeader = () => {
       window.removeEventListener('adminFeaturesChanged', updateFeatures);
     };
   }, []);
+
+  // Auto-open dropdowns based on current route (only once on mount)
+  useEffect(() => {
+    const currentPath = location.pathname;
+    
+    // Check if we're on a menu-related page and auto-open only on initial load
+    if (currentPath.startsWith("/admin/categories") || 
+        currentPath.startsWith("/admin/daily-offers") || 
+        currentPath.startsWith("/admin/image-uploads")) {
+      setMenuOpen(true);
+    }
+    // Check if we're on an events-related page and auto-open only on initial load
+    else if (currentPath.startsWith("/admin/events")) {
+      setEventsOpen(true);
+    }
+  }, []); // Empty dependency array means this only runs once on mount
 
   const toggleSidebar = () => setShow(!show);
   const closeSidebar = () => setShow(false);
@@ -120,9 +136,8 @@ const MobileHeader = () => {
                 location.pathname.startsWith("/admin/categories") || 
                 location.pathname.startsWith("/admin/subcategories") || 
                 location.pathname.startsWith("/admin/items") ||
-                location.pathname.startsWith("/admin/daily-offers") ||
-                location.pathname.startsWith("/admin/food-categories") ||
-                location.pathname.startsWith("/admin/image-uploads") ? "active" : ""
+                (adminFeatures.dailyOfferToggle && location.pathname.startsWith("/admin/daily-offers")) ||
+                (adminFeatures.imageUploadsToggle && location.pathname.startsWith("/admin/image-uploads")) ? "active" : ""
               }`}
               onClick={() => handleSectionClick("menu")}
             >
@@ -139,9 +154,8 @@ const MobileHeader = () => {
                     location.pathname.startsWith("/admin/categories") || 
                     location.pathname.startsWith("/admin/subcategories") || 
                     location.pathname.startsWith("/admin/items") ||
-                    location.pathname.startsWith("/admin/daily-offers") ||
-                    location.pathname.startsWith("/admin/food-categories") ||
-                    location.pathname.startsWith("/admin/image-uploads") ? "white" : "black"
+                    (adminFeatures.dailyOfferToggle && location.pathname.startsWith("/admin/daily-offers")) ||
+                    (adminFeatures.imageUploadsToggle && location.pathname.startsWith("/admin/image-uploads")) ? "white" : "black"
                   }
                 />
               </svg>
@@ -149,53 +163,38 @@ const MobileHeader = () => {
             </button>
 
             <Collapse in={menuOpen}>
-              <div className="menu-sub-items ms-3">
-                <Nav.Link
-                  href="#"
-                  className={
-                    location.pathname.startsWith("/admin/categories") ||
-                    location.pathname.startsWith("/admin/subcategories") ||
-                    location.pathname.startsWith("/admin/items") ? "active" : ""
-                  }
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSectionClick("menu", "category", "/admin/categories");
-                  }}
+              <div className="dropdown-menu">
+                <div className="dropdown-menu-content">
+                <button
+                  type="button"
+                  className={`dropdown-item ${location.pathname.startsWith("/admin/categories") ? "dropdown-child-active" : ""}`}
+                  onClick={() => handleSectionClick("menu", "categories", "/admin/categories")}
                 >
-                  Category  Sub Category  Items
-                </Nav.Link>
+                  <span className="dropdown-icon"><FaTags size={16} /></span>
+                  <span className="dropdown-label">Categories</span>
+                </button>
                 {adminFeatures.dailyOfferToggle && (
-                  <Nav.Link
-                    href="#"
-                    className={location.pathname.startsWith("/admin/daily-offers") ? "active" : ""}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleSectionClick("menu", "daily-offers", "/admin/daily-offers");
-                    }}
+                  <button
+                    type="button"
+                    className={`dropdown-item ${location.pathname.startsWith("/admin/daily-offers") ? "dropdown-child-active" : ""}`}
+                    onClick={() => handleSectionClick("menu", "daily-offers", "/admin/daily-offers")}
                   >
-                    Daily Offers
-                  </Nav.Link>
+                    <span className="dropdown-icon"><FaGift size={16} /></span>
+                    <span className="dropdown-label">Daily Offers</span>
+                  </button>
                 )}
-                <Nav.Link
-                  href="#"
-                  className={location.pathname.startsWith("/admin/food-categories") ? "active" : ""}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSectionClick("menu", "food-categories", "/admin/food-categories");
-                  }}
-                >
-                  Food Categories
-                </Nav.Link>
-                <Nav.Link
-                  href="#"
-                  className={location.pathname.startsWith("/admin/image-uploads") ? "active" : ""}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleSectionClick("menu", "image-uploads", "/admin/image-uploads");
-                  }}
-                >
-                  Image Uploads
-                </Nav.Link>
+
+                {adminFeatures.imageUploadsToggle && (
+                  <button
+                    type="button"
+                    className={`dropdown-item ${location.pathname.startsWith("/admin/image-uploads") ? "dropdown-child-active" : ""}`}
+                    onClick={() => handleSectionClick("menu", "image-uploads", "/admin/image-uploads")}
+                  >
+                    <span className="dropdown-icon"><FaImages size={16} /></span>
+                    <span className="dropdown-label">Image Uploads</span>
+                  </button>
+                )}
+                </div>
               </div>
             </Collapse>
 
@@ -213,27 +212,25 @@ const MobileHeader = () => {
                 </button>
 
                 <Collapse in={eventsOpen}>
-                  <div className="menu-sub-items ms-3">
-                    <Nav.Link
-                      href="#"
-                      className={location.pathname === "/admin/events/new" ? "active" : ""}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleSectionClick("events", "create-event", "/admin/events/new");
-                      }}
+                  <div className="dropdown-menu">
+                    <div className="dropdown-menu-content">
+                    <button
+                      type="button"
+                      className={`dropdown-item ${location.pathname === "/admin/events/new" ? "dropdown-child-active" : ""}`}
+                      onClick={() => handleSectionClick("events", "create-event", "/admin/events/new")}
                     >
-                      Create Event
-                    </Nav.Link>
-                    <Nav.Link
-                      href="#"
-                      className={location.pathname === "/admin/events" ? "active" : ""}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleSectionClick("events", "manage-events", "/admin/events");
-                      }}
+                      <span className="dropdown-icon"><FaPlus size={16} /></span>
+                      <span className="dropdown-label">Create Event</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`dropdown-item ${location.pathname === "/admin/events" ? "dropdown-child-active" : ""}`}
+                      onClick={() => handleSectionClick("events", "manage-events", "/admin/events")}
                     >
-                      Manage Events
-                    </Nav.Link>
+                      <span className="dropdown-icon"><FaEdit size={16} /></span>
+                      <span className="dropdown-label">Manage Events</span>
+                    </button>
+                    </div>
                   </div>
                 </Collapse>
               </>

@@ -41,7 +41,8 @@ const CafeSchema = new mongoose.Schema({
   features: {
     eventsToggle: { type: Boolean, default: true },
     dailyOfferToggle: { type: Boolean, default: true },
-    ordersToggle: { type: Boolean, default: false }
+    ordersToggle: { type: Boolean, default: false },
+    imageUploadsToggle: { type: Boolean, default: true }
   },
 }, { timestamps: true });
 

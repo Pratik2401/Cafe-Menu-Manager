@@ -89,8 +89,10 @@ const Sidebar = memo(() => {
 
   const isMenuSectionActive = () => {
     return location.pathname.startsWith("/admin/categories") || 
-           location.pathname.startsWith("/admin/daily-offers") ||
-           location.pathname.startsWith("/admin/image-uploads");
+           location.pathname.startsWith("/admin/subcategories") || 
+           location.pathname.startsWith("/admin/items") ||
+           (adminFeatures.dailyOfferToggle && location.pathname.startsWith("/admin/daily-offers")) ||
+           (adminFeatures.imageUploadsToggle && location.pathname.startsWith("/admin/image-uploads"));
   };
 
   const isEventsSectionActive = () => {
@@ -125,7 +127,7 @@ const Sidebar = memo(() => {
       subItems: [
         { label: 'Categories', route: '/admin/categories', icon: <FaTags size={16} /> },
         ...(adminFeatures.dailyOfferToggle ? [{ label: 'Daily Offers', route: '/admin/daily-offers', icon: <FaGift size={16} /> }] : []),
-        { label: 'Image Uploads', route: '/admin/image-uploads', icon: <FaImages size={16} /> }
+        ...(adminFeatures.imageUploadsToggle ? [{ label: 'Image Uploads', route: '/admin/image-uploads', icon: <FaImages size={16} /> }] : [])
       ]
     },
     ...(adminFeatures.eventsToggle ? [{

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Form, Row, Col, Button, Badge, InputGroup
+  Form, Row, Col, Button, Badge, InputGroup, Modal
 } from 'react-bootstrap';
-import { FaTrash } from 'react-icons/fa';
-import { fetchSubCategoriesByCategoryId, fetchAllVariations } from '../../api/admin';
+import { FaTrash, FaPlus } from 'react-icons/fa';
+import { fetchSubCategoriesByCategoryId, fetchAllVariations, createFoodCategory, createSize, createVariation } from '../../api/admin';
 import ImageCropModal from '../utils/ImageCropModal';
 import { getImageUrl } from '../../utils/imageUrl';
 import '../../styles/ItemForm.css'
@@ -60,6 +60,14 @@ const ItemForm = ({
   );
   const [showCropModal, setShowCropModal] = useState(false);
   const [originalImageForCrop, setOriginalImageForCrop] = useState(null);
+
+  // State for create new modals
+  const [showCreateFoodCategory, setShowCreateFoodCategory] = useState(false);
+  const [showCreateSize, setShowCreateSize] = useState(false);
+  const [showCreateVariation, setShowCreateVariation] = useState(false);
+  const [newFoodCategory, setNewFoodCategory] = useState({ name: '', icon: null });
+  const [newSize, setNewSize] = useState({ name: '', group: 'Default' });
+  const [newVariation, setNewVariation] = useState({ name: '', group: 'Default' });
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -380,6 +388,50 @@ const ItemForm = ({
     });
   };
 
+  // Create new food category
+  const handleCreateFoodCategory = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('name', newFoodCategory.name);
+      if (newFoodCategory.icon) {
+        formData.append('icon', newFoodCategory.icon);
+      }
+      await createFoodCategory(formData);
+      setShowCreateFoodCategory(false);
+      setNewFoodCategory({ name: '', icon: null });
+      // Refresh food categories list
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating food category:', error);
+    }
+  };
+
+  // Create new size
+  const handleCreateSize = async () => {
+    try {
+      await createSize(newSize);
+      setShowCreateSize(false);
+      setNewSize({ name: '', group: 'Default' });
+      // Refresh sizes list
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating size:', error);
+    }
+  };
+
+  // Create new variation
+  const handleCreateVariation = async () => {
+    try {
+      await createVariation(newVariation);
+      setShowCreateVariation(false);
+      setNewVariation({ name: '', group: 'Default' });
+      // Refresh variations list
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating variation:', error);
+    }
+  };
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -657,17 +709,26 @@ const ItemForm = ({
                 <Form.Label className="AdminEditLabel mb-0">Type :</Form.Label>
               </Col>
               <Col xs={12} md>
-                <Form.Select
-                  className="AdminEditInput"
-                  name="foodCategoryId"
-                  value={formData.foodCategoryId}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Type</option>
-                  {foodCategories.map(cat => (
-                    <option key={cat._id} value={cat._id}>{cat.name}</option>
-                  ))}
-                </Form.Select>
+                <InputGroup>
+                  <Form.Select
+                    className="AdminEditInput"
+                    name="foodCategoryId"
+                    value={formData.foodCategoryId}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Type</option>
+                    {foodCategories.map(cat => (
+                      <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    ))}
+                  </Form.Select>
+                  <Button 
+                    variant="outline-primary" 
+                    onClick={() => setShowCreateFoodCategory(true)}
+                    title="Create New Food Category"
+                  >
+                    <FaPlus />
+                  </Button>
+                </InputGroup>
               </Col>
             </Row>
 
@@ -774,22 +835,32 @@ const ItemForm = ({
                 </div>
               </Col>
               <Col xs={12} md>
-                <Form.Select
-                  className="AdminEditInput"
-                  multiple
-                  value={[...new Set(formData.sizePrices.map(sp => {
-                    const size = sizes.find(s => s._id === sp.sizeId);
-                    return size ? (size.group || 'Default') : null;
-                  }).filter(Boolean))]}
-                  onChange={handleSizeGroupSelection}
-                  style={{ minHeight: '80px' }}
-                >
-                  {[...new Set(sizes.map(size => size.group || 'Default'))].map(groupName => (
-                    <option key={groupName} value={groupName}>
-                      {groupName}
-                    </option>
-                  ))}
-                </Form.Select>
+                <InputGroup>
+                  <Form.Select
+                    className="AdminEditInput"
+                    multiple
+                    value={[...new Set(formData.sizePrices.map(sp => {
+                      const size = sizes.find(s => s._id === sp.sizeId);
+                      return size ? (size.group || 'Default') : null;
+                    }).filter(Boolean))]}
+                    onChange={handleSizeGroupSelection}
+                    style={{ minHeight: '80px' }}
+                  >
+                    {[...new Set(sizes.map(size => size.group || 'Default'))].map(groupName => (
+                      <option key={groupName} value={groupName}>
+                        {groupName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Button 
+                    variant="outline-primary" 
+                    onClick={() => setShowCreateSize(true)}
+                    title="Create New Size"
+                    style={{ alignSelf: 'flex-start' }}
+                  >
+                    <FaPlus />
+                  </Button>
+                </InputGroup>
               </Col>
             </Row>
             {/* Size Prices */}
@@ -834,22 +905,32 @@ const ItemForm = ({
                 </div>
               </Col>
               <Col xs={12} md>
-                <Form.Select
-                  className="AdminEditInput"
-                  multiple
-                  value={[...new Set(formData.variations.map(v => {
-                    const variation = variations.find(variation => variation._id === v.variationId);
-                    return variation ? (variation.group || 'Default') : null;
-                  }).filter(Boolean))]}
-                  onChange={handleVariationGroupSelection}
-                  style={{ minHeight: '80px' }}
-                >
-                  {[...new Set(variations.filter(v => v.isActive).map(variation => variation.group || 'Default'))].map(groupName => (
-                    <option key={groupName} value={groupName}>
-                      {groupName}
-                    </option>
-                  ))}
-                </Form.Select>
+                <InputGroup>
+                  <Form.Select
+                    className="AdminEditInput"
+                    multiple
+                    value={[...new Set(formData.variations.map(v => {
+                      const variation = variations.find(variation => variation._id === v.variationId);
+                      return variation ? (variation.group || 'Default') : null;
+                    }).filter(Boolean))]}
+                    onChange={handleVariationGroupSelection}
+                    style={{ minHeight: '80px' }}
+                  >
+                    {[...new Set(variations.filter(v => v.isActive).map(variation => variation.group || 'Default'))].map(groupName => (
+                      <option key={groupName} value={groupName}>
+                        {groupName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <Button 
+                    variant="outline-primary" 
+                    onClick={() => setShowCreateVariation(true)}
+                    title="Create New Variation"
+                    style={{ alignSelf: 'flex-start' }}
+                  >
+                    <FaPlus />
+                  </Button>
+                </InputGroup>
               </Col>
             </Row>
 
@@ -1335,6 +1416,98 @@ const ItemForm = ({
         originalImage={originalImageForCrop}
         aspectRatio={1}
       />
+
+      {/* Create Food Category Modal */}
+      <Modal show={showCreateFoodCategory} onHide={() => setShowCreateFoodCategory(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create New Food Category</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-3">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={newFoodCategory.name}
+              onChange={(e) => setNewFoodCategory({...newFoodCategory, name: e.target.value})}
+              placeholder="Enter category name"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Icon</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) => setNewFoodCategory({...newFoodCategory, icon: e.target.files[0]})}
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateFoodCategory(false)}>Cancel</Button>
+          <Button variant="primary" onClick={handleCreateFoodCategory}>Create</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Create Size Modal */}
+      <Modal show={showCreateSize} onHide={() => setShowCreateSize(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create New Size</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-3">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={newSize.name}
+              onChange={(e) => setNewSize({...newSize, name: e.target.value})}
+              placeholder="Enter size name"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Group</Form.Label>
+            <Form.Control
+              type="text"
+              value={newSize.group}
+              onChange={(e) => setNewSize({...newSize, group: e.target.value})}
+              placeholder="Enter group name"
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateSize(false)}>Cancel</Button>
+          <Button variant="primary" onClick={handleCreateSize}>Create</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Create Variation Modal */}
+      <Modal show={showCreateVariation} onHide={() => setShowCreateVariation(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create New Variation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group className="mb-3">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={newVariation.name}
+              onChange={(e) => setNewVariation({...newVariation, name: e.target.value})}
+              placeholder="Enter variation name"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Group</Form.Label>
+            <Form.Control
+              type="text"
+              value={newVariation.group}
+              onChange={(e) => setNewVariation({...newVariation, group: e.target.value})}
+              placeholder="Enter group name"
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateVariation(false)}>Cancel</Button>
+          <Button variant="primary" onClick={handleCreateVariation}>Create</Button>
+        </Modal.Footer>
+      </Modal>
     </Form>
   );
 };
