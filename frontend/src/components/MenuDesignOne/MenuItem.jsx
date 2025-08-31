@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, memo, useRef } from 'react';
 import { getImageUrl } from '../../utils/imageUrl';
 import { Button, Badge, Offcanvas, ListGroup, Accordion } from 'react-bootstrap';
+import { ChevronDown } from 'react-bootstrap-icons';
 import { getAllItems, getAllCategories, getAllSizes, getAllSubCategories } from '../../api/customer';
 import { useDebounce } from '../../hooks/useDebounce.js';
 import NoItems from '../../assets/images/NoItemsImage.webp';
@@ -688,34 +689,41 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                     
 
                     
-                    <div className="addons-section">
-                      <p className="addons-heading">Add-ons:</p>
-                      <ul className="addons-list">
-                        {(() => {
-                          // Group addons by price, filtering out zero/null prices
-                          const addonsByPrice = {};
-                          selection.addOns.forEach(addon => {
-                            const price = getAddonPrice(addon, selection.item._id);
-                            if (price !== null && price > 0) {
-                              if (!addonsByPrice[price]) {
-                                addonsByPrice[price] = [];
-                              }
-                              addonsByPrice[price].push(addon.addOnItem);
-                            }
-                          });
-                          
-                          // Only render if there are addons with valid prices
-                          const entries = Object.entries(addonsByPrice);
-                          if (entries.length === 0) return null;
-                          
-                          return entries.map(([price, addons], index) => (
-                            <li key={index}>
-                              {addons.join(' | ')} (Rs. {price})
-                            </li>
-                          ));
-                        })()}
-                      </ul>
-                    </div>
+                    {(() => {
+                      const validAddons = selection.addOns.filter(addon => {
+                        const price = getAddonPrice(addon, selection.item._id);
+                        return price !== null && price > 0;
+                      });
+                      
+                      if (validAddons.length === 0) return null;
+                      
+                      const isExpanded = expandedItems.includes(selection.item._id);
+                      
+                      return (
+                        <div className="addons-section">
+                          <div 
+                            className="addons-header" 
+                            onClick={() => toggleExpandedItem(selection.item)}
+                            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
+                          >
+                            <span>Add-ons</span>
+                            <ChevronDown style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
+                          </div>
+                          {isExpanded && (
+                            <div className="addons-list" style={{ marginTop: '8px' }}>
+                              {validAddons.map((addon, index) => {
+                                const price = getAddonPrice(addon, selection.item._id);
+                                return (
+                                  <div key={index} className="addon-item" style={{ color: '#666', fontSize: '14px', marginBottom: '4px' }}>
+                                    {addon.addOnItem} (<strong>₹ {price}</strong>)
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                   
                   {/* Right Column - Image (30% width) */}
@@ -973,36 +981,41 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
                     return null;
                   })()}
                   
-                  {item.fieldVisibility?.addOns !== false && item.addOns && item.addOns.length > 0 && (
-                    <div className="addons-section">
-                      <p className="addons-heading">Add-ons:</p>
-                      <ul className="addons-list">
-                        {(() => {
-                          // Group addons by price, filtering out zero/null prices
-                          const addonsByPrice = {};
-                          item.addOns.forEach(addon => {
-                            const price = getAddonPrice(addon, item._id);
-                            if (price !== null && price > 0) {
-                              if (!addonsByPrice[price]) {
-                                addonsByPrice[price] = [];
-                              }
-                              addonsByPrice[price].push(addon.addOnItem);
-                            }
-                          });
-                          
-                          // Only render if there are addons with valid prices
-                          const entries = Object.entries(addonsByPrice);
-                          if (entries.length === 0) return null;
-                          
-                          return entries.map(([price, addons], index) => (
-                            <p key={index}>
-                              {addons.join(' | ')} (Rs. {price})
-                            </p>
-                          ));
-                        })()}
-                      </ul>
-                    </div>
-                  )}
+                  {item.fieldVisibility?.addOns !== false && item.addOns && item.addOns.length > 0 && (() => {
+                    const validAddons = item.addOns.filter(addon => {
+                      const price = getAddonPrice(addon, item._id);
+                      return price !== null && price > 0;
+                    });
+                    
+                    if (validAddons.length === 0) return null;
+                    
+                    const isExpanded = expandedItems.includes(item._id);
+                    
+                    return (
+                      <div className="addons-section">
+                        <div 
+                          className="addons-header" 
+                          onClick={() => toggleExpandedItem(item)}
+                          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
+                        >
+                          <span className='AddonsText'>Add-ons</span>
+                          <ChevronDown style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', fontSize: '12px' }} />
+                        </div>
+                        {isExpanded && (
+                          <div className="addons-list" style={{ marginTop: '8px' }}>
+                            {validAddons.map((addon, index) => {
+                              const price = getAddonPrice(addon, item._id);
+                              return (
+                                <div key={index} className="addon-item" style={{ color: '#666', fontSize: '14px', marginBottom: '4px' }}>
+                                  {addon.addOnItem} (<strong>₹ {price}</strong>)
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
                 
                 {/* Right Column - Image (30% width) */}

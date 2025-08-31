@@ -17,6 +17,7 @@ import {
 import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import '../../styles/AdminVariationManagement.css';
+import '../../styles/AdminCommon.css';
 import { FaPencil, FaRegTrashCan } from "react-icons/fa6";
 import Swal from 'sweetalert2';
 import { Row, Col } from 'react-bootstrap';
@@ -27,10 +28,10 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentVariation, setCurrentVariation] = useState({ name: '', description: '', group: 'Default' });
+  const [currentVariation, setCurrentVariation] = useState({ name: '', group: 'Default' });
   const [isEditing, setIsEditing] = useState(false);
   const [openBulkDialog, setOpenBulkDialog] = useState(false);
-  const [bulkVariations, setBulkVariations] = useState([{ name: '', description: '', group: 'Default' }]);
+  const [bulkVariations, setBulkVariations] = useState([{ name: '', group: 'Default' }]);
   const [bulkGroup, setBulkGroup] = useState('Default');
   const [groupedVariations, setGroupedVariations] = useState({});
 
@@ -75,20 +76,20 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
   };
 
   const handleOpenCreateDialog = () => {
-    setCurrentVariation({ name: '', description: '', group: 'Default' });
+    setCurrentVariation({ name: '', group: 'Default' });
     setIsEditing(false);
     setOpenDialog(true);
   };
 
   const handleOpenBulkDialog = () => {
-    setBulkVariations([{ name: '', description: '', group: 'Default' }]);
+    setBulkVariations([{ name: '', group: 'Default' }]);
     setBulkGroup('Default');
     setOpenBulkDialog(true);
   };
 
   const handleCloseBulkDialog = () => {
     setOpenBulkDialog(false);
-    setBulkVariations([{ name: '', description: '', group: 'Default' }]);
+    setBulkVariations([{ name: '', group: 'Default' }]);
     setBulkGroup('Default');
   };
 
@@ -123,7 +124,7 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
   };
 
   const addBulkVariation = () => {
-    setBulkVariations([...bulkVariations, { name: '', description: '', group: bulkGroup }]);
+    setBulkVariations([...bulkVariations, { name: '', group: bulkGroup }]);
   };
 
   const removeBulkVariation = (index) => {
@@ -261,26 +262,28 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <div className="admin-section d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="food-category-management">
-      <Card>
-        <Card.Header>
-            <h3 className="section-title">Variation Management</h3>
-            <Button 
-              variant="primary" 
-              size="sm" 
-              onClick={handleOpenBulkDialog}
-            >
-              <FaPlus className="me-1" /> Add Variation
-            </Button>
+    <div className="admin-common-container">
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Variation Management</h3>
+          <Button 
+            className='createbtn' 
+            size="sm" 
+            onClick={handleOpenBulkDialog}
+          >
+            <FaPlus className="me-1" /> Add Variation
+          </Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
           {error && (
             <Alert variant="danger" className="mb-3" onClose={() => setError(null)} dismissible>
               {error}
@@ -311,7 +314,6 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Description</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -319,7 +321,6 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                     {groupVariations.map((variation) => (
                       <tr key={variation._id}>
                         <td>{variation.name}</td>
-                        <td>{variation.description || 'N/A'}</td>
                         <td>
                           <button
                             className="btn btn-outline-secondary editVariationBtn"
@@ -363,18 +364,6 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                 value={currentVariation.name}
                 onChange={handleInputChange}
                 autoFocus
-              />
-            </Form.Group>
-            
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="description"
-                value={currentVariation.description}
-                onChange={handleInputChange}
-                placeholder="Enter variation description (optional)"
               />
             </Form.Group>
             
@@ -438,16 +427,6 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                           value={variation.name}
                           onChange={(e) => handleBulkInputChange(index, 'name', e.target.value)}
                           placeholder={`Enter variation name ${index + 1}`}
-                        />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Label>Description (Optional)</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          rows={2}
-                          value={variation.description}
-                          onChange={(e) => handleBulkInputChange(index, 'description', e.target.value)}
-                          placeholder={`Enter description for variation ${index + 1}`}
                         />
                       </Form.Group>
                     </Col>

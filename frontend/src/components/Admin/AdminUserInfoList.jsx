@@ -1,17 +1,24 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Form } from 'react-bootstrap';
+import { Table, Button, Form, Card, Spinner, Alert } from 'react-bootstrap';
 import { CSVLink } from 'react-csv';
+import { FaUsers, FaDownload } from 'react-icons/fa';
 import { getUserInfoList, getUserInfoSettings, updateUserInfoSettings } from '../../api/admin';
+import { useBreadcrumb } from './AdminBreadcrumbContext';
+import '../../styles/AdminCommon.css';
 
 const AdminUserInfoList = () => {
+  const { updateBreadcrumb } = useBreadcrumb();
   const [userInfoList, setUserInfoList] = useState([]);
   const [isEnabled, setIsEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
+    updateBreadcrumb([{ label: 'User Info' }]);
     fetchUserInfoList();
     fetchSettings();
-  }, []);
+  }, [updateBreadcrumb]);
 
   const fetchUserInfoList = async () => {
     try {
@@ -98,64 +105,87 @@ const AdminUserInfoList = () => {
   }));
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>User Information Submissions</h2>
-        <div className="d-flex gap-3">
-          <Form.Check
-            type="switch"
-            id="user-info-toggle"
-            label="Enable User Info Collection"
-            checked={isEnabled}
-            onChange={handleToggleEnable}
-          />
-          
-          <CSVLink
-            data={csvData}
-            filename={"user-info-list.csv"}
-            className="btn btn-success"
-          >
-            Export to CSV
-          </CSVLink>
-        </div>
-      </div>
+    <div className="admin-common-container">
+      {error && (
+        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+          {error}
+        </Alert>
+      )}
+      
+      {success && (
+        <Alert variant="success" onClose={() => setSuccess(null)} dismissible>
+          {success}
+        </Alert>
+      )}
 
-     
-
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Birthday</th>
-            <th>Opted In</th>
-            <th>Submission Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userInfoList.length > 0 ? (
-            userInfoList.map((user, index) => (
-              <tr key={index}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.number}</td>
-                <td>{user.birthday ? new Date(user.birthday).toLocaleDateString() : '-'}</td>
-                <td>{user.optIn ? 'Yes' : 'No'}</td>
-                <td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center">No user information found</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">
+            <FaUsers className="me-2" />
+            User Information Submissions
+          </h3>
+          <div className="d-flex gap-3">
+            <Form.Check
+              type="switch"
+              id="user-info-toggle"
+              label="Enable Collection"
+              checked={isEnabled}
+              onChange={handleToggleEnable}
+            />
+            <CSVLink
+              data={csvData}
+              filename={"user-info-list.csv"}
+              className="btn btn-success btn-sm"
+            >
+              <FaDownload className="me-1" /> Export CSV
+            </CSVLink>
+          </div>
+        </Card.Header>
+        <Card.Body className="admin-common-card-body">
+          <div className="table-responsive">
+            <Table striped bordered hover className="mb-0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Birthday</th>
+                  <th>Opted In</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userInfoList.length > 0 ? (
+                  userInfoList.map((user, index) => (
+                    <tr key={index}>
+                      <td>{user.name}</td>
+                      <td className="text-break">{user.email}</td>
+                      <td>{user.number}</td>
+                      <td>{user.birthday ? new Date(user.birthday).toLocaleDateString() : '-'}</td>
+                      <td>{user.optIn ? 'Yes' : 'No'}</td>
+                      <td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center">No user information found</td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          </div>
+        </Card.Body>
+      </Card>
     </div>
   );
 };

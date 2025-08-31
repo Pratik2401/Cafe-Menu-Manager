@@ -16,7 +16,8 @@ import {
 } from 'react-bootstrap';
 import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
-import '../../styles/AdminSizeManagement.css'
+import '../../styles/AdminSizeManagement.css';
+import '../../styles/AdminCommon.css';
 import { FaPencil,FaRegTrashCan } from "react-icons/fa6";
 import Swal from 'sweetalert2';
 import { Row, Col } from 'react-bootstrap';
@@ -293,29 +294,29 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <div className="admin-section d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className=" food-category-management">
-      <Card className="size-card">
-        <Card.Header>
-          <div className="d-flex justify-content-between align-items-center">
-            <h3 className="section-title">Size Management</h3>
-            <Button 
-              className='AddSizeBtn'
-              variant="primary" 
-              size="sm" 
-              onClick={handleOpenBulkDialog}
-            >
-              <FaPlus className="me-1" /> Add Size
-            </Button>
-          </div>
+    <div className="admin-common-container">
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Size Management</h3>
+          <Button 
+            className='createbtn'
+            variant="primary" 
+            size="sm" 
+            onClick={handleOpenBulkDialog}
+          >
+            <FaPlus className="me-1" /> Add Size
+          </Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
           {error && (
             <Alert variant="danger" className="mb-3" onClose={() => setError(null)} dismissible>
               {error}

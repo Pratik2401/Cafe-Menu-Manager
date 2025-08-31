@@ -100,3 +100,19 @@
   color: #333;
   font-size: 1.2rem;
 }
+
+.BrandImage{
+  width: 50%;
+  height: auto;
+}
+
+/* Active state styling for mobile sidebar buttons */
+.mobile-sidebar .menu-toggle.active {
+  background-color: #e22a20 !important;
+  color: white !important;
+}
+
+.mobile-sidebar .dropdown-item.dropdown-child-active {
+  background-color: #e22a20 !important;
+  color: white !important;
+}

@@ -9,6 +9,7 @@ import { clearCache } from '../../hooks/useApiCache';
 import ImageCropModal from '../utils/ImageCropModal';
 import Swal from 'sweetalert2';
 import '../../styles/MenuCustomization.css';
+import '../../styles/AdminCommon.css';
 
 const MenuCustomization = ({ isStandalone = true }) => {
   const { updateBreadcrumb } = useBreadcrumb();
@@ -374,20 +375,21 @@ const MenuCustomization = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <div className="menu-customization d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="menu-customization">
-      <Card>
-        <Card.Header>
-            <h3 className="section-title">Menu Customization</h3>
-          
+    <div className="admin-common-container">
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Menu Customization</h3>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
 
           <Form>
             <Card className="mb-4">
@@ -468,63 +470,7 @@ const MenuCustomization = ({ isStandalone = true }) => {
               </Card.Body>
             </Card>
             
-            <Card className="mb-4">
-              <Card.Header>
-                <h5 className="mb-0"><FaPalette className="me-2" /> Card Colors</h5>
-              </Card.Header>
-              <Card.Body>
-                {cssVariables.cards.map((card, index) => (
-                  <Form.Group key={index} className="mb-3">
-                    <Form.Label>{card.description}</Form.Label>
-                    <div className="d-flex align-items-center">
-                      <Form.Control
-                        type="color"
-                        value={cssValues[card.name]}
-                        onChange={(e) => handleCssValueChange(card.name, e.target.value)}
-                        style={{ marginRight: '8px' }}
-                      />
-                      <Form.Control
-                        type="text"
-                        value={cssValues[card.name]}
-                        onChange={(e) => {
-                          const inputValue = e.target.value;
-                          if (/^#([0-9A-Fa-f]{0,6})$/.test(inputValue) || inputValue === '') {
-                            handleCssValueChange(card.name, inputValue);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          const hex = e.target.value.trim();
-                          if (!/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hex)) {
-                            handleCssValueChange(card.name, card.name === '--card-bg' ? '#FFFFFF' : '#000000');
-                          }
-                        }}
-                        placeholder="#RRGGBB"
-                        style={{ width: '100px' }}
-                      />
-                    </div>
-                  </Form.Group>
-                ))}
-                
-                {/* Card Preview */}
-                <div className="mt-4">
-                  <Form.Label>Preview</Form.Label>
-                  <div 
-                    style={{
-                      backgroundColor: cssValues['--card-bg'],
-                      color: cssValues['--card-text'],
-                      padding: '16px',
-                      borderRadius: '8px',
-                      border: '1px solid #dee2e6',
-                      maxWidth: '300px'
-                    }}
-                  >
-                    <h6 style={{ color: cssValues['--card-text'], marginBottom: '8px' }}>Sample Menu Item</h6>
-                    <p style={{ color: cssValues['--card-text'], marginBottom: '4px', fontSize: '14px' }}>This is how your menu cards will look with the selected colors.</p>
-                    <small style={{ color: cssValues['--card-text'], opacity: 0.8 }}>Price: $12.99</small>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
+
             
             {/* Logo Upload */}
             <Card className="mb-4">

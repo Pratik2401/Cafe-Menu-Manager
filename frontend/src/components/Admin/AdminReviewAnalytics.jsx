@@ -1,15 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Badge, Spinner, Button } from 'react-bootstrap';
+import { Row, Col, Card, Spinner, Button, Alert } from 'react-bootstrap';
 import { FaStar, FaStarHalfAlt, FaRegStar, FaChartBar, FaUsers, FaThumbsUp, FaDownload } from 'react-icons/fa';
 import { getAllFeedback } from '../../api/admin';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
+import '../../styles/AdminCommon.css';
 import '../../styles/ReviewAnalytics.css';
 
 const ReviewAnalytics = () => {
   const { updateBreadcrumb } = useBreadcrumb();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [analytics, setAnalytics] = useState({
     totalReviews: 0,
     averageRating: 0,
@@ -51,6 +53,7 @@ const ReviewAnalytics = () => {
         });
       } catch (error) {
         console.error('Error fetching feedback:', error);
+        setError('Failed to load review analytics. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -102,34 +105,41 @@ const ReviewAnalytics = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  return (
-    <Container fluid className="review-analytics-container">
-      <div className="page-header mb-4 d-flex justify-content-between align-items-center">
-        <h2 className="brand-title">
-          <FaChartBar className="me-2" />
-          Review Analytics
-        </h2>
-        <Button 
-          className='export-csv-button'
-          onClick={exportToCSV}
-          disabled={reviews.length === 0}
-        >
-          <FaDownload className="me-2" />
-          Export CSV
-        </Button>
-      </div>
-      
-      {loading ? (
-        <div className="text-center py-5">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-2">Loading analytics data...</p>
+  if (loading) {
+    return (
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
         </div>
-      ) : (
-        <>
-      
-        <>
+      </div>
+    );
+  }
+
+  return (
+    <div className="admin-common-container">
+      {error && (
+        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+          {error}
+        </Alert>
+      )}
+
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">
+            <FaChartBar className="me-2" />
+            Review Analytics
+          </h3>
+          <Button 
+            className="btn btn-success btn-sm"
+            onClick={exportToCSV}
+            disabled={reviews.length === 0}
+          >
+            <FaDownload className="me-1" /> Export CSV
+          </Button>
+        </Card.Header>
+        <Card.Body className="admin-common-card-body">
           {/* Summary Cards */}
-          <Row className="mb-5">
+          <Row className="mb-4">
         <Col md={4} className="mb-3">
           <Card className="analytics-card h-100">
             <Card.Body className="text-center py-4">
@@ -227,10 +237,9 @@ const ReviewAnalytics = () => {
           </Card>
         </Col>
       </Row>
-          </>
-        </>
-      )}
-    </Container>
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 

@@ -11,6 +11,10 @@
   padding-left: 16px;
 }
 
+.adminControls{
+  padding: 20px !important;
+}
+
 .admin-navigation .btn,
 .admin-navigation .btn:focus {
   background: none;

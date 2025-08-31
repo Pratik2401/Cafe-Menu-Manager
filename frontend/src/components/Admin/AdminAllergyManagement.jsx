@@ -8,6 +8,7 @@ import ImageCropModal from '../utils/ImageCropModal';
 import { getImageUrl } from '../../utils/imageUrl';
 import Swal from 'sweetalert2';
 import '../../styles/AllergyManagement.css';
+import '../../styles/AdminCommon.css';
 
 const AllergyManagement = ({ isStandalone = true }) => {
   const [allergies, setAllergies] = useState([]);
@@ -121,26 +122,28 @@ const AllergyManagement = ({ isStandalone = true }) => {
 
   if (loading && allergies.length === 0) {
     return (
-      <div className="loading-container">
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className=" food-category-management">
-      <Card>
-        <Card.Header>
-            <h3 className="section-title">Allergy Management</h3>
-            <Button 
-              variant="primary" 
-              size="sm" 
-              onClick={() => setShowModal(true)}
-            >
-              <FaPlus className="me-1" /> Add Allergy
-            </Button>
+    <div className="admin-common-container">
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Allergy Management</h3>
+          <Button 
+            className='createbtn' 
+            size="sm" 
+            onClick={() => setShowModal(true)}
+          >
+            <FaPlus className="me-1" /> Add Allergy
+          </Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
           <div className="alert-container">
             {error && (
               <Alert variant="danger" onClose={clearMessages} dismissible>

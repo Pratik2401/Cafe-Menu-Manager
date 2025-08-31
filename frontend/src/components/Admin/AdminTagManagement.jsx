@@ -5,6 +5,7 @@ import { fetchTags, createTag, updateTag, deleteTag, toggleTagStatus } from '../
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import ImageCropModal from '../utils/ImageCropModal';
 import '../../styles/TagManagement.css';
+import '../../styles/AdminCommon.css';
 import { FaPencil,FaRegTrashCan } from "react-icons/fa6";
 import Switch from "react-switch";
 import Swal from 'sweetalert2';
@@ -199,15 +200,16 @@ const TagManagement = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <div className="tag-management d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="tag-management food-category-management">
-      
+    <div className="admin-common-container">
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
           {error}
@@ -220,21 +222,21 @@ const TagManagement = ({ isStandalone = true }) => {
         </Alert>
       )}
 
-      <Card>
-        <Card.Header>
-            <h3 className="section-title">Tags</h3>
-            <Button 
-              variant="primary" 
-              size="sm" 
-              onClick={() => {
-                resetForm();
-                setShowModal(true);
-              }}
-            >
-              <FaPlus className="me-1" /> Add Tag
-            </Button>
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Tags</h3>
+          <Button 
+            className='createbtn'
+            size="sm" 
+            onClick={() => {
+              resetForm();
+              setShowModal(true);
+            }}
+          >
+            <FaPlus className="me-1" /> Add Tag
+          </Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
           {tags.length === 0 ? (
             <div className="text-center py-4">
               <p className="text-muted">No tags found. Add a tag to get started.</p>
@@ -255,7 +257,7 @@ const TagManagement = ({ isStandalone = true }) => {
                     <td>
                       {tag.image ? (
                         <img 
-                          src={tag.image} 
+                          src={`${import.meta.env.VITE_API_URL_ADMIN?.replace('/api/admin', '') || 'http://localhost:3000'}${tag.image}`} 
                           alt={tag.name}
                           style={{ 
                             width: '30px', 
@@ -394,7 +396,7 @@ const TagManagement = ({ isStandalone = true }) => {
                       ✓ Image processed and ready to upload
                     </div>
                     <img 
-                      src={formData.image instanceof File ? URL.createObjectURL(formData.image) : formData.image} 
+                      src={formData.image instanceof File ? URL.createObjectURL(formData.image) : `${import.meta.env.VITE_API_URL_ADMIN?.replace('/api/admin', '') || 'http://localhost:3000'}${formData.image}`} 
                       alt="Preview" 
                       style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                     />

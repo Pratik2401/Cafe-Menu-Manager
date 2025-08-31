@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form, Card, Row, Col, Table, Badge, Spinner, Alert, Modal } from 'react-bootstrap';
-import { FaCog, FaPlus, FaTrash, FaEdit, FaSave, FaShareAlt, FaPalette, FaComments } from 'react-icons/fa';
+import { FaCog, FaPlus, FaTrash, FaEdit, FaSave, FaShareAlt, FaPalette } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
 import { FaPencil } from "react-icons/fa6";
@@ -17,8 +17,9 @@ import {
 import { clearCache } from '../../hooks/useApiCache';
 import AdminSocialControl from './AdminSocialControl';
 import MenuCustomization from './AdminMenuCustomization';
-import AdminMessageControl from './AdminMessageControl';
+
 import '../../styles/AdminControls.css';
+import '../../styles/AdminCommon.css';
 
 const AdminControls = () => {
   const { updateBreadcrumb } = useBreadcrumb();
@@ -74,7 +75,6 @@ useEffect(() => {
       'tables': 'Table Management',
       'social': 'Social Media',
       'menu-customization': 'Menu Customization',
-      'messages': 'Messages',
       'features': 'Feature Toggles',
       'tax': 'Tax Settings',
       'ordering': 'Ordering Settings',
@@ -194,15 +194,16 @@ const handleSaveCafeSettings = async () => {
 
   if (loading) {
     return (
-      <div className="admin-controls d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container adminControls">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="admin-controls">
-      
+    <div className="admin-common-container">
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
           {error}
@@ -249,13 +250,6 @@ const handleSaveCafeSettings = async () => {
             >
               <FaPalette className="me-2" /> Menu Customize
             </Button>
-            <Button 
-              variant={activeSection === 'messages' ? 'primary' : 'outline-primary'} 
-              className="me-2 mb-2"
-              onClick={() => setActiveSection('messages')}
-            >
-              <FaComments className="me-2" /> Messages
-            </Button>
 
 
 
@@ -265,13 +259,11 @@ const handleSaveCafeSettings = async () => {
       </div>
 
       {activeSection === 'cafe' && (
-        <div className="admin-section">
-          <Card>
-            <Card.Header>
-                <h3 className="section-title">Cafe Details</h3>
-              
-            </Card.Header>
-            <Card.Body>
+        <Card className="admin-common-card">
+          <Card.Header className="admin-common-card-header">
+            <h3 className="admin-common-section-title">Cafe Details</h3>
+          </Card.Header>
+          <Card.Body className="admin-common-card-body">
               <Form>
 <Form.Group className="mb-3 position-relative">
   <Form.Label>Cafe Name</Form.Label>
@@ -319,28 +311,17 @@ const handleSaveCafeSettings = async () => {
   )}
 </Form.Group>
               </Form>
-            </Card.Body>
-          </Card>
-        </div>
+          </Card.Body>
+        </Card>
       )}
 
    
       {activeSection === 'social' && (
-        <div className="admin-section">
-          <AdminSocialControl isStandalone={false} />
-        </div>
+        <AdminSocialControl isStandalone={false} />
       )}
       
       {activeSection === 'menu-customization' && (
-        <div className="admin-section">
-          <MenuCustomization isStandalone={false} />
-        </div>
-      )}
-      
-      {activeSection === 'messages' && (
-        <div className="admin-section">
-          <AdminMessageControl isStandalone={false} />
-        </div>
+        <MenuCustomization isStandalone={false} />
       )}
 
 

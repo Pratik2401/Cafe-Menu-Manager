@@ -4,6 +4,7 @@ import { FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';
 import { getMessages, updateMessages } from '../../api/admin.js';
 import '../../styles/AdminMessageControl.css';
+import '../../styles/AdminCommon.css';
 
 const AdminMessageControl = ({ isStandalone = true }) => {
   const [messages, setMessages] = useState({
@@ -100,8 +101,10 @@ const AdminMessageControl = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className={isStandalone ? 'admin-common-container' : ''}>
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
@@ -113,7 +116,7 @@ const AdminMessageControl = ({ isStandalone = true }) => {
   ];
 
   return (
-    <div className="admin-message-control">
+    <div className={isStandalone ? 'admin-common-container' : ''}>
       <div className="alert-container">
         {error && (
           <Alert variant="danger" onClose={() => setError(null)} dismissible>
@@ -128,11 +131,11 @@ const AdminMessageControl = ({ isStandalone = true }) => {
         )}
       </div>
 
-      <Card>
-        <Card.Header>
-          <h3 className="section-title">Custom Messages</h3>
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Custom Messages</h3>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
           <div className="message-table-container">
             <Table className="message-table">
               <thead>

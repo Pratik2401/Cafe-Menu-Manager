@@ -7,7 +7,7 @@ import { MdManageAccounts } from "react-icons/md";
 import { getAdminFeatures } from '../../utils/tokenManager';
 import '../../styles/MobileHeader.css';
 import '../../styles/SideBar.css';
-
+import BrandLogo from '../../assets/images/Snap2Eat.png';
 const MobileHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -93,23 +93,13 @@ const MobileHeader = () => {
 
       <Offcanvas show={show} onHide={closeSidebar} className="mobile-sidebar">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title className="fw-bold">Snap2Eat</Offcanvas.Title>
+          <Offcanvas.Title className="fw-bold"><Image src={BrandLogo} alt="Snap2Eat" className='BrandImage'/></Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body className="SideBar-Container">
+      
           <button
             type="button"
-            className={`menu-toggle btn btn-link text-start ${
-              isActive("/admin/dashboard") ? "active" : ""
-            }`}
-            onClick={() => handleSectionClick("dashboard", null, "/admin/dashboard")}
-          >
-            <MdManageAccounts size={22} color={isActive("/admin/dashboard") ? "white" : "black"} />
-            <span style={{ marginLeft: '3px' }}>Admin Dashboard</span>
-          </button>
-
-          <button
-            type="button"
-            className={`menu-toggle btn btn-link text-start ${
+            className={`menu-toggle btn  text-start ${
               isActive("/admin/controls") ? "active" : ""
             }`}
             onClick={() => handleSectionClick("controls", null, "/admin/controls")}
@@ -120,7 +110,7 @@ const MobileHeader = () => {
 
           <button
             type="button"
-            className={`menu-toggle btn btn-link text-start ${
+            className={`menu-toggle btn  text-start ${
               isActive("/admin/management") ? "active" : ""
             }`}
             onClick={() => handleSectionClick("management", null, "/admin/management")}
@@ -132,7 +122,7 @@ const MobileHeader = () => {
           <Nav className="flex-column">
             <button
               type="button"
-              className={`menu-toggle btn btn-link text-start ${
+              className={`menu-toggle btn  text-start ${
                 location.pathname.startsWith("/admin/categories") || 
                 location.pathname.startsWith("/admin/subcategories") || 
                 location.pathname.startsWith("/admin/items") ||
@@ -202,7 +192,7 @@ const MobileHeader = () => {
               <>
                 <button
                   type="button"
-                  className={`menu-toggle btn btn-link text-start ${
+                  className={`menu-toggle btn  text-start ${
                     location.pathname.startsWith("/admin/events") ? "active" : ""
                   }`}
                   onClick={() => handleSectionClick("events")}
@@ -238,7 +228,7 @@ const MobileHeader = () => {
 
             <button
               type="button"
-              className={`menu-toggle btn btn-link text-start ${
+              className={`menu-toggle btn  text-start ${
                 location.pathname === "/admin/analytics" ? "active" : ""
               }`}
               onClick={() => handleSectionClick("analytics", null, "/admin/analytics")}
@@ -249,7 +239,7 @@ const MobileHeader = () => {
 
             <button
               type="button"
-              className={`menu-toggle btn btn-link text-start ${
+              className={`menu-toggle btn  text-start ${
                 location.pathname === "/admin/user-info" ? "active" : ""
               }`}
               onClick={() => handleSectionClick("user-info", null, "/admin/user-info")}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Alert, Modal } from 'react-bootstrap';
+import { Container, Card, Col, Button, Alert, Modal } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import { getAllSocials, deleteSocial, toggleSocialVisibility, updateSocialSerials } from '../../api/admin';
@@ -8,6 +8,7 @@ import AdminSocialCard from './AdminSocialCard';
 import AdminSocialForm from './AdminSocialForm';
 import AdminSocialDragDrop from './AdminSocialDragDrop';
 import '../../styles/AdminSocialControl.css';
+import '../../styles/AdminCommon.css';
 
 const AdminSocialManagement = ({ isStandalone = true }) => {
   const { updateBreadcrumb } = useBreadcrumb();
@@ -115,9 +116,11 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <Container className="SocialMediaContainer mt-4 d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
-          <span className="visually-hidden">Loading...</span>
+      <Container className="admin-common-container">
+        <div className="admin-common-loading">
+          <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
       </Container>
     );
@@ -126,47 +129,50 @@ const AdminSocialManagement = ({ isStandalone = true }) => {
 
 
   return (
-    <Container className="SocialMediaContainer mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2>Social Media Management</h2>
-          <p className="text-muted">
-            Manage your social media links and icons ({socials.length}/6 used)
-          </p>
-        </div>
-        <Button 
-          variant="primary" 
-          onClick={handleCreate}
-          disabled={socials.length >= 6}
-        >
-          <Plus className="me-2" />
-          Add Social Media
-        </Button>
-      </div>
-
-      {error && (
-        <Alert variant="danger" dismissible onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
-
-      {socials.length === 0 ? (
-        <div className="text-center py-5">
-          <p className="text-muted">No social media added yet.</p>
-          <Button variant="primary" onClick={handleCreate}>
+    <Container className="admin-common-container">
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <div>
+            <h3 className="admin-common-section-title">Social Media Management({socials.length}/6 used)</h3>
+           
+          </div>
+          <Button 
+            className='createbtn'
+            onClick={handleCreate}
+            disabled={socials.length >= 6}
+          >
             <Plus className="me-2" />
-            Add Your First Social Media
+            Add Socials
           </Button>
-        </div>
-      ) : (
-        <AdminSocialDragDrop
-          socials={socials}
-          onReorder={handleReorder}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onToggleVisibility={handleToggleVisibility}
-        />
-      )}
+        </Card.Header>
+        <Card.Body className="admin-common-card-body">
+
+
+          {error && (
+            <Alert variant="danger" dismissible onClose={() => setError('')}>
+              {error}
+            </Alert>
+          )}
+
+          {socials.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="text-muted">No social media added yet.</p>
+              <Button variant="primary" onClick={handleCreate}>
+                <Plus className="me-2" />
+                Add Your First Social Media
+              </Button>
+            </div>
+          ) : (
+            <AdminSocialDragDrop
+              socials={socials}
+              onReorder={handleReorder}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onToggleVisibility={handleToggleVisibility}
+            />
+          )}
+        </Card.Body>
+      </Card>
       
       <Modal show={showForm} onHide={handleFormCancel} size="lg" centered>
         <Modal.Body className="p-0">

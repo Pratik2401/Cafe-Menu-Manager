@@ -9,6 +9,7 @@ import Switch from "react-switch";
 import { FaPencil,FaRegTrashCan } from "react-icons/fa6";
 import Swal from 'sweetalert2';
 import '../../styles/FoodCategoryManagement.css';
+import '../../styles/AdminCommon.css';
 const FoodCategoryManagement = ({ isStandalone = true }) => {
   const { updateBreadcrumb } = useBreadcrumb();
   const [foodCategories, setFoodCategories] = useState([]);
@@ -179,15 +180,16 @@ const FoodCategoryManagement = ({ isStandalone = true }) => {
 
   if (loading) {
     return (
-      <div className="food-category-management d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <Spinner animation="border" variant="primary" size="lg" />
+      <div className="admin-common-container">
+        <div className="admin-common-loading">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="food-category-management">
-      
+    <div className="admin-common-container">
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
           {error}
@@ -200,22 +202,22 @@ const FoodCategoryManagement = ({ isStandalone = true }) => {
         </Alert>
       )}
 
-      <Card>
-        <Card.Header>
-            <h3 className="section-title">Food Categories</h3>
-            <Button 
-              variant="primary" 
-              size="sm" 
-              onClick={() => {
-                resetForm();
-                setShowModal(true);
-              }}
-            >
-              <FaPlus className="me-1" /> Add Food Category
-            </Button>
-         
+      <Card className="admin-common-card">
+        <Card.Header className="admin-common-card-header">
+          <h3 className="admin-common-section-title">Food Categories</h3>
+          <Button 
+          
+            size="sm" 
+            className='createbtn'
+            onClick={() => {
+              resetForm();
+              setShowModal(true);
+            }}
+          >
+            <FaPlus className="me-1" /> Add Food Category
+          </Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className="admin-common-card-body">
           {foodCategories.length === 0 ? (
             <div className="text-center py-4">
               <p className="text-muted">No food categories found. Add a category to get started.</p>
