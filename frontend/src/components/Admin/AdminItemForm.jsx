@@ -66,8 +66,10 @@ const ItemForm = ({
   const [showCreateSize, setShowCreateSize] = useState(false);
   const [showCreateVariation, setShowCreateVariation] = useState(false);
   const [newFoodCategory, setNewFoodCategory] = useState({ name: '', icon: null });
-  const [newSize, setNewSize] = useState({ name: '', group: 'Default' });
-  const [newVariation, setNewVariation] = useState({ name: '', group: 'Default' });
+  const [bulkSizes, setBulkSizes] = useState([{ name: '', group: 'Default' }]);
+  const [bulkGroup, setBulkGroup] = useState('Default');
+  const [bulkVariations, setBulkVariations] = useState([{ name: '', group: 'Default' }]);
+  const [bulkVariationGroup, setBulkVariationGroup] = useState('Default');
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -143,11 +145,17 @@ const ItemForm = ({
       return;
     }
     const croppedFile = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
-    setFormData({
-      ...formData,
-      image: croppedFile
-    });
-    setImagePreview(URL.createObjectURL(croppedBlob));
+    
+    // Check if this is for food category creation
+    if (showCreateFoodCategory) {
+      setNewFoodCategory({...newFoodCategory, icon: croppedFile});
+    } else {
+      setFormData({
+        ...formData,
+        image: croppedFile
+      });
+      setImagePreview(URL.createObjectURL(croppedBlob));
+    }
     setShowCropModal(false);
   };
 
@@ -406,29 +414,85 @@ const ItemForm = ({
     }
   };
 
-  // Create new size
-  const handleCreateSize = async () => {
-    try {
-      await createSize(newSize);
-      setShowCreateSize(false);
-      setNewSize({ name: '', group: 'Default' });
-      // Refresh sizes list
-      window.location.reload();
-    } catch (error) {
-      console.error('Error creating size:', error);
+  // Bulk size handlers
+  const handleBulkSizeInputChange = (index, field, value) => {
+    const updatedSizes = [...bulkSizes];
+    updatedSizes[index][field] = value;
+    setBulkSizes(updatedSizes);
+  };
+
+  const handleBulkSizeGroupChange = (newGroup) => {
+    setBulkGroup(newGroup);
+    const updatedSizes = bulkSizes.map(size => ({ ...size, group: newGroup }));
+    setBulkSizes(updatedSizes);
+  };
+
+  const addBulkSize = () => {
+    setBulkSizes([...bulkSizes, { name: '', group: bulkGroup }]);
+  };
+
+  const removeBulkSize = (index) => {
+    if (bulkSizes.length > 1) {
+      setBulkSizes(bulkSizes.filter((_, i) => i !== index));
     }
   };
 
-  // Create new variation
-  const handleCreateVariation = async () => {
+  // Bulk variation handlers
+  const handleBulkVariationInputChange = (index, field, value) => {
+    const updatedVariations = [...bulkVariations];
+    updatedVariations[index][field] = value;
+    setBulkVariations(updatedVariations);
+  };
+
+  const handleBulkVariationGroupChange = (newGroup) => {
+    setBulkVariationGroup(newGroup);
+    const updatedVariations = bulkVariations.map(variation => ({ ...variation, group: newGroup }));
+    setBulkVariations(updatedVariations);
+  };
+
+  const addBulkVariation = () => {
+    setBulkVariations([...bulkVariations, { name: '', group: bulkVariationGroup }]);
+  };
+
+  const removeBulkVariation = (index) => {
+    if (bulkVariations.length > 1) {
+      setBulkVariations(bulkVariations.filter((_, i) => i !== index));
+    }
+  };
+
+  // Create new sizes
+  const handleCreateSize = async () => {
+    const validSizes = bulkSizes.filter(size => size.name.trim());
+    if (validSizes.length === 0) return;
+
     try {
-      await createVariation(newVariation);
-      setShowCreateVariation(false);
-      setNewVariation({ name: '', group: 'Default' });
-      // Refresh variations list
+      for (const size of validSizes) {
+        await createSize(size);
+      }
+      setShowCreateSize(false);
+      setBulkSizes([{ name: '', group: 'Default' }]);
+      setBulkGroup('Default');
       window.location.reload();
     } catch (error) {
-      console.error('Error creating variation:', error);
+      console.error('Error creating sizes:', error);
+    }
+  };
+
+  // Create new variations
+  const handleCreateVariation = async () => {
+    const validVariations = bulkVariations.filter(variation => variation.name.trim());
+    if (validVariations.length === 0) return;
+
+    try {
+      for (const variation of validVariations) {
+        await createVariation(variation);
+      }
+      setShowCreateVariation(false);
+      setBulkVariations([{ name: '', group: 'Default' }]);
+      setBulkVariationGroup('Default');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating variations:', error);
     }
   };
 
@@ -1418,94 +1482,217 @@ const ItemForm = ({
       />
 
       {/* Create Food Category Modal */}
-      <Modal show={showCreateFoodCategory} onHide={() => setShowCreateFoodCategory(false)}>
+      <Modal show={showCreateFoodCategory} onHide={() => setShowCreateFoodCategory(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Create New Food Category</Modal.Title>
+          <Modal.Title>Add New Food Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={newFoodCategory.name}
-              onChange={(e) => setNewFoodCategory({...newFoodCategory, name: e.target.value})}
-              placeholder="Enter category name"
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Icon</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={(e) => setNewFoodCategory({...newFoodCategory, icon: e.target.files[0]})}
-            />
-          </Form.Group>
+          <Form onSubmit={(e) => { e.preventDefault(); handleCreateFoodCategory(); }}>
+            <Form.Group className="mb-3">
+              <Form.Label>Category Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={newFoodCategory.name}
+                onChange={(e) => setNewFoodCategory({...newFoodCategory, name: e.target.value})}
+                required
+                placeholder="Enter category name"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Category Icon (Keep Ratio 1:1)</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const imageUrl = URL.createObjectURL(file);
+                    setOriginalImageForCrop(imageUrl);
+                    setShowCropModal(true);
+                  }
+                  e.target.value = '';
+                }}
+                required={!newFoodCategory.icon}
+              />
+              {newFoodCategory.icon && (
+                <div className="mt-2 text-success small">
+                  ✓ Image processed and ready to upload
+                </div>
+              )}
+              {newFoodCategory.icon && (
+                <div className="mt-2">
+                  <img
+                    src={URL.createObjectURL(newFoodCategory.icon)}
+                    alt="Preview"
+                    style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 4 }}
+                  />
+                </div>
+              )}
+            </Form.Group>
+            <div className="d-flex justify-content-end">
+              <Button variant="secondary" className="me-2 CancelFoodCategoryBtn" onClick={() => setShowCreateFoodCategory(false)} type="button">
+                <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
+              </Button>
+              <Button variant="primary" type="submit" className='SaveFoodCategoryBtn'>
+                <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> Save
+              </Button>
+            </div>
+          </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowCreateFoodCategory(false)}>Cancel</Button>
-          <Button variant="primary" onClick={handleCreateFoodCategory}>Create</Button>
-        </Modal.Footer>
       </Modal>
 
       {/* Create Size Modal */}
-      <Modal show={showCreateSize} onHide={() => setShowCreateSize(false)}>
+      <Modal show={showCreateSize} onHide={() => setShowCreateSize(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Create New Size</Modal.Title>
+          <Modal.Title>Add Multiple Sizes in Same Group</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={newSize.name}
-              onChange={(e) => setNewSize({...newSize, name: e.target.value})}
-              placeholder="Enter size name"
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Group</Form.Label>
-            <Form.Control
-              type="text"
-              value={newSize.group}
-              onChange={(e) => setNewSize({...newSize, group: e.target.value})}
-              placeholder="Enter group name"
-            />
-          </Form.Group>
+          <div className="bulk-sizes-container">
+            {/* Group Selection */}
+            <div className="mb-4 p-3 bg-light rounded">
+              <Form.Group>
+                <Form.Label className="fw-bold">Group Name (All sizes will be added to this group)</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={bulkGroup}
+                  onChange={(e) => handleBulkSizeGroupChange(e.target.value)}
+                  placeholder="Enter group name (e.g., Pizza Sizes, Drink Sizes)"
+                  className="mb-2"
+                />
+                <Form.Text className="text-muted">
+                  All sizes below will be grouped under: <strong>{bulkGroup}</strong>
+                </Form.Text>
+              </Form.Group>
+            </div>
+
+            {/* Size Names */}
+            <div className="mb-3">
+              <h6 className="mb-3">Size Names:</h6>
+              {bulkSizes.map((size, index) => (
+                <div key={index} className="bulk-size-row mb-3 p-3 border rounded">
+                  <Row className="align-items-center">
+                    <Col md={10}>
+                      <Form.Group>
+                        <Form.Label>Size Name {index + 1}</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={size.name}
+                          onChange={(e) => handleBulkSizeInputChange(index, 'name', e.target.value)}
+                          placeholder={`Enter size name ${index + 1}`}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={2} className="d-flex align-items-end">
+                      {bulkSizes.length > 1 && (
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => removeBulkSize(index)}
+                          className="mb-3"
+                          title="Remove this size"
+                        >
+                          <FaTrash />
+                        </Button>
+                      )}
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+              <Button
+                variant="outline-primary"
+                onClick={addBulkSize}
+                className="w-100"
+              >
+                <FaPlus className="me-2" /> Add Another Size
+              </Button>
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowCreateSize(false)}>Cancel</Button>
-          <Button variant="primary" onClick={handleCreateSize}>Create</Button>
+          <Button variant="secondary" className="me-2 CancelBulkSizeBtn" onClick={() => setShowCreateSize(false)} type="button">
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
+          </Button>
+          <Button variant="primary" onClick={handleCreateSize} disabled={bulkSizes.every(size => !size.name.trim())} className='SaveBulkSizeBtn'>
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> Create {bulkSizes.filter(size => size.name.trim()).length} Sizes
+          </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Create Variation Modal */}
-      <Modal show={showCreateVariation} onHide={() => setShowCreateVariation(false)}>
+      <Modal show={showCreateVariation} onHide={() => setShowCreateVariation(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Create New Variation</Modal.Title>
+          <Modal.Title>Add Multiple Variations in Same Group</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={newVariation.name}
-              onChange={(e) => setNewVariation({...newVariation, name: e.target.value})}
-              placeholder="Enter variation name"
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Group</Form.Label>
-            <Form.Control
-              type="text"
-              value={newVariation.group}
-              onChange={(e) => setNewVariation({...newVariation, group: e.target.value})}
-              placeholder="Enter group name"
-            />
-          </Form.Group>
+          <div className="bulk-variations-container">
+            {/* Group Selection */}
+            <div className="mb-4 p-3 bg-light rounded group-selection">
+              <Form.Group>
+                <Form.Label className="fw-bold">Group Name (All variations will be added to this group)</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={bulkVariationGroup}
+                  onChange={(e) => handleBulkVariationGroupChange(e.target.value)}
+                  placeholder="Enter group name (e.g., Pizza Variations, Drink Variations)"
+                  className="mb-2"
+                />
+                <Form.Text className="text-muted">
+                  All variations below will be grouped under: <strong>{bulkVariationGroup}</strong>
+                </Form.Text>
+              </Form.Group>
+            </div>
+
+            {/* Variation Names */}
+            <div className="mb-3">
+              <h6 className="mb-3">Variation Details:</h6>
+              {bulkVariations.map((variation, index) => (
+                <div key={index} className="bulk-variation-row mb-3 p-3 border rounded">
+                  <Row className="align-items-center">
+                    <Col md={10}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Variation Name {index + 1}</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={variation.name}
+                          onChange={(e) => handleBulkVariationInputChange(index, 'name', e.target.value)}
+                          placeholder={`Enter variation name ${index + 1}`}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={2} className="d-flex align-items-end">
+                      {bulkVariations.length > 1 && (
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => removeBulkVariation(index)}
+                          className="mb-3 remove-variation-btn"
+                          title="Remove this variation"
+                        >
+                          <FaTrash />
+                        </Button>
+                      )}
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+              <Button
+                variant="outline-primary"
+                onClick={addBulkVariation}
+                className="w-100 add-another-btn"
+              >
+                <FaPlus className="me-2" /> Add Another Variation
+              </Button>
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowCreateVariation(false)}>Cancel</Button>
-          <Button variant="primary" onClick={handleCreateVariation}>Create</Button>
+          <Button variant="secondary" className="me-2 CancelFoodCategoryBtn" onClick={() => setShowCreateVariation(false)} type="button">
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✗</span> Cancel
+          </Button>
+          <Button variant="primary" onClick={handleCreateVariation} disabled={bulkVariations.every(variation => !variation.name.trim())} className='SaveFoodCategoryBtn'>
+            <span style={{ fontSize: 18, verticalAlign: 'middle' }}>✓</span> Create {bulkVariations.filter(variation => variation.name.trim()).length} Variations
+          </Button>
         </Modal.Footer>
       </Modal>
     </Form>
