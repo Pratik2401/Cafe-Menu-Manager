@@ -124,7 +124,7 @@ const AdminImageUploadPage = () => {
         <Col>
           <div className="d-flex justify-content-between align-items-center">
             <h2><FaImage className="me-2" />Image Uploads</h2>
-            <Button variant="primary" onClick={() => setShowModal(true)}>
+            <Button variant="primary" onClick={() => setShowModal(true)} className='btn createbtn'>
               <FaPlus className="me-2" />Add Image Upload
             </Button>
           </div>
@@ -167,17 +167,20 @@ const AdminImageUploadPage = () => {
                         <Switch
                           checked={upload.isVisible}
                           onChange={() => handleToggleVisibility(upload._id)}
-                          onColor="#28a745"
-                          offColor="#dc3545"
-                          height={20}
-                          width={40}
+                          onColor="#64E239"
+                          offColor="#545454"
+                          checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
+                          uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
+                          width={70}
+                          height={30}
+                          handleDiameter={22}
                         />
                       </td>
                       <td>
                         <Button 
-                          variant="outline-danger" 
-                          size="sm"
+                        
                           onClick={() => handleDelete(upload._id)}
+                          className='btn deleteIconBtn'
                         >
                           <FaTrash />
                         </Button>

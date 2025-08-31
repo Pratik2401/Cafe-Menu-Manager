@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Button, Form, Card, Spinner, Alert } from 'react-bootstrap';
 import { CSVLink } from 'react-csv';
 import { FaUsers, FaDownload } from 'react-icons/fa';
+import Switch from 'react-switch';
 import { getUserInfoList, getUserInfoSettings, updateUserInfoSettings } from '../../api/admin';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import '../../styles/AdminCommon.css';
@@ -135,19 +136,26 @@ const AdminUserInfoList = () => {
             User Information Submissions
           </h3>
           <div className="d-flex gap-3">
-            <Form.Check
-              type="switch"
-              id="user-info-toggle"
-              label="Enable Collection"
-              checked={isEnabled}
-              onChange={handleToggleEnable}
-            />
+            <div className="d-flex align-items-center gap-2">
+              <span>Collection:</span>
+              <Switch
+                checked={isEnabled}
+                onChange={handleToggleEnable}
+                onColor="#64E239"
+                offColor="#545454"
+                checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
+                uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
+                width={70}
+                height={30}
+                handleDiameter={22}
+              />
+            </div>
             <CSVLink
               data={csvData}
               filename={"user-info-list.csv"}
-              className="btn btn-success btn-sm"
+              className="btn CsvExportBtn"
             >
-              <FaDownload className="me-1" /> Export CSV
+              <FaDownload className="me-1" />CSV
             </CSVLink>
           </div>
         </Card.Header>

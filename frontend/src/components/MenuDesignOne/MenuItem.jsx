@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback, memo, useRef } from 'react';
 import { getImageUrl } from '../../utils/imageUrl';
 import { Button, Badge, Offcanvas, ListGroup, Accordion } from 'react-bootstrap';
 import { ChevronDown } from 'react-bootstrap-icons';
-import { getAllItems, getAllCategories, getAllSizes, getAllSubCategories } from '../../api/customer';
+
 import { useDebounce } from '../../hooks/useDebounce.js';
 import NoItems from '../../assets/images/NoItemsImage.webp';
 import LoadingVideo from '../../assets/videos/loading.gif';
@@ -56,7 +56,7 @@ const MenuItemImage = memo(({ src, alt, className, onError }) => {
 
 MenuItemImage.displayName = 'MenuItemImage';
 
-const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCategories, customMessages, onSubCategorySelect, onMenuClick }) => {
+const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCategories, customMessages, onSubCategorySelect, onMenuClick, menuData }) => {
   // Debounce search query for better performance
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
   
@@ -103,13 +103,15 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
   const [selectedSizes, setSelectedSizes] = useState({});
   const [selectedVariations, setSelectedVariations] = useState({});
 
-  const [menuItems, setMenuItems] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [variations, setVariations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [allCategories, setAllCategories] = useState([]);
-  const [allSubCategories, setAllSubCategories] = useState({});
+  
+  // Use data from menuData prop
+  const menuItems = menuData?.items || [];
+  const categories = { ...menuData?.categories, sizes: menuData?.sizes };
+  const variations = menuData?.variations || [];
+  const allCategories = menuData?.categories || [];
+  const allSubCategories = menuData?.subCategoriesGrouped || {};
 
   // Function to check if an image URL is valid
   const checkImageUrl = (url, itemName) => {
@@ -135,105 +137,9 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
     }
   };
   
-  const loadItems = async () => {
-   
-    setLoading(true);
-    try {
-      const response = await getAllItems();
-      
-      // Process items array
-      const items = Array.isArray(response.data) ? response.data : [];
-      
-      items.forEach(item => {
-        // Check image URLs
-        if (item.image) {
-          checkImageUrl(item.image, item.name);
-        }
-      });
-      
-      setMenuItems(items);
-      
-      // Fetch categories and sizes
-      const categoriesResponse = await getAllCategories();
-      
-      
-      // Handle both array and object with categories property
-      const categoriesData = Array.isArray(categoriesResponse.data) 
-        ? categoriesResponse.data 
-        : (categoriesResponse.data.categories || []);
-      
-      // Fetch sizes separately
-      const sizesResponse = await getAllSizes();
-      
-      
-      // Add sizes to categories data for easy lookup
-      const sizesData = Array.isArray(sizesResponse.data) 
-        ? sizesResponse.data 
-        : (sizesResponse.data.data || []);
-      
-      // Create a combined data structure for easy size lookup
-      const categoriesWithSizes = [...categoriesData];
-      categoriesWithSizes.sizes = sizesData;
-      
-      setCategories(categoriesWithSizes);
-      
-      // Fetch variations
-      try {
-        const variationsResponse = await import('../../api/customer').then(module => module.getAllVariations());
-      
-        const variationsData = Array.isArray(variationsResponse.data) 
-          ? variationsResponse.data 
-          : (variationsResponse.data?.data || []);
-        setVariations(variationsData);
-      } catch (error) {
-        console.error('Error fetching variations:', error);
-        setVariations([]);
-      }
-    } catch (error) {
-      console.error("Error fetching items:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  // Fetch items once when the component mounts
-  useEffect(() => {
-    loadItems();
-    
 
-    
-    // Fetch all categories and subcategories for the sidebar
-    const fetchCategoriesForSidebar = async () => {
-      try {
-        // Fetch categories
-        const categoriesResponse = await getAllCategories();
-        const categoriesData = Array.isArray(categoriesResponse.data) 
-          ? categoriesResponse.data 
-          : (categoriesResponse.data.categories || []);
-        setAllCategories(categoriesData);
-        
-        // Fetch subcategories
-        const subCategoriesResponse = await getAllSubCategories();
-        const subCategoriesData = subCategoriesResponse.data || [];
-        
-        // Group subcategories by category ID
-        const grouped = {};
-        subCategoriesData.forEach(subCategory => {
-          const categoryId = subCategory.category?.serialId || subCategory.categoryId;
-          if (!grouped[categoryId]) {
-            grouped[categoryId] = [];
-          }
-          grouped[categoryId].push(subCategory);
-        });
-        
-        setAllSubCategories(grouped);
-      } catch (error) {
-        console.error('Error fetching categories for sidebar:', error);
-      }
-    };
-    
-    fetchCategoriesForSidebar();
-  }, []);
+
 
   const applyFilters = useCallback((item) => {
     // Ignore subcategory match when searchQuery is present
@@ -258,22 +164,8 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
     return subCategoryMatch && searchMatch && visibilityMatch && foodCategoryMatch;
   }, [debouncedSearchQuery, selectedSubCategory, filters]);
 
-  // State for food categories
-  const [foodCategories, setFoodCategories] = useState([]);
-
-  // Fetch food categories using the getAllFoodCategories endpoint
-  useEffect(() => {
-    const fetchFoodCategories = async () => {
-      try {
-        const response = await import('../../api/customer').then(module => module.getFoodCategories());
-        setFoodCategories(response.data);
-      } catch (error) {
-        console.error('Error fetching food categories:', error);
-      }
-    };
-    
-    fetchFoodCategories();
-  }, []);
+  // Use food categories from menuData
+  const foodCategories = menuData?.foodCategories || [];
 
   // Pre-select first variation and size for all items
   useEffect(() => {
@@ -322,7 +214,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
       setSelectedVariations(prev => ({ ...prev, ...defaultVariations }));
       setSelectedSizes(prev => ({ ...prev, ...defaultSizes }));
     }
-  }, [menuItems.length, categories.sizes]); // Use menuItems.length instead of menuItems to prevent infinite loop
+  }, [menuItems.length, categories.sizes]);
 
   // Function to get food category name by ID
   const getFoodCategoryName = (foodCategoryId) => {
@@ -581,7 +473,7 @@ const MenuItem = memo(({ selectedSubCategory, filters, searchQuery, hasSubCatego
         </div>
       )}
       
-      {loading ? (
+      {!menuData || loading ? (
         <CafeLoader 
           type={LOADER_TYPES.COFFEE_POUR} 
           text={customMessages?.loadingText || "Brewing your menu items..."} 

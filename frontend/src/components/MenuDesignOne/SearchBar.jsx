@@ -7,10 +7,10 @@ import { getImageUrl } from '../../utils/imageUrl';
 import '../../styles/SearchBar.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getFoodCategories, getAllEvents, getAllSubCategories, getCafeSettings } from '../../api/customer';
 
 
-const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], onCategoryChange, onSubCategorySelect, onMenuClick }) => {
+
+const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], onCategoryChange, onSubCategorySelect, onMenuClick, menuData }) => {
   const [showFilterPopup, setShowFilterPopup] = useState(false);
 
   const [filters, setFilters] = useState({});
@@ -45,92 +45,58 @@ const NavigationBar = memo(({ onFiltersChange, onSearchChange, categories = [], 
   }, []);
 
   useEffect(() => {
-    // Fetch subcategories for dropdown menu
-    const fetchSubCategories = async () => {
+    if (!menuData) return;
+    
+    // Use data from menuData prop
+    const foodCategories = menuData.foodCategories || [];
+    setLocalCategories(foodCategories);
+    
+    // Initialize filter state based on food categories
+    const initialFilters = {};
+    foodCategories.forEach(category => {
+      initialFilters[category._id] = false;
+    });
+    setFilters(initialFilters);
+    
+    // Set default selected category
+    if (foodCategories.length > 0 && !selectedCategory) {
+      setSelectedCategory(foodCategories[0].serialId);
+      if (onCategoryChange) {
+        onCategoryChange(foodCategories[0].serialId);
+      }
+    }
+    
+    // Use subcategories from menuData
+    setSubCategoriesMap(menuData.subCategoriesGrouped || {});
+    
+    // Set current subcategories based on selected category
+    const storedCategory = localStorage.getItem('selectedMainCategory');
+    if (storedCategory) {
       try {
-        const response = await getAllSubCategories();
-        const subCategoriesData = response.data || [];
-        
-        // Group subcategories by category ID
-        const grouped = {};
-        subCategoriesData.forEach(subCategory => {
-          const categoryId = subCategory.category?.serialId || subCategory.categoryId;
-          if (!grouped[categoryId]) {
-            grouped[categoryId] = [];
-          }
-          grouped[categoryId].push(subCategory);
-        });
-        
-        setSubCategoriesMap(grouped);
-        
-        // Set current subcategories based on selected category
-        const storedCategory = localStorage.getItem('selectedMainCategory');
-        if (storedCategory) {
-          try {
-            const parsedCategory = JSON.parse(storedCategory);
-            const categoryId = parsedCategory.id;
-            if (grouped[categoryId]) {
-              setCurrentSubcategories(grouped[categoryId]);
-              const category = categories.find(cat => cat.serialId === categoryId);
-              setCurrentCategoryName(category ? category.name : '');
-            }
-          } catch (error) {
-            console.error('Error parsing stored category:', error);
-          }
+        const parsedCategory = JSON.parse(storedCategory);
+        const categoryId = parsedCategory.id;
+        const grouped = menuData.subCategoriesGrouped || {};
+        if (grouped[categoryId]) {
+          setCurrentSubcategories(grouped[categoryId]);
+          const category = categories.find(cat => cat.serialId === categoryId);
+          setCurrentCategoryName(category ? category.name : '');
         }
       } catch (error) {
-        console.error('Error fetching subcategories:', error);
+        console.error('Error parsing stored category:', error);
       }
-    };
+    }
     
-    fetchSubCategories();
+    // Check for events and feature toggle from menuData
+    const eventsEnabled = menuData.cafeSettings?.data?.features?.eventsToggle || false;
+    setEventsToggle(eventsEnabled);
     
-    const fetchData = async () => {
-      try {
-        // Fetch food categories
-        const response = await getFoodCategories();
-        const foodCategories = response.data || [];
-        setLocalCategories(foodCategories);
-        
-        // Initialize filter state based on food categories
-        const initialFilters = {};
-        foodCategories.forEach(category => {
-          initialFilters[category._id] = false;
-        });
-        setFilters(initialFilters);
-        
-        // Set default selected category
-        if (foodCategories.length > 0 && !selectedCategory) {
-          setSelectedCategory(foodCategories[0].serialId);
-          if (onCategoryChange) {
-            onCategoryChange(foodCategories[0].serialId);
-          }
-        }
-        
-        // Check for events and feature toggle
-        try {
-          const settingsResponse = await getCafeSettings();
-          const eventsEnabled = settingsResponse?.data?.data?.features?.eventsToggle || false;
-          setEventsToggle(eventsEnabled);
-          
-          if (eventsEnabled) {
-            const eventsResponse = await getAllEvents({ active: true });
-            const hasEventsData = eventsResponse && eventsResponse.data && eventsResponse.data.length > 0;
-            setHasEvents(hasEventsData);
-          } else {
-            setHasEvents(false);
-          }
-        } catch (eventError) {
-          console.error('Error fetching events:', eventError);
-          setHasEvents(false);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    
-    fetchData();
-  }, [onCategoryChange]);
+    if (eventsEnabled) {
+      const hasEventsData = menuData.events && menuData.events.length > 0;
+      setHasEvents(hasEventsData);
+    } else {
+      setHasEvents(false);
+    }
+  }, [onCategoryChange, menuData, categories, selectedCategory]);
 
   // Effect to handle debounced search
   useEffect(() => {

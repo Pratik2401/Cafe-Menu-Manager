@@ -101,7 +101,7 @@ const ManageEventsPage = ({ setActiveSection }) => {
         <h2 className="mb-0">Manage Events</h2>
         <Button 
           style={{ backgroundColor: '#3F61D8', borderColor: '#3F61D8', borderRadius: '30px' }}
-          onClick={() => setActiveSection && setActiveSection('create-event')}
+          onClick={() => navigate('/admin/events/new')}
         >
           Create New Event
         </Button>
@@ -171,13 +171,13 @@ const ManageEventsPage = ({ setActiveSection }) => {
                       <Switch
                         checked={event.isActive}
                         onChange={() => handleToggleStatus(event.eventId)}
-                        onColor="#28a745"
-                        offColor="#6c757d"
-                        checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 12, color: 'white', paddingRight: 2}}>Active</span>}
-                        uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 12, color: 'white', paddingLeft: 2}}>Inactive</span>}
+                        onColor="#64E239"
+                        offColor="#545454"
+                        checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
+                        uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
                         width={70}
                         height={30}
-                        handleDiameter={24}
+                        handleDiameter={22}
                       />
                     </td>
                     <td>

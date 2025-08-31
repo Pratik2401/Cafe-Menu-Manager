@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 import NavigateBar from './NavigateBar';
 import MenuItem from './MenuItem';
 import MenuPopup from './MenuPopup';
-import { getAllCategories, getCafeSettings, getAllSubCategories } from '../../api/customer';
+import { useMenuData } from '../../hooks/useMenuData';
 import TopBar from './TopBar';
 import EventBanner from './EventBanner';
 import Branding from './Branding';
@@ -13,8 +13,8 @@ import AllergyNote from './AllergyNote';
 import CafeLoader, { LOADER_TYPES } from '../utils/CafeLoader';
 
 const MenuView = memo(() => {
+  const { data: menuData, loading } = useMenuData();
   const [showMenuPopup, setShowMenuPopup] = useState(false);
-  const [allSubCategories, setAllSubCategories] = useState({});
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [filters, setFilters] = useState({
@@ -26,82 +26,31 @@ const MenuView = memo(() => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [subCategories, setSubCategories] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [hasSubCategories, setHasSubCategories] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [cafeSettings, setCafeSettings] = useState(null);
   // Removed showBranding state
 
   // Fetch all categories and cafe settings on component mount
   // Removed scroll event listener for branding
 
   useEffect(() => {
-    // Fetch subcategories for popup
-    const fetchSubCategories = async () => {
-      try {
-        const response = await getAllSubCategories();
-        const subCategoriesData = response.data || [];
-        
-        const grouped = {};
-        subCategoriesData.forEach(subCategory => {
-          const categoryId = subCategory.category?.serialId;
-          if (categoryId !== undefined && !grouped[categoryId]) {
-            grouped[categoryId] = [];
-          }
-          if (categoryId !== undefined) {
-            grouped[categoryId].push(subCategory);
-          }
-        });
-        
-        setAllSubCategories(grouped);
-      } catch (error) {
-        console.error('Error fetching subcategories:', error);
-      }
-    };
-    
-    fetchSubCategories();
-    
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // Fetch categories
-        const response = await getAllCategories();
-        const categoriesData = Array.isArray(response.data) 
-          ? response.data 
-          : (response.data.categories || []);
-        
-        setCategories(categoriesData);
-        
-        // Fetch cafe settings
-        const settingsResponse = await getCafeSettings();
-        setCafeSettings(settingsResponse.data);
-        
-        // Check if there's a selected category from Landing Page in localStorage
-        const storedCategory = localStorage.getItem('selectedMainCategory');
-        if (storedCategory) {
-          try {
-            const parsedCategory = JSON.parse(storedCategory);
-            setSelectedCategory(parsedCategory.id);
-          } catch (error) {
-            console.error('Error parsing stored category:', error);
-            // Fallback to first category if parsing fails
-            if (categoriesData.length > 0) {
-              setSelectedCategory(categoriesData[0].serialId);
-            }
-          }
-        } else if (categoriesData.length > 0) {
-          // Set default category if no stored category and categories are available
-          setSelectedCategory(categoriesData[0].serialId);
+    if (!loading && menuData.categories.length > 0) {
+      // Check if there's a selected category from Landing Page in localStorage
+      const storedCategory = localStorage.getItem('selectedMainCategory');
+      if (storedCategory) {
+        try {
+          const parsedCategory = JSON.parse(storedCategory);
+          setSelectedCategory(parsedCategory.id);
+        } catch (error) {
+          console.error('Error parsing stored category:', error);
+          // Fallback to first category if parsing fails
+          setSelectedCategory(menuData.categories[0].serialId);
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
+      } else {
+        // Set default category if no stored category and categories are available
+        setSelectedCategory(menuData.categories[0].serialId);
       }
-    };
-    
-    fetchData();
-  }, []);
+    }
+  }, [loading, menuData.categories]);
 
   const handleSubCategorySelect = useCallback((item, subCategories) => {
     setSelectedSubCategory(item);
@@ -156,15 +105,16 @@ const MenuView = memo(() => {
               filters={filters}
               onFiltersChange={updateFilters}
               onSearchChange={handleSearchChange}
-              categories={categories}
+              categories={menuData.categories}
               onCategoryChange={handleCategoryChange}
               onSubCategorySelect={handleSubCategorySelect}
               onMenuClick={handleMenuClick}
+              menuData={menuData}
             />
            <MenuPopup 
   show={showMenuPopup}
-  categories={categories}
-  subCategories={allSubCategories}
+  categories={menuData.categories}
+  subCategories={menuData.subCategoriesGrouped}
   onSubCategorySelect={(subCategory, subCategories) => {
     handleSubCategorySelect(subCategory, subCategories);
     setShowMenuPopup(false);
@@ -174,13 +124,14 @@ const MenuView = memo(() => {
 />
           </div>
           {/* Event Banner with Modal */}
-          <EventBanner />
+          <EventBanner menuData={menuData} />
 
           {hasSubCategories ? (
             <NavigateBar 
               onSubCategorySelect={handleSubCategorySelect} 
               categoryId={selectedCategory}
               searchQuery={searchQuery}
+              menuData={menuData}
             />
           ) : null
           }
@@ -195,6 +146,7 @@ const MenuView = memo(() => {
             categoryId={selectedCategory}
             key={selectedSubCategory ? selectedSubCategory._id : 'default'}
             onMenuClick={handleMenuClick}
+            menuData={menuData}
           />
           
           <AllergyNote />

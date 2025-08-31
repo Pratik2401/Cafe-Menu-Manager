@@ -23,7 +23,10 @@ const ItemForm = ({
   subCategories = [],
   categories = [],
   variations = [],
-  isCreating = false
+  isCreating = false,
+  onFoodCategoryCreated,
+  onSizeCreated,
+  onVariationCreated
 }) => {
   // Initialize form state from item or with defaults
   const [formData, setFormData] = useState({
@@ -399,16 +402,24 @@ const ItemForm = ({
   // Create new food category
   const handleCreateFoodCategory = async () => {
     try {
-      const formData = new FormData();
-      formData.append('name', newFoodCategory.name);
+      const formDataObj = new FormData();
+      formDataObj.append('name', newFoodCategory.name);
       if (newFoodCategory.icon) {
-        formData.append('icon', newFoodCategory.icon);
+        formDataObj.append('icon', newFoodCategory.icon);
       }
-      await createFoodCategory(formData);
+      const response = await createFoodCategory(formDataObj);
+      const createdCategory = response.data || response;
+      
+      // Update local state with new category
+      if (onFoodCategoryCreated) {
+        onFoodCategoryCreated(createdCategory);
+      }
+      
+      // Auto-select the newly created category
+      setFormData(prev => ({ ...prev, foodCategoryId: createdCategory._id }));
+      
       setShowCreateFoodCategory(false);
       setNewFoodCategory({ name: '', icon: null });
-      // Refresh food categories list
-      window.location.reload();
     } catch (error) {
       console.error('Error creating food category:', error);
     }
@@ -466,13 +477,32 @@ const ItemForm = ({
     if (validSizes.length === 0) return;
 
     try {
+      const createdSizes = [];
       for (const size of validSizes) {
-        await createSize(size);
+        const response = await createSize(size);
+        const createdSize = response.data || response;
+        createdSizes.push(createdSize);
       }
+      
+      // Update local state with new sizes
+      if (onSizeCreated) {
+        onSizeCreated(createdSizes);
+      }
+      
+      // Auto-select the newly created sizes
+      const newSizePrices = createdSizes.map(size => ({
+        sizeId: size._id,
+        price: formData.price || 0
+      }));
+      
+      setFormData(prev => ({
+        ...prev,
+        sizePrices: [...prev.sizePrices, ...newSizePrices]
+      }));
+      
       setShowCreateSize(false);
       setBulkSizes([{ name: '', group: 'Default' }]);
       setBulkGroup('Default');
-      window.location.reload();
     } catch (error) {
       console.error('Error creating sizes:', error);
     }
@@ -484,13 +514,44 @@ const ItemForm = ({
     if (validVariations.length === 0) return;
 
     try {
+      const createdVariations = [];
       for (const variation of validVariations) {
-        await createVariation(variation);
+        const response = await createVariation(variation);
+        const createdVariation = response.data || response;
+        createdVariations.push(createdVariation);
       }
+      
+      // Update local state with new variations
+      if (onVariationCreated) {
+        onVariationCreated(createdVariations);
+      }
+      
+      // Auto-select the newly created variations
+      const newVariations = createdVariations.map(variation => {
+        if (formData.sizePrices.length === 0) {
+          return {
+            variationId: variation._id,
+            price: formData.price || 0,
+            isAvailable: true
+          };
+        } else {
+          return {
+            variationId: variation._id,
+            sizePrices: formData.sizePrices.map(sp => ({ sizeId: sp.sizeId, price: sp.price })),
+            isAvailable: true
+          };
+        }
+      });
+      
+      setFormData(prev => ({
+        ...prev,
+        variations: [...prev.variations, ...newVariations],
+        hasVariations: true
+      }));
+      
       setShowCreateVariation(false);
       setBulkVariations([{ name: '', group: 'Default' }]);
       setBulkVariationGroup('Default');
-      window.location.reload();
     } catch (error) {
       console.error('Error creating variations:', error);
     }
@@ -676,7 +737,7 @@ const ItemForm = ({
               )}
               <div className="AdminEditImageActions d-flex w-100">
                 <Form.Label className="AdminEditImageBtn flex-fill mb-0" style={{ cursor: 'pointer' }}>
-                  Change(Ratio 1:1)
+                  Change
                   <Form.Control
                     type="file"
                     accept="image/*"
@@ -1123,7 +1184,7 @@ const ItemForm = ({
               <Col>
                 <div className="AdminEditRow" style={{ width: '100%' }}>
                   <div className="table-responsive">
-                    <table className="AdminItemEditAddonsTable w-100" style={{ 
+                    <table className="AdminItemEditAddonsTable" style={{ 
                       border: '1px solid #dee2e6',
                       borderRadius: '8px',
                       overflow: 'hidden',
@@ -1500,7 +1561,7 @@ const ItemForm = ({
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Category Icon (Keep Ratio 1:1)</Form.Label>
+              <Form.Label>Category Icon</Form.Label>
               <Form.Control
                 type="file"
                 accept="image/*"

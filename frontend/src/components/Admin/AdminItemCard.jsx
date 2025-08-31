@@ -20,7 +20,9 @@ const AdminItemCard = ({
   categories = [],
   variations = [],
   dragHandleProps = {},
-
+  onFoodCategoryCreated,
+  onSizeCreated,
+  onVariationCreated
 }) => {
   const [localShow, setLocalShow] = useState(item.show);
   
@@ -91,6 +93,9 @@ const AdminItemCard = ({
               subCategories={subCategories}
               categories={categories}
               variations={variations}
+              onFoodCategoryCreated={onFoodCategoryCreated}
+              onSizeCreated={onSizeCreated}
+              onVariationCreated={onVariationCreated}
             />
           </Col>
         ) : (
@@ -104,38 +109,14 @@ const AdminItemCard = ({
                 <div className="d-flex justify-content-end align-items-center mb-3 gap-3">
                   <Switch
                     checked={localShow}
+                    onChange={handleAvailabilityToggle}
                     onColor="#64E239"
                     offColor="#545454"
-                    checkedIcon={
-                      <span style={{
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
-                        height: '100%', 
-                        fontSize: 16, 
-                        color: 'white'
-                      }}>
-                        Show
-                      </span>
-                    }
-                    uncheckedIcon={
-                      <span style={{
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
-                        height: '100%', 
-                        fontSize: 16, 
-                        color: 'white'
-                      }}>
-                        Hide
-                      </span>
-                    }
-                    checkedHandleIcon={false}
-                    uncheckedHandleIcon={false}
+                    checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
+                    uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
                     width={70}
                     height={30}
                     handleDiameter={22}
-                    onChange={handleAvailabilityToggle}
                     onClick={e => e.stopPropagation()}
                     onMouseDown={e => e.stopPropagation()}
                     onTouchStart={e => e.stopPropagation()}

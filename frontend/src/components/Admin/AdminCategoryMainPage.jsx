@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useBreadcrumb } from "./AdminBreadcrumbContext";
+import { useNavigate, Link } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
@@ -36,8 +37,7 @@ function CategoryPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [editedCategory, setEditedCategory] = useState({ name: '', image: '' });
   const fileInputRefs = useRef({});
-  const [viewSubCategory, setViewSubCategory] = useState(null); // { id, name }
-  const [ItemName, setItemName] = useState(null);
+  const navigate = useNavigate();
   const [showCropModal, setShowCropModal] = useState(false);
   const [originalImageForCrop, setOriginalImageForCrop] = useState(null);
   const [cropTargetType, setCropTargetType] = useState(null); // 'new' or 'edit'
@@ -65,41 +65,12 @@ function CategoryPage() {
     fetchData();
   }, []);
 
-  // Update breadcrumb only once when component mounts or when navigation changes
+  // Update breadcrumb
   useEffect(() => {
-    if (viewSubCategory) {
-      const breadcrumbPath = [
-        { 
-          label: "Category Management",
-          onClick: () => {
-            setViewSubCategory(null);
-            setItemName(null);
-          }
-        }
-      ];
-      
-      // Add category name
-      breadcrumbPath.push({
-        label: viewSubCategory.name,
-        onClick: () => {
-          setItemName(null);
-          callItemRest();
-        }
-      });
-      
-      // Add item name if present
-      if (ItemName) {
-        breadcrumbPath.push({ label: ItemName });
-      }
-      
-      updateBreadcrumb(breadcrumbPath);
-    } else {
-      // Just show Category Management when on main categories page
-      updateBreadcrumb([
-        { label: "Category Management" }
-      ]);
-    }
-  }, [viewSubCategory?.id, ItemName]);
+    updateBreadcrumb([
+      { label: "Category Management" }
+    ]);
+  }, []);
 
   const handleDragEnd = async (event) => {
     const { active, over } = event;
@@ -330,22 +301,7 @@ function CategoryPage() {
     }
   };
 
-  const sendItemtoCategeoryPage = (data) => {
-    setItemName(data);
-  };
 
-  if (viewSubCategory) {
-    return (
-      <AdminSubCategoryMainPage
-        ref={subCategoryRef}
-        categoryId={viewSubCategory.id}
-        categoryName={viewSubCategory.name}
-        onBack={() => setViewSubCategory(null)}
-        sendItemtoCategeoryPage={sendItemtoCategeoryPage}
-        resetSubCategoryView={() => setItemName(null)}
-      />
-    );
-  }
 
   if (loading) {
     return (
@@ -398,7 +354,8 @@ function CategoryPage() {
                   onEditClick={() => editCategory(category._id)}
                   onDeleteClick={() => deleteCategoryFunction(category._id)}
                   onToggleShow={() => toggleShow(category._id, category.isVisible)}
-                  onView={() => setViewSubCategory({ id: category._id, name: category.name })} 
+                  onView={() => navigate(`/admin/categories/${category._id}`)}
+                  viewLink={`/admin/categories/${category._id}`} 
                 />
               ))
               )}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Table, Form, Modal, Alert, Spinner } from 'react-bootstrap';
-import { FaPlus } from 'react-icons/fa';
+import { Card, Button, Table, Form, Modal, Alert, Spinner, Row, Col } from 'react-bootstrap';
+import { FaPlus, FaUtensils, FaEdit, FaRuler, FaAllergies, FaCogs } from 'react-icons/fa';
 import { FaPencil, FaRegTrashCan } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
 import Switch from 'react-switch';
 import { getAllAllergies, createAllergy, updateAllergy, deleteAllergy, toggleAllergyStatus } from '../../api/admin';
 import ImageCropModal from '../utils/ImageCropModal';
@@ -132,6 +133,30 @@ const AllergyManagement = ({ isStandalone = true }) => {
 
   return (
     <div className="admin-common-container">
+      {/* Navigation Tabs - Only show when standalone */}
+      {isStandalone && (
+        <div className="management-navigation mb-4">
+          <Row>
+            <Col>
+              <Link to="/admin/food-categories" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaUtensils className="me-2" /> Food Categories
+              </Link>
+              <Link to="/admin/tags" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaEdit className="me-2" /> Tags
+              </Link>
+              <Link to="/admin/sizes" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaRuler className="me-2" /> Sizes
+              </Link>
+              <Link to="/admin/allergies" className="btn btn-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaAllergies className="me-2" /> Allergies
+              </Link>
+              <Link to="/admin/variations" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaCogs className="me-2" /> Variations
+              </Link>
+            </Col>
+          </Row>
+        </div>
+      )}
       <Card className="admin-common-card">
         <Card.Header className="admin-common-card-header">
           <h3 className="admin-common-section-title">Allergy Management</h3>
@@ -197,7 +222,7 @@ const AllergyManagement = ({ isStandalone = true }) => {
                     </td>
                     <td>
                       <button
-                        className="btn btn-outline-secondary editAllergyBtn"
+                        className="btn editIconBtn"
                         onClick={() => handleEdit(allergy)}
                         title="Edit"
                         type="button"
@@ -205,7 +230,7 @@ const AllergyManagement = ({ isStandalone = true }) => {
                         <FaPencil />
                       </button>
                       <button
-                        className="btn btn-outline-danger"
+                        className="btn deleteIconBtn"
                         onClick={() => handleDelete(allergy._id)}
                         title="Delete"
                         type="button"

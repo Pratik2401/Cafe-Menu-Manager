@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button } from 'react-bootstrap';
-import { getAllSubCategories, getAllCategories } from '../../api/customer';
+
 import '../../styles/NavigateBar.css';
 import CafeLoader, { LOADER_TYPES } from '../utils/CafeLoader';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -8,7 +8,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-export default function NavigateBar({ onSubCategorySelect, categoryId, customMessages, searchQuery }) {
+export default function NavigateBar({ onSubCategorySelect, categoryId, customMessages, searchQuery, menuData }) {
   const [subCategory, setSubCategory] = useState([]);
   const [activeSubCategoryId, setActiveSubCategoryId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,87 +16,86 @@ export default function NavigateBar({ onSubCategorySelect, categoryId, customMes
   const swiperRef = useRef(null);
 
  useEffect(() => {
-    const getSubCategories = async () => {
-      setLoading(true);
-      try {
-        let selectedCategoryId;
-        
-        if (categoryId) {
-          selectedCategoryId = categoryId;
-        } else {
-          const storedCategory = localStorage.getItem('selectedMainCategory');
-          if (!storedCategory) {
-            console.warn('No category found in props or localStorage.');
-            setSubCategory([]);
-            setLoading(false);
-            return;
-          }
-          selectedCategoryId = JSON.parse(storedCategory).id;
-        }
-        
-        const response = await getAllSubCategories();
-        
-        const filteredSubCategories = response.data.filter(subcategory => {
-          if (subcategory.category) {
-            return subcategory.category.serialId === selectedCategoryId;
-          } else if (subcategory.categoryId) {
-            return subcategory.categoryId === selectedCategoryId;
-          }
-          return false;
-        });
+    if (!menuData?.subCategories) {
+      setLoading(false);
+      return;
+    }
 
-        setSubCategory(filteredSubCategories);
-        
-        // Check if there's a selected subcategory from MenuPopup
-        const storedSubCategory = localStorage.getItem('selectedSubCategory');
-        let targetIndex = 0;
-        
-        if (storedSubCategory) {
-          try {
-            const parsedSubCategory = JSON.parse(storedSubCategory);
-            const foundIndex = filteredSubCategories.findIndex(sub => 
-              sub._id === parsedSubCategory._id || sub.name === parsedSubCategory.name
-            );
-            if (foundIndex !== -1) {
-              targetIndex = foundIndex;
-            }
-          } catch (error) {
-            console.error('Error parsing stored subcategory:', error);
-          }
+    setLoading(true);
+    try {
+      let selectedCategoryId;
+      
+      if (categoryId) {
+        selectedCategoryId = categoryId;
+      } else {
+        const storedCategory = localStorage.getItem('selectedMainCategory');
+        if (!storedCategory) {
+          console.warn('No category found in props or localStorage.');
+          setSubCategory([]);
+          setLoading(false);
+          return;
         }
-        
-        setCurrentIndex(targetIndex);
-
-        if (filteredSubCategories.length > 0) {
-          const targetSubCategory = filteredSubCategories[targetIndex];
-          setActiveSubCategoryId(targetSubCategory.serialId);
-          
-          // Notify parent about the selected subcategory
-          if (onSubCategorySelect) {
-            onSubCategorySelect(targetSubCategory, filteredSubCategories);
-          }
-          
-          // Update swiper to show the correct subcategory
-          setTimeout(() => {
-            if (swiperRef.current) {
-              swiperRef.current.slideTo(targetIndex, 0);
-            }
-          }, 100);
-        } else {
-          setActiveSubCategoryId(null);
-          if (onSubCategorySelect) {
-            onSubCategorySelect(null, []);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching subcategories:', error);
-      } finally {
-        setLoading(false);
+        selectedCategoryId = JSON.parse(storedCategory).id;
       }
-    };
+      
+      const filteredSubCategories = menuData.subCategories.filter(subcategory => {
+        if (subcategory.category) {
+          return subcategory.category.serialId === selectedCategoryId;
+        } else if (subcategory.categoryId) {
+          return subcategory.categoryId === selectedCategoryId;
+        }
+        return false;
+      });
 
-    getSubCategories();
-  }, [onSubCategorySelect, categoryId, searchQuery]);
+      setSubCategory(filteredSubCategories);
+      
+      // Check if there's a selected subcategory from MenuPopup
+      const storedSubCategory = localStorage.getItem('selectedSubCategory');
+      let targetIndex = 0;
+      
+      if (storedSubCategory) {
+        try {
+          const parsedSubCategory = JSON.parse(storedSubCategory);
+          const foundIndex = filteredSubCategories.findIndex(sub => 
+            sub._id === parsedSubCategory._id || sub.name === parsedSubCategory.name
+          );
+          if (foundIndex !== -1) {
+            targetIndex = foundIndex;
+          }
+        } catch (error) {
+          console.error('Error parsing stored subcategory:', error);
+        }
+      }
+      
+      setCurrentIndex(targetIndex);
+
+      if (filteredSubCategories.length > 0) {
+        const targetSubCategory = filteredSubCategories[targetIndex];
+        setActiveSubCategoryId(targetSubCategory.serialId);
+        
+        // Notify parent about the selected subcategory
+        if (onSubCategorySelect) {
+          onSubCategorySelect(targetSubCategory, filteredSubCategories);
+        }
+        
+        // Update swiper to show the correct subcategory
+        setTimeout(() => {
+          if (swiperRef.current) {
+            swiperRef.current.slideTo(targetIndex, 0);
+          }
+        }, 100);
+      } else {
+        setActiveSubCategoryId(null);
+        if (onSubCategorySelect) {
+          onSubCategorySelect(null, []);
+        }
+      }
+    } catch (error) {
+      console.error('Error processing subcategories:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [onSubCategorySelect, categoryId, searchQuery, menuData?.subCategories]);
   
   // Set up global function for NavigateBar updates
   useEffect(() => {

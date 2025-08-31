@@ -14,7 +14,8 @@ import {
   Spinner, 
   Alert 
 } from 'react-bootstrap';
-import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaUtensils, FaRuler, FaAllergies, FaCogs } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import '../../styles/AdminVariationManagement.css';
 import '../../styles/AdminCommon.css';
@@ -272,6 +273,30 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
 
   return (
     <div className="admin-common-container">
+      {/* Navigation Tabs - Only show when standalone */}
+      {isStandalone && (
+        <div className="management-navigation mb-4">
+          <Row>
+            <Col>
+              <Link to="/admin/food-categories" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaUtensils className="me-2" /> Food Categories
+              </Link>
+              <Link to="/admin/tags" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaEdit className="me-2" /> Tags
+              </Link>
+              <Link to="/admin/sizes" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaRuler className="me-2" /> Sizes
+              </Link>
+              <Link to="/admin/allergies" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaAllergies className="me-2" /> Allergies
+              </Link>
+              <Link to="/admin/variations" className="btn btn-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaCogs className="me-2" /> Variations
+              </Link>
+            </Col>
+          </Row>
+        </div>
+      )}
       <Card className="admin-common-card">
         <Card.Header className="admin-common-card-header">
           <h3 className="admin-common-section-title">Variation Management</h3>
@@ -302,12 +327,14 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                 <div className="d-flex justify-content-between align-items-center mb-2 p-3 bg-light rounded">
                   <h5 className="mb-0 fw-bold">{groupName} ({groupVariations.length} variations)</h5>
                   <Button
-                    variant="outline-danger"
-                    size="sm"
+                  
                     onClick={() => handleDeleteGroup(groupName)}
-                    className="d-flex align-items-center gap-2"
+                 
+                    className="btn deleteIconBtn"
+                    title="Delete"
+                    type="button"
                   >
-                    <FaRegTrashCan /> Delete Group
+                    <FaRegTrashCan />
                   </Button>
                 </div>
                 <Table responsive bordered hover className="variation-table mb-0">
@@ -323,7 +350,7 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                         <td>{variation.name}</td>
                         <td>
                           <button
-                            className="btn btn-outline-secondary editVariationBtn"
+                            className="btn editIconBtn"
                             onClick={() => handleOpenEditDialog(variation)}
                             title="Edit"
                             type="button"
@@ -331,7 +358,7 @@ const AdminVariationManagement = ({ isStandalone = true }) => {
                             <FaPencil />
                           </button>
                           <button
-                            className="btn btn-outline-danger"
+                            className="btn deleteIconBtn"
                             onClick={() => handleDelete(variation._id)}
                             title="Delete"
                             type="button"

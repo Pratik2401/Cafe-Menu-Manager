@@ -6,6 +6,7 @@ import Switch from "react-switch";
 import { FaEye } from "react-icons/fa";
 import { FaPencil,FaRegTrashCan } from "react-icons/fa6";
 import { getImageUrl } from '../../utils/imageUrl';
+import { Link } from "react-router-dom";
 
 
 const SortableCategoryCard = ({
@@ -23,7 +24,8 @@ const SortableCategoryCard = ({
   onEditClick,
   onDeleteClick,
   onToggleShow,
-  onView
+  onView,
+  viewLink
 }) => {
   const {
     attributes,
@@ -157,19 +159,21 @@ const SortableCategoryCard = ({
 
             <div className="CategoryCard-BottomRow">
              <div className="CategoryCard-ActionIcons">
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={onView}
-            className="CategoryCard-IconButton ViewBtn"
-            style={{
-              transition: "color 0.3s",
-            }}
-            onMouseOver={(e) => e.currentTarget.querySelector('svg').style.color = "#658AD8"}
-            onMouseOut={(e) => e.currentTarget.querySelector('svg').style.color = ""}
-          >
-            <FaEye size={17} />
-          </Button>
+          {viewLink ? (
+            <Link to={viewLink} className="btn btn-outline-primary btn-sm CategoryCard-IconButton ViewBtn" style={{ transition: "color 0.3s", textDecoration: 'none' }}>
+              <FaEye size={17} />
+            </Link>
+          ) : (
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={onView}
+              className="CategoryCard-IconButton ViewBtn"
+              style={{ transition: "color 0.3s" }}
+            >
+              <FaEye size={17} />
+            </Button>
+          )}
                 <Button
                   variant="outline-dark"
                   size="sm"

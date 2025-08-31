@@ -1,5 +1,6 @@
 import { useEffect,useRef,   useState, useImperativeHandle, forwardRef, useMemo } from "react";
 import { useBreadcrumb } from "./AdminBreadcrumbContext";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   Table,
   Button,
@@ -51,6 +52,8 @@ const SortableRow = ({
   handleEditClick,
   handleDelete,
   handleViewClick,
+  urlCategoryId,
+  categoryId,
 }) => {
   const {
     attributes,
@@ -105,30 +108,40 @@ return (
         /> */}
          <Switch
             checked={sub.isVisible}
-        onChange={() => handleToggleVisibility(sub._id, !sub.isVisible)}
-          onClick={(e) => e.stopPropagation()}
+            onChange={() => handleToggleVisibility(sub._id, !sub.isVisible)}
+            onClick={(e) => e.stopPropagation()}
             onColor="#64E239"
             offColor="#545454"
             checkedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Show</span>}
             uncheckedIcon={<span style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', fontSize: 16, color: 'white'}}>Hide</span>}
             width={70}
             height={30}
-            handleDiameter={24}
-             id={`visibility-switch-${sub._id}`}
+            handleDiameter={22}
           />
       </td>
       <td className="text-center">
         <div className="action-buttons" onClick={(e) => e.stopPropagation()} style={{ touchAction: "auto", pointerEvents: "auto", display: "flex", flexWrap: "nowrap", justifyContent: "center", gap: "4px" }}>
-          <Button
-            size="sm"
-            className="action-btn ViewBtn"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleViewClick(sub);
-            }}
-          >
-            <FaEye />
-          </Button>
+          {urlCategoryId ? (
+            <Link 
+              to={`/admin/categories/${categoryId}/${sub._id}`}
+              className="btn btn-sm action-btn ViewBtn"
+              style={{ textDecoration: 'none' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <FaEye />
+            </Link>
+          ) : (
+            <Button
+              size="sm"
+              className="action-btn ViewBtn"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewClick(sub);
+              }}
+            >
+              <FaEye />
+            </Button>
+          )}
           <Button
             size="sm"
             className="action-btn EditBtn"
@@ -159,7 +172,14 @@ return (
 
 
 const AdminSubCategoryMainPage = forwardRef(
-  ({ categoryId, categoryName, onBack, sendItemtoCategeoryPage, resetSubCategoryView }, ref) => {
+  ({ categoryId: propCategoryId, categoryName: propCategoryName, onBack: propOnBack, sendItemtoCategeoryPage, resetSubCategoryView }, ref) => {
+    const { categoryId: urlCategoryId } = useParams();
+    const navigate = useNavigate();
+    
+    // Use URL params if available, otherwise use props (for backward compatibility)
+    const categoryId = urlCategoryId || propCategoryId;
+    const [categoryName, setCategoryName] = useState(propCategoryName || '');
+    const onBack = propOnBack || (() => navigate('/admin/categories'));
     
   const [subcategories, setSubcategories] = useState({ count: 0, items: [] });
   const [loading, setLoading] = useState(true);
@@ -200,53 +220,69 @@ const touchSensor = useSensor(TouchSensor, {
 const keyboardSensor = useSensor(KeyboardSensor);
 
 const sensors = useSensors(pointerSensor, touchSensor, keyboardSensor);
-  // Fetch subcategories
+  // Fetch subcategories and category name
   useEffect(() => {
     const getSubCategories = async () => {
+      if (!categoryId) return;
+      
       setLoading(true);
       try {
-        const data = await fetchSubCategoriesByCategoryId(categoryId);
+        const [data, categories] = await Promise.all([
+          fetchSubCategoriesByCategoryId(categoryId),
+          fetchAllCategories()
+        ]);
+        
         setSubcategories(data);
+        
+        const category = categories.find(cat => cat._id === categoryId);
+        if (category) {
+          setCategoryName(category.name);
+        }
       } catch (error) {
         console.error("Error fetching subcategories:", error);
       } finally {
         setLoading(false);
       }
     };
-    if (categoryId) {
-      getSubCategories();
-    }
-  }, [categoryId]);
+    
+    getSubCategories();
+  }, []);
 
 useEffect(() => {
-  if (categoryId) {
-    const breadcrumbPath = selectedSubForItems 
-      ? [
-          { label: "Category Management", onClick: () => onBack() },
-          { label: categoryName, onClick: () => handleBackToSubCategory() },
-          { label: selectedSubForItems.name }
-        ]
-      : [
-          { label: "Category Management", onClick: () => onBack() },
-          { label: categoryName }
-        ];
-
-    // Only update breadcrumb if the path has changed
-    updateBreadcrumb((prevBreadcrumb) => {
-      const isSamePath = JSON.stringify(prevBreadcrumb) === JSON.stringify(breadcrumbPath);
-      if (!isSamePath) {
-        return breadcrumbPath;
-      }
-      return prevBreadcrumb;
-    });
+  if (categoryName) {
+    if (selectedSubForItems) {
+      updateBreadcrumb([
+        { label: "Category Management", onClick: () => onBack() },
+        { label: categoryName, onClick: () => handleBackToSubCategory() },
+        { label: selectedSubForItems.name }
+      ]);
+    } else if (urlCategoryId) {
+      updateBreadcrumb([
+        { label: "Category Management", onClick: () => navigate('/admin/categories') },
+        { label: categoryName }
+      ]);
+    } else {
+      updateBreadcrumb([
+        { label: "Category Management", onClick: () => onBack() },
+        { label: categoryName }
+      ]);
+    }
   }
-}, [categoryId, selectedSubForItems, categoryName, onBack, updateBreadcrumb]);
+}, [categoryName, selectedSubForItems]);
 
 
 
   const handleViewClick = (sub) => {
-    setSelectedSubForItems(sub);
-    sendItemtoCategeoryPage(sub.name);
+    if (urlCategoryId) {
+      // Navigate to items page with URL params
+      navigate(`/admin/categories/${categoryId}/${sub._id}`);
+    } else {
+      // Use old method for backward compatibility
+      setSelectedSubForItems(sub);
+      if (sendItemtoCategeoryPage) {
+        sendItemtoCategeoryPage(sub.name);
+      }
+    }
   };
 
   const handleBackToSubCategory = () => {
@@ -600,7 +636,7 @@ useEffect(() => {
           onDragEnd={handleDragEnd}
         >
           <div style={{ overflowX: 'auto', touchAction: 'pan-x pan-y' }}>
-            <Table hover bordered className="SubCategoryTable" style={{ minWidth: '600px' }}>
+            <Table hover bordered  style={{ minWidth: '600px' }} className="SubCategoryTable">
             <thead className="SubCategoryTableHeader">
               <tr>
                 <th style={{width: '40px'}}></th>
@@ -626,6 +662,8 @@ useEffect(() => {
                       handleEditClick={handleEditClick}
                       handleDelete={handleDelete}
                       handleViewClick={handleViewClick}
+                      urlCategoryId={urlCategoryId}
+                      categoryId={categoryId}
                     />
                   ))
                 ) : (

@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import {
   Card, Button, Row, Col, Form, Spinner, Badge, ListGroup, InputGroup
 } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useBreadcrumb } from './AdminBreadcrumbContext';
 import { FaSearch, FaPlus, FaTrash } from 'react-icons/fa';
 import ItemForm from './AdminItemForm';
 import { fetchItemsBySubCategoryId, updateItemSerials, createItem, deleteItem, updateItem, fetchAllCategories } from '../../api/admin';
@@ -31,7 +33,7 @@ import AdminItemCard from './AdminItemCard';
 import CSVImportButton from './AdminCSVImportButton';
 
 
-const SortableItem = ({ item, onDelete, onSave, editingItemId, setEditingItemId, foodCategories, tags = [], sizes = [], subCategories = [], categories = [], variations = [] }) => {
+const SortableItem = ({ item, onDelete, onSave, editingItemId, setEditingItemId, foodCategories, tags = [], sizes = [], subCategories = [], categories = [], variations = [], onFoodCategoryCreated, onSizeCreated, onVariationCreated }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: item._id,
     disabled: editingItemId === item._id, // Disable sorting when editing
@@ -78,6 +80,9 @@ const SortableItem = ({ item, onDelete, onSave, editingItemId, setEditingItemId,
         categories={categories}
         variations={variations}
         dragHandleProps={{ ...attributes, ...listeners }}
+        onFoodCategoryCreated={onFoodCategoryCreated}
+        onSizeCreated={onSizeCreated}
+        onVariationCreated={onVariationCreated}
       />
     </div>
   );
@@ -94,7 +99,15 @@ const SortableItem = ({ item, onDelete, onSave, editingItemId, setEditingItemId,
 
 
 
-const AdminItemsPage = ({ subCategory }) => {
+const AdminItemsPage = ({ subCategory: propSubCategory, categoryName: propCategoryName, onBack: propOnBack }) => {
+  const { categoryId, subcategoryId } = useParams();
+  const navigate = useNavigate();
+  const { updateBreadcrumb } = useBreadcrumb();
+  
+  // State for subcategory and category info when using URL params
+  const [subCategory, setSubCategory] = useState(propSubCategory || null);
+  const [categoryName, setCategoryName] = useState(propCategoryName || '');
+  const onBack = propOnBack || (() => navigate(`/admin/categories/${categoryId}`));
   const [activeItem, setActiveItem] = useState(null);
 
   const [items, setItems] = useState([]);
@@ -140,6 +153,33 @@ const [newItem, setNewItem] = useState({
     setLoading(false);
   }
 };
+  // Load data when component mounts
+  useEffect(() => {
+    const loadData = async () => {
+      if (subcategoryId) {
+        setLoading(true);
+        try {
+          const [categories, allSubCategories] = await Promise.all([
+            fetchAllCategories(),
+            fetchAllSubCategories()
+          ]);
+          
+          const category = categories.find(cat => cat._id === categoryId);
+          const foundSubCategory = allSubCategories.find(sub => sub._id === subcategoryId);
+          
+          if (category) setCategoryName(category.name);
+          if (foundSubCategory) setSubCategory(foundSubCategory);
+        } catch (error) {
+          console.error('Error loading data:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    
+    loadData();
+  }, []);
+  
   useEffect(() => {
     if (subCategory?._id) {
       fetchItems();
@@ -151,6 +191,17 @@ const [newItem, setNewItem] = useState({
       loadVariations();
     }
   }, [subCategory]);
+  
+  // Update breadcrumb
+  useEffect(() => {
+    if (subCategory && categoryName) {
+      updateBreadcrumb([
+        { label: "Category Management", link: "/admin/categories" },
+        { label: categoryName, link: `/admin/categories/${categoryId}` },
+        { label: subCategory.name }
+      ]);
+    }
+  }, [subCategory, categoryName]);
   
   const loadFoodCategories = async () => {
     try {
@@ -468,6 +519,15 @@ return (
           categories={categories}
           variations={variations}
           isCreating={true}
+          onFoodCategoryCreated={(newCategory) => {
+            setFoodCategories(prev => [...prev, newCategory]);
+          }}
+          onSizeCreated={(newSizes) => {
+            setSizes(prev => [...prev, ...newSizes]);
+          }}
+          onVariationCreated={(newVariations) => {
+            setVariations(prev => [...prev, ...newVariations]);
+          }}
         />
       </Card>
     )}
@@ -509,6 +569,15 @@ return (
   subCategories={subCategories}
   categories={categories}
   variations={variations}
+  onFoodCategoryCreated={(newCategory) => {
+    setFoodCategories(prev => [...prev, newCategory]);
+  }}
+  onSizeCreated={(newSizes) => {
+    setSizes(prev => [...prev, ...newSizes]);
+  }}
+  onVariationCreated={(newVariations) => {
+    setVariations(prev => [...prev, ...newVariations]);
+  }}
 />
           ))}
         </SortableContext>

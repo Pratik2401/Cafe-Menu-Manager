@@ -163,12 +163,3 @@ export const clearAllCache = () => {
   apiCache.clear();
   pendingRequests.clear();
 };
-
-/**
- * Get cache statistics
- */
-export const getCacheStats = () => ({
-  cacheSize: apiCache.size,
-  pendingRequests: pendingRequests.size,
-  cacheKeys: Array.from(apiCache.keys())
-});

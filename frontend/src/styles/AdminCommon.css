@@ -58,7 +58,7 @@
     width: 70%;
     padding: 5px 10px !important;
     font-size: 14px !important;
-    max-width: 320px !important;
+    max-width: 270px !important;
     min-width: 200px !important;
     margin: 10px 0 !important;
   }
@@ -68,4 +68,45 @@
   align-items: start !important;
   padding: 15px 10px !important;
 }
+}
+
+.editIconBtn{
+  border-radius: 50% !important;
+  color: black !important;
+  border-color: black !important;
+  margin: 0 5px 0 0 !important;
+  background-color: white !important;
+}
+
+.editIconBtn:hover{
+  background-color: black !important;
+  color: white !important;
+  border-color: black !important;
+}
+
+.deleteIconBtn{
+  border-radius: 50% !important;
+  color: red !important;
+  border-color: red !important;
+  margin: 0 0 0 5px !important; 
+  background-color: white !important;
+}
+
+.deleteIconBtn:hover{
+  background-color: red !important;
+  color: white !important;
+  border-color: red !important;
+}
+
+.CsvExportBtn{
+  background-color: #df353c !important;
+  border: none;
+  color: white !important;
+  display: flex;
+  align-items: center;
+}
+
+.CsvExportBtn:hover{
+  background-color: #c92a2a !important;
+  color: white !important;
 }

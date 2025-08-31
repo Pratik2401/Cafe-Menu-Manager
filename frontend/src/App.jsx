@@ -289,6 +289,34 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
+            {/* Category with subcategories */}
+            <Route
+              path="/admin/categories/:categoryId"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Suspense fallback={<LoadingFallback />}>
+                      <LazyComponents.AdminSubCategoryMainPage key={window.location.pathname} />
+                    </Suspense>
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Subcategory with items */}
+            <Route
+              path="/admin/categories/:categoryId/:subcategoryId"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Suspense fallback={<LoadingFallback />}>
+                      <LazyComponents.AdminItemMainPage key={window.location.pathname} />
+                    </Suspense>
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
 
             {/* Food category management */}
             <Route
@@ -304,7 +332,7 @@ function App() {
               }
             />
 
-            {/* Subcategory management */}
+            {/* Subcategory management - standalone */}
             <Route
               path="/admin/subcategories"
               element={
@@ -318,7 +346,7 @@ function App() {
               }
             />
 
-            {/* Item management */}
+            {/* Item management - standalone */}
             <Route
               path="/admin/items"
               element={

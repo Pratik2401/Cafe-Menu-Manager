@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Table, Badge, Form, Modal, Spinner, Alert } from 'react-bootstrap';
-import { FaPlus, FaEdit, FaTrash, FaToggleOn } from 'react-icons/fa';
+import { Card, Button, Table, Badge, Form, Modal, Spinner, Alert, Row, Col } from 'react-bootstrap';
+import { FaPlus, FaEdit, FaTrash, FaToggleOn, FaUtensils, FaRuler, FaAllergies, FaCogs } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { fetchTags, createTag, updateTag, deleteTag, toggleTagStatus } from '../../api/admin';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import ImageCropModal from '../utils/ImageCropModal';
@@ -210,6 +211,30 @@ const TagManagement = ({ isStandalone = true }) => {
 
   return (
     <div className="admin-common-container">
+      {/* Navigation Tabs - Only show when standalone */}
+      {isStandalone && (
+        <div className="management-navigation mb-4">
+          <Row>
+            <Col>
+              <Link to="/admin/food-categories" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaUtensils className="me-2" /> Food Categories
+              </Link>
+              <Link to="/admin/tags" className="btn btn-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaEdit className="me-2" /> Tags
+              </Link>
+              <Link to="/admin/sizes" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaRuler className="me-2" /> Sizes
+              </Link>
+              <Link to="/admin/allergies" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaAllergies className="me-2" /> Allergies
+              </Link>
+              <Link to="/admin/variations" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaCogs className="me-2" /> Variations
+              </Link>
+            </Col>
+          </Row>
+        </div>
+      )}
       {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
           {error}
@@ -296,7 +321,7 @@ const TagManagement = ({ isStandalone = true }) => {
                     </td>
                     <td>
                       <button
-                        className="btn btn-outline-secondary editTagBtn"
+                        className="btn editIconBtn"
                         onClick={() => handleEdit(tag)}
                         title="Edit"
                         type="button"
@@ -304,7 +329,7 @@ const TagManagement = ({ isStandalone = true }) => {
                         <FaPencil />
                       </button>
                       <button
-                        className="btn btn-outline-danger"
+                        className="btn deleteIconBtn"
                         onClick={() => handleDelete(tag._id)}
                         title="Delete"
                         type="button"

@@ -130,7 +130,7 @@ const ReviewAnalytics = () => {
             Review Analytics
           </h3>
           <Button 
-            className="btn btn-success btn-sm"
+            className="btn CsvExportBtn"
             onClick={exportToCSV}
             disabled={reviews.length === 0}
           >

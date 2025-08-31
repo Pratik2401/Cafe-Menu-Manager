@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { FaUtensils, FaEdit, FaRuler, FaAllergies, FaCogs } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import FoodCategoryManagement from './AdminFoodCategoryManagement';
 import TagManagement from './AdminTagManagement';
@@ -35,41 +36,21 @@ const ManagementControls = () => {
       <div className="management-navigation mb-4">
         <Row>
           <Col>
-            <Button 
-              variant={activeSection === 'food-categories' ? 'primary' : 'outline-primary'} 
-              className="me-2 mb-2"
-              onClick={() => setActiveSection('food-categories')}
-            >
+            <Link to="/admin/food-categories" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
               <FaUtensils className="me-2" /> Food Categories
-            </Button>
-            <Button 
-              variant={activeSection === 'tags' ? 'primary' : 'outline-primary'} 
-              className="me-2 mb-2"
-              onClick={() => setActiveSection('tags')}
-            >
+            </Link>
+            <Link to="/admin/tags" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
               <FaEdit className="me-2" /> Tags
-            </Button>
-            <Button 
-              variant={activeSection === 'sizes' ? 'primary' : 'outline-primary'} 
-              className="me-2 mb-2"
-              onClick={() => setActiveSection('sizes')}
-            >
+            </Link>
+            <Link to="/admin/sizes" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
               <FaRuler className="me-2" /> Sizes
-            </Button>
-            <Button 
-              variant={activeSection === 'allergies' ? 'primary' : 'outline-primary'} 
-              className="me-2 mb-2"
-              onClick={() => setActiveSection('allergies')}
-            >
+            </Link>
+            <Link to="/admin/allergies" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
               <FaAllergies className="me-2" /> Allergies
-            </Button>
-            <Button 
-              variant={activeSection === 'variations' ? 'primary' : 'outline-primary'} 
-              className="me-2 mb-2"
-              onClick={() => setActiveSection('variations')}
-            >
+            </Link>
+            <Link to="/admin/variations" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
               <FaCogs className="me-2" /> Variations
-            </Button>
+            </Link>
           </Col>
         </Row>
       </div>

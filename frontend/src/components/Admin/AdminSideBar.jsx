@@ -1,6 +1,6 @@
 import { useState, memo, useEffect } from "react";
 import { Nav, Image, Collapse } from "react-bootstrap";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import "../../styles/SideBar.css";
 import Snap2EatLogo from "../../assets/images/Snap2Eat.png";
 import { getImageUrl } from '../../utils/imageUrl';
@@ -177,10 +177,10 @@ const Sidebar = memo(() => {
           {menuItems.map(item => (
             <div key={item.id} className="nav-item-container">
               {item.type === 'single' ? (
-                <button
-                  type="button"
+                <Link
+                  to={item.route}
                   className={`modern-nav-item ${isActive(item.route) ? 'active' : ''}`}
-                  onClick={() => handleSectionClick(item.id, null, item.route)}
+                  style={{ textDecoration: 'none' }}
                 >
                   <div className="nav-item-content">
                     <div className="nav-item-left">
@@ -188,7 +188,7 @@ const Sidebar = memo(() => {
                       <span className="nav-label">{item.label}</span>
                     </div>
                   </div>
-                </button>
+                </Link>
               ) : (
                 <>
                   <button
@@ -213,19 +213,17 @@ const Sidebar = memo(() => {
                     <div className="dropdown-menu" id={`dropdown-${item.id}`}>
                       <div className="dropdown-menu-content">
                         {item.subItems.map((subItem, index) => (
-                          <button
+                          <Link
                             key={index}
-                            type="button"
+                            to={subItem.route}
                             className={`dropdown-item ${
                               location.pathname === subItem.route ? 'dropdown-child-active' : ''
                             }`}
-                            onClick={() => {
-                              handleSectionClick(item.id, subItem.label.toLowerCase(), subItem.route);
-                            }}
+                            style={{ textDecoration: 'none' }}
                           >
                             <span className="dropdown-icon">{subItem.icon}</span>
                             <span className="dropdown-label">{subItem.label}</span>
-                          </button>
+                          </Link>
                         ))}
                       </div>
                     </div>

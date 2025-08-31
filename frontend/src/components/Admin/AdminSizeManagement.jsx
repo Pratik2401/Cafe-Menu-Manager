@@ -14,7 +14,8 @@ import {
   Spinner, 
   Alert 
 } from 'react-bootstrap';
-import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaUtensils, FaRuler, FaAllergies, FaCogs } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { useBreadcrumb } from './AdminBreadcrumbContext';
 import '../../styles/AdminSizeManagement.css';
 import '../../styles/AdminCommon.css';
@@ -304,6 +305,30 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
 
   return (
     <div className="admin-common-container">
+      {/* Navigation Tabs - Only show when standalone */}
+      {isStandalone && (
+        <div className="management-navigation mb-4">
+          <Row>
+            <Col>
+              <Link to="/admin/food-categories" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaUtensils className="me-2" /> Food Categories
+              </Link>
+              <Link to="/admin/tags" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaEdit className="me-2" /> Tags
+              </Link>
+              <Link to="/admin/sizes" className="btn btn-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaRuler className="me-2" /> Sizes
+              </Link>
+              <Link to="/admin/allergies" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaAllergies className="me-2" /> Allergies
+              </Link>
+              <Link to="/admin/variations" className="btn btn-outline-primary me-2 mb-2" style={{ textDecoration: 'none' }}>
+                <FaCogs className="me-2" /> Variations
+              </Link>
+            </Col>
+          </Row>
+        </div>
+      )}
       <Card className="admin-common-card">
         <Card.Header className="admin-common-card-header">
           <h3 className="admin-common-section-title">Size Management</h3>
@@ -346,20 +371,18 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
                   <h5 className="mb-0 fw-bold">{groupName} ({groupSizes.length} sizes)</h5>
                   <div className="d-flex gap-2">
                     <Button
-                      variant="outline-primary"
-                      size="sm"
+                    
+                    
                       onClick={() => handleEditGroup(groupName)}
-                      className="d-flex align-items-center gap-2"
+                      className="editIconBtn"
                     >
-                      <FaPencil /> Edit Group
+                      <FaPencil />
                     </Button>
                     <Button
-                      variant="outline-danger"
-                      size="sm"
                       onClick={() => handleDeleteGroup(groupName)}
-                      className="d-flex align-items-center gap-2"
+                      className="deleteIconBtn"
                     >
-                      <FaRegTrashCan /> Delete Group
+                      <FaRegTrashCan />
                     </Button>
                   </div>
                 </div>
@@ -376,7 +399,7 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
                         <td>{size.name}</td>
                         <td>
                           <button
-                            className="btn btn-outline-secondary editSizeBtn"
+                            className="btn editIconBtn"
                             onClick={() => handleOpenEditDialog(size)}
                             title="Edit"
                             type="button"
@@ -384,7 +407,7 @@ const AdminSizeManagement = ({ isStandalone = true }) => {
                             <FaPencil />
                           </button>
                           <button
-                            className="btn btn-outline-danger"
+                            className="btn deleteIconBtn"
                             onClick={() => handleDelete(size._id)}
                             title="Delete"
                             type="button"
